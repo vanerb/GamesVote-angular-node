@@ -14,6 +14,7 @@ import {MatFormField, MatInput, MatInputModule} from '@angular/material/input';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatButtonModule} from '@angular/material/button';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import {Card} from '../general/card/card';
 
 @Component({
   selector: 'app-index',
@@ -28,7 +29,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
     MatInputModule,
     MatSidenavModule,
     MatButtonModule,
-    NgStyle
+    NgStyle,
+    Card
   ],
   templateUrl: './index.html',
   styleUrl: './index.css',
