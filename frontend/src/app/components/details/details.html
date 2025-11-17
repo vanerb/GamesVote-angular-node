@@ -1,0 +1,384 @@
+<app-container>
+  <div
+    style="" class="responsive-container">
+    <div style="" class="left">
+
+      <div
+        style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%;">
+        <div
+          style="width: 100%; height:100% ; display: flex; align-items: center; justify-content: center; overflow: hidden;border-radius: 10px ">
+          <img *ngIf="game?.cover?.url"
+               style="object-fit: contain; width: 100%; height: fit-content; border-radius: 10px; overflow: hidden;box-shadow: 3px 3px 6px rgba(0,0,0,0.5);"
+               src="{{getImage(game?.cover?.url, 't_720p')}}">
+
+          <img *ngIf="!game?.cover?.url"
+               style="object-fit: contain; width: 100%; height: fit-content; border-radius: 10px; overflow: hidden;box-shadow: 3px 3px 6px rgba(0,0,0,0.5);"
+               src="{{ getLocalImage('No_Image_Available.jpg')}}">
+
+
+        </div>
+        <div
+          style="text-align: center; font-size: 36px; font-weight: bold; width: 100%; height:80px; display: flex; justify-content: center; align-items: center; margin-top: 20px; gap:10px">
+          <div
+            style="background-color: #363636; border-radius: 10px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5); width: 100%; display: flex; justify-content: center; align-items: center; height: 100%">
+            <img style="margin-right: 10px; border-radius: 10px" width="32" height="32"
+                 src="{{ getLocalImage('android-chrome-512x512.png') }}">
+            <span *ngIf="game?.rating"
+                  style="">{{ game?.rating?.toFixed(0) }}</span>
+            <span *ngIf="!game?.rating"
+                  style="">{{ 0 }}</span>
+
+          </div>
+
+
+          <div
+            style="background-color: #363636; border-radius: 10px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5); width: 100%; display: flex; justify-content: center; align-items: center; height: 100%">
+            <img style="margin-right: 10px; border-radius: 10px" width="32" height="32"
+                 src="{{ getLocalImage('Games VOte.png') }}">
+            <span
+              style="">{{ getMediaValue(valorations) }}</span>
+
+          </div>
+
+
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="right">
+      <div style="padding-right: 5px; padding-left: 5px; padding-bottom: 5px">
+        <h1 style="margin: 0; text-align: center">{{ game?.name }}</h1>
+        <div *ngIf="game?.summary"
+             style="margin-top: 20px; background-color: #363636; padding: 20px; border-radius: 10px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5);">
+          <h2 style="margin: 0 0 10px;">Descripción</h2>
+          <p style="margin: 0">{{ game?.summary }}</p>
+        </div>
+
+        <div *ngIf="game?.storyline"
+             style="margin-top: 20px; background-color: #363636; padding: 20px; border-radius: 10px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5);">
+          <h2 style="margin: 0 0 10px;">Sinopsis</h2>
+          <p style="margin: 0">{{ game?.storyline }}</p>
+        </div>
+
+        <!--        <div *ngIf="game.involved_companies"-->
+        <!--             style="margin-top: 20px; background-color: #363636; padding: 20px; border-radius: 10px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5);">-->
+        <!--          <h2 style="margin: 0 0 10px;">Compañias</h2>-->
+        <!--          <p style="margin: 0">{{ game?.involved_companies }}</p>-->
+        <!--        </div>-->
+
+        <div *ngIf="game.genres &&  game.genres.length > 0" style=" background-color: #363636; padding: 20px; border-radius: 10px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5);display: flex;justify-content: center;align-items: center;gap:10px;margin-top: 20px;
+    flex-wrap: wrap;">
+          <div
+            style="
+      padding: 0px 20px;
+      height: 36px;
+      border-radius: 20px;
+      border: 1px #363636 solid;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    "
+            *ngFor="let genre of game.genres">
+            <i [ngClass]="'bi bi-'+getGenreIcon(genre.id)" style="font-size: 20px; margin-right: 10px;"></i>
+            <span>{{ genre?.name }}</span>
+          </div>
+        </div>
+
+        <div *ngIf="game.platforms && game.platforms.length > 0" style=" background-color: #363636; padding: 20px; border-radius: 10px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:10px;
+    margin-top: 20px;
+    flex-wrap: wrap;   /* Permite que bajen a la siguiente línea */
+">
+          <div
+            style="
+      padding: 0px 20px;
+      height: 36px;
+      border-radius: 20px;
+      border: 1px #363636 solid;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    "
+            *ngFor="let platform of game.platforms">
+            <i [ngClass]="'bi bi-'+getPlatformIcon(platform.id)" style="font-size: 20px; margin-right: 10px;"></i>
+            <span>{{ platform?.name }}</span>
+          </div>
+        </div>
+
+
+        <div *ngIf="game?.screenshots"
+             style="width: calc(100% - 40px); margin-top: 20px; background-color: #363636; padding: 20px; border-radius: 10px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5);">
+          <h2 style="margin: 0; ">Capturas</h2>
+          <app-carrousel-images [images]="game.screenshots"></app-carrousel-images>
+
+        </div>
+
+
+        <div *ngIf=" game?.videos"
+             style=" width: calc(100% - 40px);margin-top: 20px ; background-color: #363636; padding: 20px; border-radius: 10px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5);">
+          <h2 style="margin: 0 0 10px;">Videos</h2>
+          <app-carrousel-videos [videos]="game.videos"></app-carrousel-videos>
+
+        </div>
+
+        <div
+          style="margin-top: 20px; background-color: #363636; padding: 20px; border-radius: 10px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5);">
+          <h2 style="margin: 0 0 10px;">Comentarios</h2>
+          <div *ngIf="this.myValorations.length === 0 && this.user !== null"
+               style="width: 100%; display: flex; flex-direction: column;  align-items: center">
+
+            <div style="width: 100%; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; ">
+              <button mat-raised-button style="padding:0; min-height: 42px; min-width:42px; border-radius:10px; cursor:pointer; margin-right: 10px; margin-bottom: 10px" (click)="setNote(i+1, 'create')"
+                      ngstyle="width: 30px; text-align: center; padding: 10px; margin: 5px; ; border-radius: 10px; cursor: pointer;"
+                      [ngStyle]="
+              this.createValoration?.value === i+1 ? { 'background-color': 'rgb(123, 31, 162)', 'color': 'white', 'border': '1px solid rgb(123, 31, 162)', 'font-weight': 'bold' } : { 'background-color': 'white', 'color': 'rgb(123, 31, 162)', 'font-weight': 'bold', 'border': '2px solid rgb(123, 31, 162)' }"
+                      *ngFor="let n of [].constructor(10); let i = index">
+                {{ i + 1 }}
+              </button>
+            </div>
+
+
+            <!--              <div style="width: 46px; height: 46px">-->
+            <!--                <img style="width: 46px; height: 46px; object-fit: cover; border-radius: 50px; margin-right: 10px;"-->
+            <!--                     src="{{'http://localhost:3000/'+ cleanUrlImage(this.user.Images[0].url)}}">-->
+            <!--              </div>-->
+
+
+            <div style="width: 100% ; display: flex; justify-content: center; align-items: end; ">
+              <div
+                style="width: 100% ; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: center">
+                <div style="width: 100%; ">
+                  <mat-form-field style="width: 100%;margin-bottom: -20px;">
+                    <mat-label>Comentario</mat-label>
+
+                    <span matPrefix>
+                                       <img style="width: 46px; height: 46px; object-fit: cover; border-radius: 50px; margin-left: 10px; margin-right: 10px"
+                                           src="{{'http://localhost:3000/'+ cleanUrlImage(this.user.Images[0].url)}}">
+
+                </span>
+
+                    <textarea matInput
+                              cdkTextareaAutosize
+                              #autosize="cdkTextareaAutosize"
+                              cdkAutosizeMinRows="1"
+                              cdkAutosizeMaxRows="5" [(ngModel)]="createValoration.description"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+
+
+              <button mat-raised-button color="primary" (click)="createMyValoration()"
+                      style=";padding:0; min-height: 42px; min-width:42px; border-radius:10px; cursor:pointer; margin-left: 10px; ">
+                <i class="bi bi-send"></i></button>
+            </div>
+
+
+          </div>
+          <div *ngIf="this.myValorations.length > 0">
+            <span style="text-align: center">Ya has valorado "{{ game.name }}".🙂👍</span>
+            <div style="width: 100%">
+              <h3>Mi reseña</h3>
+              <div style="width: 100%; margin-top: 10px">
+                <!-- MIS VALORACIONES -->
+                <div style="width: 100%" *ngIf="editMode === false">
+                  <div style="margin-top: 10px; display: flex; width: 100%; position: relative;"
+                       *ngFor="let val of myValorations">
+
+                    <!-- CUADRO DE LA RESEÑA -->
+                    <div
+                      style="width: 100%; background-color: rgb(66, 66, 66); color: white; box-shadow: 3px 3px 6px rgba(0,0,0,0.5); border-radius: 10px; color: #1a1d20; padding: 10px; ; position: relative; z-index: 1;">
+                      <div style="display: flex; justify-content: start; align-items: center;">
+                        <img style="width: 46px; height: 46px; object-fit: cover; border-radius: 50px;"
+                             src="{{'http://localhost:3000/'+ cleanUrlImage(val.User.Images[0].url)}}">
+                        <span
+                          style="background-color: rgb(123, 31, 162); width: 30px; text-align: center; padding: 10px; margin: 5px; border-radius: 10px; color: white;">{{ val.value }}</span>
+                      </div>
+                      <div style="flex-wrap: wrap; word-break: break-word; margin-top: 10px">
+                        <span
+                          style="word-wrap: break-word; white-space: normal; color: white">{{ val.description }}</span>
+                      </div>
+                      <div style="text-align: end; margin-top: 10px; color: white">
+                        <span>{{ transformDate(val.createdAt) }}</span>
+                      </div>
+                    </div>
+
+                    <!-- BOTONES -->
+                    <div style="margin-left: 10px; height: 100%; ">
+                      <div
+                        style="height:50%; margin-bottom: 10px ; display: flex;justify-content: center; align-items: center; ">
+                        <button mat-raised-button color="primary"
+                                style="padding:0; min-height: 42px; min-width:42px; ; ; border-radius:10px; cursor:pointer;"
+                                (click)="changeEditMode(val.id, val.gameId)">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                      </div>
+
+                      <div style="height:50%; display: flex; justify-content: center; align-items: center;  ">
+                        <button mat-raised-button color="warn" (click)="confirmDeleteId = val.id"
+                                style="padding:0; min-height: 42px; min-width:42px; ;; border-radius:10px; cursor:pointer;"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+
+
+                    </div>
+
+                    <!-- PANEL DE CONFIRMACIÓN LOCAL -->
+                    <div *ngIf="confirmDeleteId === val.id"
+                         style="
+           position: absolute;
+           top: 0;
+           left: 0;
+           width: 100% ;
+           height: 100%;
+           background-color: rgba(0,0,0,0.7);
+           border-radius: 10px;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           z-index: 10;
+         ">
+                      <div style="
+
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            width: 90%;
+            max-width: 350px;
+          ">
+                        <span>¿Seguro que quieres eliminar la reseña de "{{ game.name }}"?</span>
+                        <br>
+                        <span style="font-weight: bold; display:block; margin: 10px 0;">Esta acción no se puede deshacer.</span>
+                        <div style="display: flex; justify-content: space-around; margin-top: 10px;">
+                          <button mat-stroked-button color="warn" (click)="confirmDeleteId = null"
+                                  style="padding: 5px 16px;width: 100%; margin-right: 10px; border-radius: 8px; color: white; cursor: pointer;">
+                            Cancelar
+                          </button>
+                          <button mat-raised-button color="warn" (click)="deleteReview(val.id)"
+                                  style="padding: 5px 15px; width: 100%; border-radius: 8px ; color: white; cursor: pointer;">
+                            Aceptar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <!-- EDITAR RESEÑA -->
+                <div style="width: 100%" *ngIf="editMode === true">
+                  <div style="margin-top: 10px; display: flex; width: 100%"
+                       *ngFor="let val of myValorations">
+                    <div
+                      style="width: calc(100% - 66px); background-color: rgb(66, 66, 66); border-radius: 10px; color: #1a1d20; padding: 10px; margin-right: 10px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; flex-direction: column">
+
+
+                      <div
+                        style="width: 100%; display: flex; justify-content: center; align-items: center; flex-wrap: wrap">
+                        <button mat-raised-button style="padding:0; min-height: 42px; min-width:42px; border-radius:10px; cursor:pointer; margin-right: 10px; margin-bottom: 10px"
+                                (click)="setNote(i+1, 'update')"
+                                ngstyle="width: 30px; text-align: center; padding: 10px; margin: 5px; ; border-radius: 10px; cursor: pointer;"
+                                [ngStyle]="this.updateValoration?.value === i+1 ? { 'background-color': 'rgb(123, 31, 162)', 'color': 'white', 'border': '1px solid rgb(123, 31, 162)', 'font-weight': 'bold' } : { 'background-color': 'white', 'color': 'rgb(123, 31, 162)', 'font-weight': 'bold', 'border': '2px solid rgb(123, 31, 162)' }"
+                                *ngFor="let n of [].constructor(10); let i = index">
+                          {{ i + 1 }}
+                        </button>
+                      </div>
+
+
+                      <div style="width: 100%; ; display: flex; justify-content: end; align-items: end">
+                        <mat-form-field style="width: 100%; margin-bottom: -20px;">
+                          <mat-label>Comentario</mat-label>
+                          <span matPrefix>
+                                       <img style="width: 46px; height: 46px; object-fit: cover; border-radius: 50px; margin-left: 10px; margin-right: 10px"
+                                            src="{{'http://localhost:3000/'+ cleanUrlImage(this.user.Images[0].url)}}">
+                          </span>
+
+                          <textarea matInput
+                                    cdkTextareaAutosize
+                                    #autosize="cdkTextareaAutosize"
+                                    cdkAutosizeMinRows="1"
+                                    cdkAutosizeMaxRows="5" [(ngModel)]="updateValoration.description"></textarea>
+                        </mat-form-field>
+                      </div>
+
+                      <div style="text-align: end; margin-top: 10px; color: white; width: 100%">
+                        <span>{{ transformDate(val.createdAt) }}</span>
+                      </div>
+                    </div>
+
+                    <!-- VIEJO -->
+
+                    <div style="; height: 100%; ">
+                      <div
+                        style="height:50%; margin-bottom: 10px ; display: flex;justify-content: center; align-items: center; ">
+                        <button mat-raised-button color="primary"
+                                style="padding:0; min-height: 42px; min-width:42px; ; ; border-radius:10px; cursor:pointer;"
+                                (click)="updateMyValoration()">
+                          <i class="bi bi-check-circle"></i>
+                        </button>
+                      </div>
+
+                      <div style="height:50%; display: flex; justify-content: center; align-items: center;  ">
+                        <button mat-raised-button color="warn" (click)="cancelEditMode()"
+                                style="padding:0; min-height: 42px; min-width:42px; ;; border-radius:10px; cursor:pointer;"
+                        >
+                          <i class="bi bi-x-circle"></i>
+                        </button>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div style="width: 100%; margin-top: 10px">
+            <h3>Otras reseñas</h3>
+            <div *ngIf="valorationsWitouthMyValoration.length === 0" style="text-align: center">
+              <span>Aún no hay reseñas...</span>
+            </div>
+            <div
+              style="margin-top: 10px; background-color: rgb(66, 66, 66); border-radius: 10px; color: #1a1d20; padding: 10px; color: white; box-shadow: 3px 3px 6px rgba(0,0,0,0.5)"
+              *ngFor="let val of valorationsWitouthMyValoration">
+              <div
+                style="display: flex; justify-content: start; align-items: center;">
+                <img style="width: 46px; height: 46px; object-fit: cover; border-radius: 50px;"
+                     src="{{'http://localhost:3000/'+ cleanUrlImage(val.User.Images[0].url)}}">
+                <span
+                  style="background-color: rgb(123, 31, 162); width: 30px; text-align: center; padding: 10px; margin: 5px; border-radius: 10px; color: white;">{{ val.value }}</span>
+              </div>
+              <div style=" flex-wrap: wrap; word-break: break-word; margin-top: 10px">
+                <span style="word-wrap: break-word; white-space: normal;">{{ val.description }} </span>
+              </div>
+
+              <div style="text-align: end; margin-top: 10px">
+                <span>{{ transformDate(val.createdAt) }}</span>
+              </div>
+
+
+            </div>
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+    </div>
+  </div>
+
+
+  <div>
+
+
+  </div>
+</app-container>

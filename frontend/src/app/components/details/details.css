@@ -1,0 +1,41 @@
+/* styles.css o el CSS/SCSS de tu componente */
+.responsive-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(100vh - 105px);
+  overflow: auto;
+  color: white;
+  padding-bottom: 20px;
+  gap: 20px; /* separación entre columnas */
+}
+
+.responsive-container > .left,
+.responsive-container > .right {
+  height: 100%;
+}
+
+.responsive-container > .left {
+  width: 30%;
+}
+
+.responsive-container > .right {
+  width: 70%;
+  overflow: auto;
+}
+
+/* Para pantallas pequeñas */
+@media (max-width: 768px) {
+  .responsive-container {
+    flex-direction: column;
+    height: auto;
+    padding-bottom: 40px;
+
+  }
+
+  .responsive-container > .left,
+  .responsive-container > .right {
+    width: 100%;
+  }
+}

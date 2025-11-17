@@ -1,0 +1,97 @@
+<div style="width: 100%; ">
+  <form [formGroup]="form" style="width: 100%;display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div style="margin-top: 20px">
+      <h2 style="margin: 0">Filtros</h2>
+    </div>
+    <div
+      style=" height: calc(100vh - 210px); width: 200px; overflow: auto; padding: 20px; display: flex; justify-content: start; align-items: center; flex-direction: column">
+      <mat-form-field style="width: 100%">
+        <mat-label>Ordenar</mat-label>
+        <mat-select  formControlName="order" formControlName="order">
+          <mat-option value="rating__asc"><i class="bi bi-sort-up"></i> Por nota </mat-option>
+          <mat-option value="rating__desc"> <i class="bi bi-sort-down"></i> Por nota</mat-option>
+
+          <mat-option value="name__asc"><i class="bi bi-sort-up"></i> Por nombre </mat-option>
+          <mat-option value="name__desc"><i class="bi bi-sort-down"></i> Por nombre</mat-option>
+
+          <mat-option value="first_release_date__asc"><i class="bi bi-sort-up"></i> Por fecha </mat-option>
+          <mat-option value="first_release_date__desc"><i class="bi bi-sort-down"></i> Por fecha </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field style="width: 100%" >
+        <mat-label>Plataformas</mat-label>
+        <input
+          type="text"
+          matInput
+          [formControl]="platformsControl"
+          [matAutocomplete]="autoPlatforms">
+
+        <mat-autocomplete #autoPlatforms="matAutocomplete" (optionSelected)="addPlatform($event.option.value)">
+          <mat-option *ngFor="let option of filteredPlatforms | async" [value]="option">
+            <i [ngClass]="'bi bi-' + getPlatformIcon(option.id)" style="font-size: 20px; margin-right: 10px;"></i>
+            {{ option.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <div *ngIf="platformsFormArray.controls.length > 0" style="width: 300px; gap:10px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap;  margin-bottom: 20px">
+
+        <mat-chip-row style="" *ngFor="let platform of platformsFormArray.controls; let i = index" (removed)="removePlatform(i)">
+          {{ platform.value.name }}
+          <button matChipRemove [attr.aria-label]="'remove template form' + platform.value.id">
+            <i class="bi bi-trash3"></i>
+          </button>
+        </mat-chip-row>
+      </div>
+
+
+      <mat-form-field style="width: 100%;">
+        <mat-label>Generos</mat-label>
+        <input
+          type="text"
+          matInput
+          [formControl]="genresControl"
+          [matAutocomplete]="autoGenres">
+
+        <mat-autocomplete #autoGenres="matAutocomplete" (optionSelected)="addGenre($event.option.value)">
+          <mat-option *ngFor="let option of filteredGenres | async" [value]="option">
+            <i [ngClass]="'bi bi-' + getGenreIcon(option.id)" style="font-size: 20px; margin-right: 10px;"></i>
+            {{ option.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <div *ngIf="genresFormArray.controls.length > 0" style="width: 300px; gap:10px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 20px">
+        <mat-chip-row style="" *ngFor="let genre of genresFormArray.controls; let i = index" (removed)="removeGenre(i)">
+          {{ genre.value.name }}
+          <button matChipRemove [attr.aria-label]="'remove template form' + genre.value.id">
+            <i class="bi bi-trash3"></i>
+          </button>
+        </mat-chip-row>
+      </div>
+
+
+      <div
+        style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: start; flex-wrap: wrap; ">
+        <label>Nota: </label>
+        <mat-slider  style="width: calc(100% - 20px)" min="0" max="10" step="1" showTickMarks  discrete>
+          <input formControlName="minRate" value="0" matSliderStartThumb>
+          <input formControlName="maxRate" value="10" matSliderEndThumb>
+        </mat-slider>
+      </div>
+
+
+<!--      <mat-checkbox formControlName="isRated" color="primary">Mostrar los valorados</mat-checkbox>-->
+
+
+    </div>
+
+    <div style="margin-top: 20px; width: calc(100% - 20px)">
+      <button (click)="filter()" style="border-radius: 10px; width: 100%" color="primary" mat-raised-button>
+        Filtrar
+      </button>
+    </div>
+
+  </form>
+</div>

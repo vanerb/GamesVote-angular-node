@@ -1,0 +1,69 @@
+<app-container>
+
+  <div
+    style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%">
+    <div
+      style="width: calc(60vh - 100px);; padding: 20px; background-color: #1a1d20; border-radius: 5px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5);">
+      <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center">
+        <div style="width: 80%; ">
+          <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
+            <h1 class="text-primary" style="color: white; margin: 0">Iniciar sesión</h1>
+          </div>
+
+          <form [formGroup]="form" (ngSubmit)="login()"
+                style="width: 100%; height: 100%; margin-top: 20px; border: 2px transparent solid; border-radius: 5px">
+
+            <div style="height: 100%; width: 100%; ">
+
+
+              <mat-form-field color="primary"
+                              style="border-radius: 10px; width: calc(100% );"
+              >
+                <mat-label>Email</mat-label>
+                <span matPrefix>
+                  <i class="bi bi-person-circle" style="font-size: 24px; color: white; margin-left: 10px; margin-right: 10px"></i>
+                </span>
+                <input formControlName="email" style=";width: 100%; " matInput placeholder="Introduzca su correo..."
+                >
+              </mat-form-field>
+
+
+              <mat-form-field color="primary"
+                              style="border-radius: 10px; width: calc(100% );"
+              >
+                <mat-label>Contraseña</mat-label>
+                <span matPrefix>
+                  <i class="bi bi-lock" style="font-size: 24px; color: white; margin-left: 10px; margin-right: 10px"></i>
+                </span>
+                <input formControlName="password" type="password" style=";width: 100%; " matInput
+                       placeholder="Introduzca su contraseña..."
+                >
+              </mat-form-field>
+
+
+            </div>
+
+
+            <div style="width:100%; display:flex; justify-content:flex-end; align-items:center;">
+              <button type="submit" mat-raised-button color="primary"
+                      style="border-radius:10px; width:100%; display:flex; justify-content:center; align-items:center; gap:10px; padding:10px;">
+                <span>Iniciar sesión</span>
+                <i class="bi bi-box-arrow-right" style="line-height:1; vertical-align:middle; margin-left: 10px"></i>
+              </button>
+            </div>
+
+            <div style="width: 100%; text-align: center; margin-top: 10%">
+               <span class="text-primary" style="font-size: 14px; color: white">Si no tienes cuenta puedes crear pulsando <a
+                 [routerLink]="['/register']" style="color: white">aquí</a></span>
+            </div>
+
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+</app-container>

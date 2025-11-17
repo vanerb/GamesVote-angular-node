@@ -1,0 +1,45 @@
+# ======================
+# FRONTEND (Angular)
+# ======================
+frontend/node_modules/
+frontend/dist/
+frontend/out-tsc/
+frontend/.angular/
+frontend/.vscode/
+frontend/.idea/
+frontend/package-lock.json
+frontend/npm-debug.log
+frontend/.sass-cache/
+frontend/.DS_Store
+
+# Angular build & temp files
+frontend/.tmp/
+frontend/.cache/
+frontend/src/**/*.js
+frontend/src/**/*.js.map
+
+# ======================
+# BACKEND (Node.js)
+# ======================
+backend/node_modules/
+backend/dist/
+backend/.env
+backend/npm-debug.log
+backend/yarn-error.log
+backend/.DS_Store
+backend/.vscode/
+backend/.idea/
+
+# Logs
+backend/logs/
+backend/*.log
+
+# ======================
+# IDEs / OS
+# ======================
+*.log
+*.swp
+*.swo
+.DS_Store
+.idea/
+.vscode/

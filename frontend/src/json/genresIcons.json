@@ -1,0 +1,117 @@
+[
+  {
+    "id": 2,
+    "name": "Point-and-click",
+    "icon": "mouse"
+  },
+  {
+    "id": 4,
+    "name": "Fighting",
+    "icon": "hand-fist"
+  },
+  {
+    "id": 5,
+    "name": "Shooter",
+    "icon": "cursor"
+  },
+  {
+    "id": 7,
+    "name": "Music",
+    "icon": "music-note"
+  },
+  {
+    "id": 8,
+    "name": "Platform",
+    "icon": "arrow-up-right-circle"
+  },
+  {
+    "id": 9,
+    "name": "Puzzle",
+    "icon": "puzzle"
+  },
+  {
+    "id": 10,
+    "name": "Racing",
+    "icon": "speedometer"
+  },
+  {
+    "id": 11,
+    "name": "Real Time Strategy (RTS)",
+    "icon": "calendar3-event"
+  },
+  {
+    "id": 12,
+    "name": "Role-playing (RPG)",
+    "icon": "person-badge"
+  },
+  {
+    "id": 13,
+    "name": "Simulator",
+    "icon": "cpu"
+  },
+  {
+    "id": 14,
+    "name": "Sport",
+    "icon": "trophy"
+  },
+  {
+    "id": 15,
+    "name": "Strategy",
+    "icon": "diagram-3"
+  },
+  {
+    "id": 16,
+    "name": "Turn-based strategy (TBS)",
+    "icon": "stopwatch"
+  },
+  {
+    "id": 24,
+    "name": "Tactical",
+    "icon": "shield-check"
+  },
+  {
+    "id": 25,
+    "name": "Hack and slash/Beat 'em up",
+    "icon": "slash"
+  },
+  {
+    "id": 26,
+    "name": "Quiz/Trivia",
+    "icon": "question-circle"
+  },
+  {
+    "id": 30,
+    "name": "Pinball",
+    "icon": "circle-half"
+  },
+  {
+    "id": 31,
+    "name": "Adventure",
+    "icon": "compass"
+  },
+  {
+    "id": 32,
+    "name": "Indie",
+    "icon": "star"
+  },
+  {
+    "id": 33,
+    "name": "Arcade",
+    "icon": "controller"
+  },
+  {
+    "id": 34,
+    "name": "Visual Novel",
+    "icon": "book"
+  },
+  {
+    "id": 35,
+    "name": "Card & Board Game",
+    "icon": "cards"
+  },
+  {
+    "id": 36,
+    "name": "MOBA",
+    "icon": "people"
+  }
+]
