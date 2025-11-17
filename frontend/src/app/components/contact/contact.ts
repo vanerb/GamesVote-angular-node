@@ -19,8 +19,12 @@ export class Contact {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       cognames: ['', [Validators.required]],
-
       message: ['', [Validators.required]],
     });
+  }
+
+
+  sendEmail(){
+    console.log("MAIL ENVIADO")
   }
 }

@@ -42,7 +42,7 @@
                 <mat-form-field style="width: 100%">
                   <mat-label>Mensaje</mat-label>
 
-                  <textarea matInput
+                  <textarea formControlName="message" matInput
                             cdkTextareaAutosize
                             #autosize="cdkTextareaAutosize"
                             cdkAutosizeMinRows="5"
@@ -52,7 +52,7 @@
             </div>
             <div style="  display: flex; justify-content: space-between; align-items: center;">
               <div style="width: 100%; display: flex; justify-content: end; align-items: center">
-                <button mat-raised-button  color="primary"
+                <button (click)="sendEmail()" mat-raised-button  color="primary"
                         style=" padding-right: 16px; height: 40px; color: white; border-radius: 10px;"
                 >
                   <i class="bi bi-send" style="margin-right: 4px"></i>Enviar
