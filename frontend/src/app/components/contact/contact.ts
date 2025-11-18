@@ -20,6 +20,7 @@ export class Contact {
       name: ['', [Validators.required]],
       cognames: ['', [Validators.required]],
       message: ['', [Validators.required]],
+      email: ['', [Validators.required]],
     });
   }
 

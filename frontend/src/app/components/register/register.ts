@@ -70,41 +70,44 @@ export class Register {
 
 
   register() {
-    if (this.form.get('password')?.value !== '' && this.form.get('repeatPassword')?.value !== '') {
-      if (this.form.get('password')?.value === this.form.get('repeatPassword')?.value) {
+    if(this.form.valid){
+      if (this.form.get('password')?.value !== '' && this.form.get('repeatPassword')?.value !== '') {
+        if (this.form.get('password')?.value === this.form.get('repeatPassword')?.value) {
 
-        const formData = new FormData();
+          const formData = new FormData();
 
-        formData.append('name', this.form.get('name')?.value);
-        formData.append('cognames', this.form.get('subname')?.value); // <- coincide con backend
-        formData.append('tlf', this.form.get('phone')?.value); // <- coincide con backend
-        formData.append('email', this.form.get('email')?.value);
-        formData.append('type', 'user');
-        formData.append('password', this.form.get('password')?.value);
+          formData.append('name', this.form.get('name')?.value);
+          formData.append('cognames', this.form.get('subname')?.value); // <- coincide con backend
+          formData.append('tlf', this.form.get('phone')?.value); // <- coincide con backend
+          formData.append('email', this.form.get('email')?.value);
+          formData.append('type', 'user');
+          formData.append('password', this.form.get('password')?.value);
 
-        // El backend espera el campo "profileImage"
-        if (this.selectedImagesCover.length > 0) {
-          formData.append('profileImage', this.selectedImagesCover[0], this.selectedImagesCover[0].name);
-        }
-
-        // Estos campos no existen en el backend actual, así que los quitamos
-        // if (this.existingCoverImage) {
-        //   formData.append('existing_profile_photo', this.existingCoverImage.id.toString());
-        // }
-        // if (this.deletedCoverImage) {
-        //   formData.append('deleted_profile_photo', '1');
-        // }
-
-        this.authService.register(formData).subscribe({
-          next: async () => {
-            await this.authService.logout();
-          },
-          error: (err) => {
-            console.error('Error en registro:', err);
+          // El backend espera el campo "profileImage"
+          if (this.selectedImagesCover.length > 0) {
+            formData.append('profileImage', this.selectedImagesCover[0], this.selectedImagesCover[0].name);
           }
-        });
+
+          // Estos campos no existen en el backend actual, así que los quitamos
+          // if (this.existingCoverImage) {
+          //   formData.append('existing_profile_photo', this.existingCoverImage.id.toString());
+          // }
+          // if (this.deletedCoverImage) {
+          //   formData.append('deleted_profile_photo', '1');
+          // }
+
+          this.authService.register(formData).subscribe({
+            next: async () => {
+              await this.authService.logout();
+            },
+            error: (err) => {
+              console.error('Error en registro:', err);
+            }
+          });
+        }
       }
     }
+
   }
 
     protected readonly getLocalImage = getLocalImage;

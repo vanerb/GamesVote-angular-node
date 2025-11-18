@@ -83,7 +83,7 @@ export class Details implements OnInit {
 
     this.id = this.activatedRoute.snapshot.params['id'];
 
-   // this.modalService.open(Loader, {}, {text: 'Cargando...'});
+    this.modalService.open(Loader, {}, {text: 'Loading...'});
 
     this.searchGameById(parseInt(this.id))
 
@@ -103,9 +103,9 @@ export class Details implements OnInit {
 
     console.log("AAAAAAAA", this.valorationsWitouthMyValoration)
 
-    //await sleep(1000)
+    await sleep(1000)
 
-    //this.modalService.close()
+    this.modalService.close()
 
 
   }

@@ -118,7 +118,7 @@ export class Index implements OnInit {
     }
 
     try {
-      this.modalService.open(Loader, {}, {text: 'Cargando...'});
+      this.modalService.open(Loader, {}, {text: 'Loading...'});
       if(this.isPhone){
         this.gamesService.searchGames(filters.search || '', filters, this.page, this.limit).subscribe({
           next: (games) => this.games = games,

@@ -20,7 +20,7 @@
         class="menu-item flex flex-col justify-center items-center w-full p-5 cursor-pointer"
       >
         <i class="bi bi-dpad text-2xl"></i>
-        <span class="mt-2">Juegos</span>
+        <span class="mt-2">Games</span>
       </div>
 
       <div
@@ -28,7 +28,7 @@
         class="menu-item flex flex-col justify-center items-center w-full p-5 cursor-pointer"
       >
         <i class="bi bi-person-exclamation text-2xl"></i>
-        <span class="mt-2">Contacto</span>
+        <span class="mt-2">Contact</span>
       </div>
     </div>
 
@@ -46,23 +46,23 @@
           class="w-full h-full object-cover object-center"
         />
       </div>
-      <span class="mt-2">Mi perfil</span>
+      <span class="mt-2">My Profile</span>
     </div>
 
     <div *ngIf="isLogged" (click)="closeSession()" class="menu-item flex flex-col justify-center items-center p-5 cursor-pointer">
       <i class="bi bi-box-arrow-right text-2xl"></i>
-      <span class="mt-2">Cerrar sesión</span>
+      <span class="mt-2">Close session</span>
     </div>
 
     <!-- NO ESTA INICIADA LA SESION -->
     <div *ngIf="!isLogged" (click)="gotTo('/login')" class="menu-item flex flex-col justify-center items-center p-5 cursor-pointer">
       <i class="bi bi-person text-2xl"></i>
-      <span class="mt-2">Iniciar sesión</span>
+      <span class="mt-2">Login</span>
     </div>
 
     <div *ngIf="!isLogged" (click)="gotTo('/register')" class="menu-item flex flex-col justify-center items-center p-5 cursor-pointer">
       <i class="bi bi-person-add text-2xl"></i>
-      <span class="mt-2">Registrarse</span>
+      <span class="mt-2">Register</span>
     </div>
   </mat-drawer>
 

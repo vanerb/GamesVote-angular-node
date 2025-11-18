@@ -5,7 +5,7 @@
         <div class="bg-[#1a1d20] rounded-[5px] p-5 shadow-[3px_3px_6px_rgba(0,0,0,0.5)]">
 
           <div class="text-center px-5">
-            <h1 class="text-white m-0 text-primary">Contactar</h1>
+            <h1 class="text-white m-0 text-primary">Contact</h1>
           </div>
 
           <form
@@ -18,34 +18,44 @@
 
                 <!-- Nombre -->
                 <mat-form-field color="primary" class="rounded-[10px] w-full">
-                  <mat-label>Nombre</mat-label>
+                  <mat-label>Name</mat-label>
                   <span matPrefix>
                     <i class="bi bi-person-circle text-white text-2xl mx-2.5"></i>
                   </span>
                   <input
                     formControlName="name"
                     matInput
-                    placeholder="Introduzca su nombre..."
+                    placeholder="Input your name..."
                     class="w-full"
                   >
                 </mat-form-field>
 
                 <!-- Apellidos -->
                 <mat-form-field color="primary" class="rounded-[10px] w-full">
-                  <mat-label>Apellidos</mat-label>
+                  <mat-label>Cognames</mat-label>
                   <input
                     formControlName="cognames"
                     matInput
-                    placeholder="Introduzca su apellido..."
+                    placeholder="Input your cognames..."
                     class="w-full"
                   >
                 </mat-form-field>
 
               </div>
 
+              <mat-form-field color="primary" class="rounded-[10px] w-full">
+                <mat-label>Email</mat-label>
+                <input
+                  formControlName="email"
+                  matInput type="email"
+                  placeholder="Input your email..."
+                  class="w-full"
+                >
+              </mat-form-field>
+
               <!-- Mensaje -->
               <mat-form-field class="w-full ">
-                <mat-label>Mensaje</mat-label>
+                <mat-label>Message</mat-label>
                 <textarea
                   formControlName="message"
                   matInput
@@ -66,7 +76,7 @@
                 color="primary"
                 class="flex items-center justify-center px-4 h-10 text-white rounded-[10px]"
               >
-                <i class="bi bi-send mr-1"></i>Enviar
+                <i class="bi bi-send mr-1"></i>Send
               </button>
             </div>
 

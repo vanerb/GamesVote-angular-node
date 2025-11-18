@@ -7,10 +7,10 @@
         <!-- Perfil -->
         <div class="bg-[#1a1d20] rounded-md p-5 shadow-lg">
           <div class="text-center px-5">
-            <h2 class="text-white text-xl font-bold m-0">Mi perfil</h2>
+            <h2 class="text-white text-xl font-bold m-0">My profile</h2>
           </div>
 
-          <form [formGroup]="formProfile" class="bg-[var(--background-four)] border-2 border-transparent rounded-md mt-5 p-4 ">
+          <form [formGroup]="formProfile" class="bg-[var(--background-four)] border-2 border-transparent rounded-md  p-4 ">
 
             <!-- Avatar -->
             <div class="flex justify-center items-center mb-5">
@@ -39,7 +39,7 @@
             <div class="">
               <div class="flex gap-4">
                 <mat-form-field color="primary" class="flex-1 rounded-lg w-full">
-                  <mat-label>Nombre</mat-label>
+                  <mat-label>Name</mat-label>
                   <span matPrefix>
                     <i class="bi bi-person-circle text-white text-xl mx-2"></i>
                   </span>
@@ -47,13 +47,13 @@
                 </mat-form-field>
 
                 <mat-form-field color="primary" class="flex-1 rounded-lg w-full">
-                  <mat-label>Apellidos</mat-label>
+                  <mat-label>Cognames</mat-label>
                   <input formControlName="cognames" matInput placeholder="Introduzca su apellido..." class="w-full">
                 </mat-form-field>
               </div>
 
               <mat-form-field color="primary" class="w-full rounded-lg">
-                <mat-label>Teléfono</mat-label>
+                <mat-label>Phone</mat-label>
                 <span matPrefix>
                   <i class="bi bi-phone text-white text-xl mx-2"></i>
                 </span>
@@ -64,7 +64,7 @@
             <!-- Botón actualizar perfil -->
             <div class="flex justify-end ">
               <button mat-raised-button color="primary" (click)="updateProfile()" class="flex items-center  px-4 py-2 rounded-lg">
-                <i class="bi bi-pencil"></i>Actualizar perfil
+                <i class="bi bi-pencil"></i>Update profile
               </button>
             </div>
 
@@ -75,28 +75,28 @@
         <div class="bg-[#1a1d20] rounded-md p-5 shadow-lg">
           <form [formGroup]="formPassword" class="">
             <div class="text-center px-5 mb-5">
-              <h2 class="text-white text-xl font-bold m-0">Cambiar mi contraseña</h2>
+              <h2 class="text-white text-xl font-bold m-0">Change my password</h2>
             </div>
 
             <mat-form-field color="primary" class="w-full rounded-lg">
-              <mat-label>Contraseña</mat-label>
+              <mat-label>Password</mat-label>
               <span matPrefix>
                 <i class="bi bi-lock text-white text-xl mx-2"></i>
               </span>
-              <input formControlName="password" matInput placeholder="Introduzca su nueva contraseña..." class="w-full">
+              <input formControlName="password" matInput placeholder="Input your new password..." class="w-full">
             </mat-form-field>
 
             <mat-form-field color="primary" class="w-full rounded-lg">
-              <mat-label>Repetir contraseña</mat-label>
+              <mat-label>Repeat password</mat-label>
               <span matPrefix>
                 <i class="bi bi-lock text-white text-xl mx-2"></i>
               </span>
-              <input formControlName="repeatPassword" matInput placeholder="Introduzca de nuevo su nueva contraseña..." class="w-full">
+              <input formControlName="repeatPassword" matInput placeholder="Input again your new password..." class="w-full">
             </mat-form-field>
 
             <div class="flex justify-end ">
               <button mat-raised-button color="primary" (click)="updatePassword()" class="flex items-center  px-4 py-2 rounded-lg">
-                <i class="bi bi-pencil"></i>Actualizar contraseña
+                <i class="bi bi-pencil"></i>Update password
               </button>
             </div>
 

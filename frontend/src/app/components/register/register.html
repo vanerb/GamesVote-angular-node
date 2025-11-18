@@ -5,7 +5,7 @@
 
       <!-- Título -->
       <div class="text-center px-5">
-        <h2 class="text-white text-xl font-bold m-0">Registrarse</h2>
+        <h1 class="text-white text-xl font-bold m-0">Register</h1>
       </div>
 
       <!-- Formulario -->
@@ -35,16 +35,16 @@
         <!-- Nombre y Apellidos -->
         <div class="flex gap-4">
           <mat-form-field color="primary" class="flex-1 w-full rounded-lg">
-            <mat-label>Nombre</mat-label>
+            <mat-label>Name</mat-label>
             <span matPrefix>
               <i class="bi bi-person-circle text-white text-xl mx-2"></i>
             </span>
-            <input formControlName="name" matInput placeholder="Introduzca su nombre..." class="w-full">
+            <input formControlName="name" matInput placeholder="Input your name..." class="w-full">
           </mat-form-field>
 
           <mat-form-field color="primary" class="flex-1 w-full rounded-lg">
-            <mat-label>Apellidos</mat-label>
-            <input formControlName="subname" matInput placeholder="Introduzca su apellido..." class="w-full">
+            <mat-label>Cognames</mat-label>
+            <input formControlName="subname" matInput placeholder="Input your cognames..." class="w-full">
           </mat-form-field>
         </div>
 
@@ -54,41 +54,41 @@
           <span matPrefix>
             <i class="bi bi-envelope text-white text-xl mx-2"></i>
           </span>
-          <input type="email" formControlName="email" matInput placeholder="Introduzca su correo..." class="w-full">
+          <input type="email" formControlName="email" matInput placeholder="Input your email..." class="w-full">
         </mat-form-field>
 
         <!-- Teléfono -->
         <mat-form-field color="primary" class="w-full rounded-lg">
-          <mat-label>Teléfono</mat-label>
+          <mat-label>Phone</mat-label>
           <span matPrefix>
             <i class="bi bi-phone text-white text-xl mx-2"></i>
           </span>
-          <input formControlName="phone" matInput placeholder="Introduzca su teléfono..." class="w-full">
+          <input formControlName="phone" matInput placeholder="Input your phone..." class="w-full">
         </mat-form-field>
 
         <!-- Contraseña -->
         <mat-form-field color="primary" class="w-full rounded-lg">
-          <mat-label>Contraseña</mat-label>
+          <mat-label>Password</mat-label>
           <span matPrefix>
             <i class="bi bi-lock text-white text-xl mx-2"></i>
           </span>
-          <input type="password" formControlName="password" matInput placeholder="Introduzca su contraseña..." class="w-full">
+          <input type="password" formControlName="password" matInput placeholder="Input your password..." class="w-full">
         </mat-form-field>
 
         <!-- Repetir Contraseña -->
         <mat-form-field color="primary" class="w-full rounded-lg">
-          <mat-label>Repetir contraseña</mat-label>
+          <mat-label>Repeat password</mat-label>
           <span matPrefix>
             <i class="bi bi-lock text-white text-xl mx-2"></i>
           </span>
-          <input type="password" formControlName="repeatPassword" matInput placeholder="Introduzca de nuevo su contraseña..." class="w-full">
+          <input type="password" formControlName="repeatPassword" matInput placeholder="Input again your password..." class="w-full">
         </mat-form-field>
 
         <!-- Botón registrar -->
         <div class="flex justify-end ">
           <button (click)="register()" mat-raised-button color="primary"
                   class="w-full flex justify-center items-center gap-2 px-4 py-2 rounded-lg">
-            <span>Crear cuenta</span>
+            <span>Create account</span>
 <!--            <i class="bi bi-person-plus"></i>-->
           </button>
         </div>
@@ -96,8 +96,8 @@
         <!-- Link login -->
         <div class="mt-10 w-full text-center">
           <span class="text-white text-sm">
-            Si tienes cuenta puedes iniciar sesión pulsando
-            <a [routerLink]="['/login']" class="text-white underline">aquí</a>
+            If you have an account, you can log in by pressing
+            <a [routerLink]="['/login']" class="text-white underline"> here</a>
           </span>
         </div>
 
