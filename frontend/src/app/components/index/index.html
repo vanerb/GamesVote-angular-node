@@ -1,69 +1,83 @@
-<mat-drawer-container class="example-container">
+<mat-drawer-container class="example-container ">
   <mat-drawer (closedStart)="onDrawerClosed()" [mode]="drawerMode" position="end" [opened]="isOpen">
-    <app-filters (search)="searchFunc($event,true)"></app-filters>
-
+    <app-filters [isPhone]="isPhone" (search)="searchFunc($event,true)"></app-filters>
   </mat-drawer>
+
   <mat-drawer-content>
     <app-container>
-      <div style="width: 100%; height: calc(100vh - 132px); overflow: auto">
-        <div style="width: 100%; display: flex; justify-content: center; align-items: center;  ">
-
-          <div style="width: 100%; display: flex; justify-content: center; align-items: center">
-            <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
-              <mat-form-field color="primary"
-                              style="border-radius: 10px; width: calc(100% );"
-                              appearance="fill">
-                 <span matPrefix>
-                  <i class="bi bi-search"
-                     style="font-size: 24px; color: white; margin-left: 10px; margin-right: 10px"></i>
+      <div class="w-full  md:h-[calc(100vh-150px)]  overflow-auto">
+        <div class="w-full flex justify-center items-center">
+          <div class="w-full flex justify-center items-center">
+            <div *ngIf="!isPhone" class="flex justify-center items-center w-full">
+              <mat-form-field  color="primary" appearance="fill" class="w-full rounded-[10px]">
+                <span matPrefix>
+                  <i class="bi bi-search text-white text-2xl mx-2"></i>
                 </span>
-                <input style=";width: 100%; " matInput placeholder="Buscar..." [(ngModel)]="this.search"
-                       (keyup.enter)="searchFunc({},true)" (input)="searchFunc({},true)">
+                <input
+                  matInput
+                  placeholder="Buscar..."
+                  [(ngModel)]="this.search"
+                  (keyup.enter)="searchFunc({},true)"
+                  (input)="searchFunc({},true)"
+                  class="w-full"
+                />
               </mat-form-field>
-              <div style="margin-left: 10px;">
-                <button (click)="openDrawer()" color="primary" mat-raised-button style="border-radius: 10px; ">
-                  <i class="bi bi-filter-right" style="font-size: 24px"></i>
+              <div class="ml-2.5">
+                <button
+                  (click)="openDrawer()"
+                  color="primary"
+                  mat-raised-button
+                  class="rounded-[10px]"
+                >
+                  <i class="bi bi-filter-right text-2xl"></i>
                 </button>
               </div>
             </div>
+
+            <div>
+              <button  *ngIf="isPhone" (click)="openDrawer()"
+                       class="fixed bottom-4 right-4 bg-[rgb(123,31,162)] text-white p-3  rounded-[10px] shadow-lg transition"
+              >
+                <i class="bi bi-search text-2xl"></i>
+              </button>
+            </div>
+
           </div>
         </div>
 
-
-        <div
-          style="padding: 10px;height: calc(100vh - 230px);overflow: auto;display: grid;justify-content: center;grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));gap: 10px;color: white; font-family: Arial;">
+        <div class="p-2.5 md:h-[calc(100vh-240px)] sm:h-[calc(100vh-500px)] overflow-auto grid justify-center grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-[10px] text-white font-sans">
           <div
-            (click)="details(game.id)"
             *ngFor="let game of games"
-            style="border-radius: 5px;background-color: #363636;width: 150px;padding: 20px;cursor: pointer;box-shadow: 3px 3px 6px rgba(0,0,0,0.5);transition: box-shadow 0.3s ease;display: flex;flex-direction: column;align-items: center;"
+            (click)="details(game.id)"
+            class="rounded-[5px] bg-[#363636] w-[200px] p-5 cursor-pointer shadow-[3px_3px_6px_rgba(0,0,0,0.5)] transition-shadow duration-300 flex flex-col items-center"
             onmouseover="this.style.boxShadow='0 0 8px rgb(123, 31, 162)'"
             onmouseout="this.style.boxShadow='3px 3px 6px rgba(0,0,0,0.5)'"
-            [ngStyle]="isPhone ? {'width': 'calc(100% - 40px)'} : {'width': '150px'}">
-              <app-card [game]="game"></app-card>
+            [ngClass]="isPhone ? 'w-[calc(100%)]' : 'w-[200px]'"
+          >
+            <app-card [game]="game"></app-card>
           </div>
         </div>
-
-
       </div>
 
-
-      <div
-        style=" display: flex; justify-content: center; align-items: center;  width: 100%; gap: 10px; color: white">
-        <button mat-raised-button *ngIf="page > 1" color="primary"
-                style=" width: 40px; height: 40px; color: white; cursor: pointer; border-radius: 10px"
-                (click)="paginator('prev')"
-        ><i class="bi bi-chevron-left"></i></button>
+      <div class="flex justify-center items-center w-full gap-2.5 text-white ">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="paginator('prev')"
+          class="my-small-btn"
+        >
+          <i class="bi bi-chevron-left"></i>
+        </button>
         <p>{{ this.page }}</p>
-        <button mat-raised-button color="primary" *ngIf="this.games.length >= this.limit"
-                style="width: 40px; height: 40px; color: white; cursor: pointer; border-radius: 10px"
-                (click)="paginator('next')"
-        ><i class="bi bi-chevron-right"></i></button>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="paginator('next')"
+          class="my-small-btn"
+        >
+          <i class="bi bi-chevron-right"></i>
+        </button>
       </div>
-
     </app-container>
   </mat-drawer-content>
 </mat-drawer-container>
-
-
-
-

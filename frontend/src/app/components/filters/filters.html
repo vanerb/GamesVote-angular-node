@@ -1,15 +1,30 @@
-<div style="width: 100%; ">
-  <form [formGroup]="form" style="width: 100%;display: flex; flex-direction: column; align-items: center; justify-content: center;">
-    <div style="margin-top: 20px">
-      <h2 style="margin: 0">Filtros</h2>
+<div class="w-full">
+  <form [formGroup]="form" class="w-full flex flex-col items-center justify-center">
+    <div class="mt-5">
+      <h1 class="m-0">Filtros</h1>
     </div>
-    <div
-      style=" height: calc(100vh - 210px); width: 200px; overflow: auto; padding: 20px; display: flex; justify-content: start; align-items: center; flex-direction: column">
-      <mat-form-field style="width: 100%">
+
+    <div class="h-[calc(100vh-170px)] w-full overflow-auto p-5 flex flex-col justify-start items-center">
+
+      <!-- Buscar SOLO MOVIL -->
+      <mat-form-field *ngIf="isPhone"  color="primary" appearance="fill" class="w-full rounded-[10px]">
+                <span matPrefix>
+                  <i class="bi bi-search text-white text-2xl mx-2"></i>
+                </span>
+        <input
+          matInput
+          placeholder="Buscar..."
+          formControlName="search"
+          class="w-full"
+        />
+      </mat-form-field>
+
+      <!-- Ordenar -->
+      <mat-form-field class="w-full">
         <mat-label>Ordenar</mat-label>
-        <mat-select  formControlName="order" formControlName="order">
+        <mat-select formControlName="order">
           <mat-option value="rating__asc"><i class="bi bi-sort-up"></i> Por nota </mat-option>
-          <mat-option value="rating__desc"> <i class="bi bi-sort-down"></i> Por nota</mat-option>
+          <mat-option value="rating__desc"><i class="bi bi-sort-down"></i> Por nota</mat-option>
 
           <mat-option value="name__asc"><i class="bi bi-sort-up"></i> Por nombre </mat-option>
           <mat-option value="name__desc"><i class="bi bi-sort-down"></i> Por nombre</mat-option>
@@ -19,25 +34,25 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field style="width: 100%" >
+      <!-- Plataformas -->
+      <mat-form-field class="w-full">
         <mat-label>Plataformas</mat-label>
         <input
           type="text"
           matInput
           [formControl]="platformsControl"
-          [matAutocomplete]="autoPlatforms">
-
+          [matAutocomplete]="autoPlatforms"
+        >
         <mat-autocomplete #autoPlatforms="matAutocomplete" (optionSelected)="addPlatform($event.option.value)">
           <mat-option *ngFor="let option of filteredPlatforms | async" [value]="option">
-            <i [ngClass]="'bi bi-' + getPlatformIcon(option.id)" style="font-size: 20px; margin-right: 10px;"></i>
+            <i [ngClass]="'bi bi-' + getPlatformIcon(option.id)" class="text-lg mr-2.5"></i>
             {{ option.name }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
 
-      <div *ngIf="platformsFormArray.controls.length > 0" style="width: 300px; gap:10px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap;  margin-bottom: 20px">
-
-        <mat-chip-row style="" *ngFor="let platform of platformsFormArray.controls; let i = index" (removed)="removePlatform(i)">
+      <div *ngIf="platformsFormArray.controls.length > 0" class="w-[300px] flex justify-center items-center flex-wrap gap-2.5 mb-5">
+        <mat-chip-row *ngFor="let platform of platformsFormArray.controls; let i = index" (removed)="removePlatform(i)">
           {{ platform.value.name }}
           <button matChipRemove [attr.aria-label]="'remove template form' + platform.value.id">
             <i class="bi bi-trash3"></i>
@@ -45,25 +60,25 @@
         </mat-chip-row>
       </div>
 
-
-      <mat-form-field style="width: 100%;">
+      <!-- Géneros -->
+      <mat-form-field class="w-full">
         <mat-label>Generos</mat-label>
         <input
           type="text"
           matInput
           [formControl]="genresControl"
-          [matAutocomplete]="autoGenres">
-
+          [matAutocomplete]="autoGenres"
+        >
         <mat-autocomplete #autoGenres="matAutocomplete" (optionSelected)="addGenre($event.option.value)">
           <mat-option *ngFor="let option of filteredGenres | async" [value]="option">
-            <i [ngClass]="'bi bi-' + getGenreIcon(option.id)" style="font-size: 20px; margin-right: 10px;"></i>
+            <i [ngClass]="'bi bi-' + getGenreIcon(option.id)" class="text-lg mr-2.5"></i>
             {{ option.name }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
 
-      <div *ngIf="genresFormArray.controls.length > 0" style="width: 300px; gap:10px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 20px">
-        <mat-chip-row style="" *ngFor="let genre of genresFormArray.controls; let i = index" (removed)="removeGenre(i)">
+      <div *ngIf="genresFormArray.controls.length > 0" class="w-[300px] flex justify-center items-center flex-wrap gap-2.5 mb-5">
+        <mat-chip-row *ngFor="let genre of genresFormArray.controls; let i = index" (removed)="removeGenre(i)">
           {{ genre.value.name }}
           <button matChipRemove [attr.aria-label]="'remove template form' + genre.value.id">
             <i class="bi bi-trash3"></i>
@@ -71,24 +86,20 @@
         </mat-chip-row>
       </div>
 
-
-      <div
-        style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: start; flex-wrap: wrap; ">
-        <label>Nota: </label>
-        <mat-slider  style="width: calc(100% - 20px)" min="0" max="10" step="1" showTickMarks  discrete>
+      <!-- Nota -->
+      <div class="w-full flex flex-col justify-center items-center">
+        <label class="text-start w-full">Nota: </label>
+        <mat-slider class="w-full" min="0" max="10" step="1" showTickMarks discrete>
           <input formControlName="minRate" value="0" matSliderStartThumb>
           <input formControlName="maxRate" value="10" matSliderEndThumb>
         </mat-slider>
       </div>
 
-
-<!--      <mat-checkbox formControlName="isRated" color="primary">Mostrar los valorados</mat-checkbox>-->
-
-
     </div>
 
-    <div style="margin-top: 20px; width: calc(100% - 20px)">
-      <button (click)="filter()" style="border-radius: 10px; width: 100%" color="primary" mat-raised-button>
+    <!-- Botón Filtrar -->
+    <div class="mt-5 w-[calc(100%-20px)]">
+      <button (click)="filter()" color="primary" mat-raised-button class="w-full rounded-[10px]">
         Filtrar
       </button>
     </div>

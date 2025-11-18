@@ -114,7 +114,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/getAllValorationsByGameId/:id", authMiddleware, async (req, res) => {
+router.get("/getAllValorationsByGameId/:id", async (req, res) => {
     try {
         const gameId = req.params.id;
 

@@ -17,10 +17,7 @@ export class ValorationsService {
   }
 
   getAllByGameId(id: string){
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.authService.getToken()}`
-    });
-    return this.http.get<Valoration[]>(this.url+'/getAllValorationsByGameId/'+id,{headers})
+    return this.http.get<Valoration[]>(this.url+'/getAllValorationsByGameId/'+id)
   }
 
   getMyValorationsByGameId(gameId: string){

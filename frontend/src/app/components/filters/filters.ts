@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatButton} from '@angular/material/button';
@@ -39,6 +39,7 @@ export class Filters implements OnInit {
   form!: FormGroup;
   platformsControl = new FormControl('');
   genresControl = new FormControl('');
+  @Input() isPhone: boolean = false;
   @Output() search = new EventEmitter();
 
   constructor(private formBuilder: FormBuilder) {
@@ -49,6 +50,7 @@ export class Filters implements OnInit {
       minRate: 0,
       maxRate: 10,
       isRated: false,
+      search: ''
     });
   }
 
@@ -118,13 +120,15 @@ export class Filters implements OnInit {
       sortBy?: string,
       sortOrder?: string,
       year?: number;
+      search?: string
     } = {
       genres: genres.map(el => el.id) || [],
       platforms: platforms.map(el => el.id) || [],
       minRating: this.form.get('minRate')?.value || undefined,
       maxRating: this.form.get('maxRate')?.value || undefined,
       sortBy: sort.split('__')[0] || undefined,
-      sortOrder: sort.split('__')[1] || undefined
+      sortOrder: sort.split('__')[1] || undefined,
+      search: this.form.get('search')?.value
     }
 
     console.log( filters)

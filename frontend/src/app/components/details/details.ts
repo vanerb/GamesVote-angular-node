@@ -43,13 +43,14 @@ import {Loader} from '../general/loader/loader';
   templateUrl: './details.html',
   styleUrl: './details.css',
   standalone: true
+
 })
 export class Details implements OnInit {
 
   id: string = ""
   game!: Game
   user: any | null = null
-  createValoration: CreateValoration  = {
+  createValoration: CreateValoration = {
     value: 0,
     description: "",
     gameId: null
@@ -82,39 +83,45 @@ export class Details implements OnInit {
 
     this.id = this.activatedRoute.snapshot.params['id'];
 
-    try {
-      this.modalService.open(Loader, {}, {text: 'Cargando...'});
+   // this.modalService.open(Loader, {}, {text: 'Cargando...'});
 
-      this.searchGameById(parseInt(this.id))
+    this.searchGameById(parseInt(this.id))
 
-      await this.searchUser()
+    await this.searchUser()
 
-
-      this.searchMyValorationsByGameId()
-
-      this.getAllValorationsByGameId()
+    console.log("USER", this.user)
 
 
-      this.mediaValue = getMediaValue(this.valorations)
-      this.editMode = false
-    }
-    catch (e){
-      this.modalService.close()
-    }
-    finally {
+    this.searchMyValorationsByGameId()
 
-      await sleep(1000)
-
-      this.modalService.close()
-    }
+    this.getAllValorationsByGameId()
 
 
+    this.mediaValue = getMediaValue(this.valorations)
+    this.editMode = false
+
+
+    console.log("AAAAAAAA", this.valorationsWitouthMyValoration)
+
+    //await sleep(1000)
+
+    //this.modalService.close()
 
 
   }
 
   async searchUser() {
-    this.user = await firstValueFrom(this.authService.getUserByToken()) || null
+    try {
+      this.user = await firstValueFrom(this.authService.getUserByToken()) || null
+    }
+    catch (e){
+      this.user = null
+      console.log(e)
+    }
+    finally {
+
+    }
+
   }
 
   searchGameById(id: number): void {
@@ -136,7 +143,7 @@ export class Details implements OnInit {
 
   }
 
-  updateMyValoration(){
+  updateMyValoration() {
     let formData = new FormData();
     formData.append('description', this.updateValoration.description)
     formData.append('value', this.updateValoration.value.toString())
@@ -154,7 +161,7 @@ export class Details implements OnInit {
     })
   }
 
-  deleteReview(id: string){
+  deleteReview(id: string) {
     this.valorationsService.delete(id).subscribe({
       next: async () => {
         this.confirmDeleteId = null
@@ -172,23 +179,29 @@ export class Details implements OnInit {
 
   }
 
-  cancelEditMode(){
+  cancelEditMode() {
     this.editMode = false
   }
-
-
 
 
   getAllValorationsByGameId() {
     this.valorationsService.getAllByGameId(this.id).subscribe({
       next: async (valorations: Valoration[]) => {
         this.valorations = valorations
-        this.valorationsWitouthMyValoration = valorations.filter(el=>el.userId !== this.user.id)
+        if(this.user !== null){
+          this.valorationsWitouthMyValoration = valorations.filter(el => el.userId !== this.user.id)
+        }
+        else{
+          this.valorationsWitouthMyValoration = valorations
+        }
+
       },
       error: error => {
         console.log(error)
       }
     })
+
+    console.log("AAAAAAAA", this.valorationsWitouthMyValoration)
   }
 
   searchMyValorationsByGameId() {
@@ -205,12 +218,12 @@ export class Details implements OnInit {
   searchValorationByIdAndByGameId(id: string, gameId: string): void {
     this.valorationsService.getValorationByIdAndByGameId(id, gameId).subscribe({
       next: async (valoration: Valoration) => {
-       this.updateValoration = {
-         id: valoration.id,
-         description: valoration.description,
-         value: parseInt(valoration.value),
-         gameId: valoration.gameId
-       }
+        this.updateValoration = {
+          id: valoration.id,
+          description: valoration.description,
+          value: parseInt(valoration.value),
+          gameId: valoration.gameId
+        }
 
       },
       error: error => {
@@ -221,10 +234,9 @@ export class Details implements OnInit {
 
 
   setNote(note: number, type: 'update' | 'create') {
-    if(type === 'update') {
+    if (type === 'update') {
       this.updateValoration.value = note
-    }
-    else if(type === 'create'){
+    } else if (type === 'create') {
       this.createValoration.value = note
     }
   }

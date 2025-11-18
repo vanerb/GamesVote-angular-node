@@ -1,69 +1,56 @@
 <app-container>
-
-  <div
-    style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%">
-    <div
-      style="width: calc(60vh - 100px);; padding: 20px; background-color: #1a1d20; border-radius: 5px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5);">
-      <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center">
-        <div style="width: 80%; ">
-          <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
-            <h1 class="text-primary" style="color: white; margin: 0">Iniciar sesión</h1>
+  <div class="flex flex-col items-center justify-center w-full h-full">
+    <div class="w-[calc(60vh-100px)] p-5 bg-[#1a1d20] rounded-md shadow-lg">
+      <div class="w-full h-full flex justify-center items-center">
+        <div class="w-4/5">
+          <!-- Título -->
+          <div class="w-full flex justify-center items-center">
+            <h1 class="text-white text-2xl font-bold m-0">Iniciar sesión</h1>
           </div>
 
-          <form [formGroup]="form" (ngSubmit)="login()"
-                style="width: 100%; height: 100%; margin-top: 20px; border: 2px transparent solid; border-radius: 5px">
+          <!-- Formulario -->
+          <form [formGroup]="form" (ngSubmit)="login()" class="w-full mt-5 border-2 border-transparent rounded-md">
 
-            <div style="height: 100%; width: 100%; ">
-
-
-              <mat-form-field color="primary"
-                              style="border-radius: 10px; width: calc(100% );"
-              >
+            <div class="w-full h-full ">
+              <!-- Email -->
+              <mat-form-field color="primary" class="w-full rounded-lg">
                 <mat-label>Email</mat-label>
                 <span matPrefix>
-                  <i class="bi bi-person-circle" style="font-size: 24px; color: white; margin-left: 10px; margin-right: 10px"></i>
+                  <i class="bi bi-person-circle text-white text-xl mx-2"></i>
                 </span>
-                <input formControlName="email" style=";width: 100%; " matInput placeholder="Introduzca su correo..."
-                >
+                <input formControlName="email" matInput placeholder="Introduzca su correo..." class="w-full">
               </mat-form-field>
 
-
-              <mat-form-field color="primary"
-                              style="border-radius: 10px; width: calc(100% );"
-              >
+              <!-- Contraseña -->
+              <mat-form-field color="primary" class="w-full rounded-lg">
                 <mat-label>Contraseña</mat-label>
                 <span matPrefix>
-                  <i class="bi bi-lock" style="font-size: 24px; color: white; margin-left: 10px; margin-right: 10px"></i>
+                  <i class="bi bi-lock text-white text-xl mx-2"></i>
                 </span>
-                <input formControlName="password" type="password" style=";width: 100%; " matInput
-                       placeholder="Introduzca su contraseña..."
-                >
+                <input formControlName="password" type="password" matInput placeholder="Introduzca su contraseña..." class="w-full">
               </mat-form-field>
-
-
             </div>
 
-
-            <div style="width:100%; display:flex; justify-content:flex-end; align-items:center;">
+            <!-- Botón de submit -->
+            <div class="w-full">
               <button type="submit" mat-raised-button color="primary"
-                      style="border-radius:10px; width:100%; display:flex; justify-content:center; align-items:center; gap:10px; padding:10px;">
+                      class="w-full flex justify-center items-center h-full rounded-lg">
                 <span>Iniciar sesión</span>
-                <i class="bi bi-box-arrow-right" style="line-height:1; vertical-align:middle; margin-left: 10px"></i>
+<!--                <i class="bi bi-box-arrow-right"></i>-->
               </button>
             </div>
 
-            <div style="width: 100%; text-align: center; margin-top: 10%">
-               <span class="text-primary" style="font-size: 14px; color: white">Si no tienes cuenta puedes crear pulsando <a
-                 [routerLink]="['/register']" style="color: white">aquí</a></span>
+            <!-- Link de registro -->
+            <div class="w-full text-center mt-10 text-sm text-white">
+              <span>
+                Si no tienes cuenta puedes crear pulsando
+                <a [routerLink]="['/register']" class="text-white underline"> aquí</a>
+              </span>
             </div>
-
 
           </form>
         </div>
       </div>
     </div>
-
   </div>
-
-
 </app-container>

@@ -1,75 +1,32 @@
-<div
-  style="
-    position: relative;
-    width: 100%;
-
-    overflow: hidden;
-    margin: auto;
-    border-radius: 10px;
-  "
->
+<div class="relative w-full overflow-hidden mx-auto rounded-[10px]">
   <!-- Contenedor del slider -->
-  <div style="width: 100%; overflow: hidden; height: 250px; border-radius: 10px;">
+  <div class="w-full overflow-hidden h-[250px] rounded-[10px]">
     <!-- Slides -->
-    <div
-      style="display: flex; gap: 10px; height: 100%; transition: transform 0.5s ease;"
-      [style.transform]="'translateX(-' + (currentIndex * (100 / visibleSlides)) + '%)'"
-    >
-      <div
-        *ngFor="let img of images"
-        [ngStyle]="{
-    flex: '0 0 calc((100% / ' + visibleSlides + ') - 10px)',
-    height: '100%',
-    display: 'flex',
-    'justify-content': 'center',
-    'align-items': 'center'
-  }"
-      >
-        <img [src]="getImage(img.url, 't_screenshot_big')" alt="" style="max-width: 100%; max-height: 100%; border-radius: 10px; object-fit: contain;">
+    <div class="flex gap-2.5 h-full transition-transform duration-500 ease-in-out"
+         [style.transform]="'translateX(-' + (currentIndex * (100 / visibleSlides)) + '%)'">
+      <div *ngFor="let img of images"
+           [ngStyle]="{
+             flex: '0 0 calc((100% / ' + visibleSlides + ') - 10px)',
+             height: '100%',
+             display: 'flex',
+             'justify-content': 'center',
+             'align-items': 'center'
+           }">
+        <img [src]="getImage(img.url, 't_screenshot_big')"
+             alt=""
+             class="max-w-full max-h-full rounded-[10px] object-contain">
       </div>
     </div>
   </div>
 
   <!-- Botones -->
-  <button
-    (click)="prevSlide()"
-    style="
-      position: absolute;
-      top: 50%;
-      left: 10px;
-      transform: translateY(-50%);
-      background: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
-      font-size: 24px;
-      line-height: 36px;
-    "
-  >
+  <button (click)="prevSlide()"
+          class="absolute top-1/2 left-2.5 -translate-y-1/2 bg-black/50 text-white border-none rounded-full w-10 h-10 cursor-pointer text-2xl leading-[36px]">
     ‹
   </button>
 
-  <button
-    (click)="nextSlide()"
-    style="
-      position: absolute;
-      top: 50%;
-      right: 10px;
-      transform: translateY(-50%);
-      background: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
-      font-size: 24px;
-      line-height: 36px;
-    "
-  >
+  <button (click)="nextSlide()"
+          class="absolute top-1/2 right-2.5 -translate-y-1/2 bg-black/50 text-white border-none rounded-full w-10 h-10 cursor-pointer text-2xl leading-[36px]">
     ›
   </button>
 </div>

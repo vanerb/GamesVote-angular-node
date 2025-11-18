@@ -1,46 +1,36 @@
-<div
-  style="position: relative; width: 100%;  overflow: hidden; margin: auto; border-radius: 10px; height: 250px;"
->
+<div class="relative w-full overflow-hidden mx-auto rounded-[10px] h-[250px]">
   <!-- Contenedor de slides -->
-  <div
-    style="display: flex; gap: 10px; height: 100%; transition: transform 0.5s ease;"
-    [style.transform]="'translateX(-' + (currentIndex * (100 / visibleSlides)) + '%)'"
-  >
-    <div
-      *ngFor="let video of videos"
-      [ngStyle]="{
-    flex: '0 0 calc((100% /  ' + visibleSlides + ') - 10px)',
-    height: '100%',
-    display: 'flex',
-    'justify-content': 'center',
-    'align-items': 'center'
-  }"
-    >
+  <div class="flex gap-2.5 h-full transition-transform duration-500 ease-in-out"
+       [style.transform]="'translateX(-' + (currentIndex * (100 / visibleSlides)) + '%)'">
+    <div *ngFor="let video of videos"
+         [ngStyle]="{
+           flex: '0 0 calc((100% / ' + visibleSlides + ') - 10px)',
+           height: '100%',
+           display: 'flex',
+           'justify-content': 'center',
+           'align-items': 'center'
+         }">
       <iframe
+        [src]="getSafeUrl(video.video_id)"
         width="100%"
         height="100%"
-        [src]="getSafeUrl(video.video_id)"
         title="YouTube video player"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
-        style="border-radius: 10px;"
-      ></iframe>
+        class="rounded-[10px]">
+      </iframe>
     </div>
   </div>
 
   <!-- Botones -->
-  <button
-    (click)="prevSlide()"
-    style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 24px; line-height: 36px;"
-  >
+  <button (click)="prevSlide()"
+          class="absolute top-1/2 left-2.5 -translate-y-1/2 bg-black/50 text-white border-none rounded-full w-10 h-10 cursor-pointer text-2xl leading-[36px]">
     ‹
   </button>
 
-  <button
-    (click)="nextSlide()"
-    style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 24px; line-height: 36px;"
-  >
+  <button (click)="nextSlide()"
+          class="absolute top-1/2 right-2.5 -translate-y-1/2 bg-black/50 text-white border-none rounded-full w-10 h-10 cursor-pointer text-2xl leading-[36px]">
     ›
   </button>
 </div>

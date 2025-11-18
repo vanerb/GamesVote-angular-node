@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {GamesServices} from '../../services/games-services';
-import {NgForOf, NgIf, NgStyle} from '@angular/common';
+import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {Container} from '../general/container/container';
@@ -30,11 +30,29 @@ import {Card} from '../general/card/card';
     MatSidenavModule,
     MatButtonModule,
     NgStyle,
-    Card
+    Card,
+    NgClass
   ],
   templateUrl: './index.html',
   styleUrl: './index.css',
-  standalone: true
+  standalone: true,
+  styles: [`
+    ::ng-deep .my-small-btn.mat-mdc-raised-button {
+      min-width: 40px !important;
+      height: 40px !important;
+      padding: 0 !important;
+    }
+
+    ::ng-deep .my-small-btn .mdc-button__label {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    ::ng-deep .my-small-btn .mat-mdc-button-touch-target {
+      height: 40px !important;
+      width: 40px !important;
+    }
+  `]
 })
 export class Index implements OnInit {
   games: any[] = [];
@@ -93,6 +111,7 @@ export class Index implements OnInit {
     sortBy?: string,
     sortOrder?: string,
     year?: number;
+    search?: string
   } = {}, isReset: boolean = false) {
     if (isReset) {
       this.page = 1
@@ -100,10 +119,19 @@ export class Index implements OnInit {
 
     try {
       this.modalService.open(Loader, {}, {text: 'Cargando...'});
-      this.gamesService.searchGames(this.search, filters, this.page, this.limit).subscribe({
-        next: (games) => this.games = games,
-        error: (err) => console.error(err)
-      });
+      if(this.isPhone){
+        this.gamesService.searchGames(filters.search || '', filters, this.page, this.limit).subscribe({
+          next: (games) => this.games = games,
+          error: (err) => console.error(err)
+        });
+      }
+      else{
+        this.gamesService.searchGames(this.search, filters, this.page, this.limit).subscribe({
+          next: (games) => this.games = games,
+          error: (err) => console.error(err)
+        });
+      }
+
     }
     catch (e){
       console.log(e)

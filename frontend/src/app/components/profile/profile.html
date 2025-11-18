@@ -1,157 +1,110 @@
 <app-container>
 
-  <div
-    style="display: flex; flex-direction: column; align-items: center; justify-content: center; ">
-    <div
-      style="width: calc(60vh - 60px); ">
-      <div style="width: 100%; height: 100%">
-        <div
-          style="background-color: #1a1d20; border-radius: 5px; padding: 20px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5);">
-          <div style="text-align: center; padding-right: 20px; padding-left: 20px">
-            <h2 class="text-primary" style="color: white; margin: 0">Mi perfil</h2>
+  <div class="flex flex-col items-center justify-center w-full">
+    <div class="w-[calc(60vh-60px)]">
+      <div class="w-full h-full space-y-5">
+
+        <!-- Perfil -->
+        <div class="bg-[#1a1d20] rounded-md p-5 shadow-lg">
+          <div class="text-center px-5">
+            <h2 class="text-white text-xl font-bold m-0">Mi perfil</h2>
           </div>
 
-          <form [formGroup]="formProfile"
-                style="background-color: var(--background-four); border: 2px transparent solid; border-radius: 5px; margin-top: 20px">
+          <form [formGroup]="formProfile" class="bg-[var(--background-four)] border-2 border-transparent rounded-md mt-5 p-4 ">
 
-            <div>
+            <!-- Avatar -->
+            <div class="flex justify-center items-center mb-5">
+              <div class="w-fit flex justify-center items-end relative">
+                <div class="w-36 h-36 overflow-hidden rounded-full mx-auto border border-transparent">
+                  <img *ngIf="previewCoverImage" [src]="previewCoverImage" alt="No Image"
+                       class="w-full h-full object-cover object-center">
+                  <img *ngIf="!previewCoverImage" src="http://localhost:3000/uploads/No_Image_Available.jpg"
+                       class="w-full h-full object-cover object-center">
+                </div>
 
-              <div style=" display: flex; justify-content: center; align-items: center">
-                <div style="width: fit-content; display: flex; justify-content: center; align-items: end">
-                  <div
-                    style="width: 150px; height: 150px; overflow: hidden; border-radius: 50%; margin: 0 auto; border: 1px transparent solid">
-                    <img *ngIf="this.previewCoverImage" src="{{ this.previewCoverImage }}" alt="No Image"
-                         style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
-
-                    <img *ngIf="!this.previewCoverImage"
-                         src="{{'http://localhost:3000/uploads/No_Image_Available.jpg'}}"
-                         style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    #fileInput
-                    hidden
-                    (change)="onImageChange($event)"
-                  />
-
-                  <!-- Botón que abre el selector -->
-                  <button
-                    type="button" mat-raised-button color="primary"
-                    (click)="fileInput.click()"
-                    style="margin-left: -50px; border-radius: 10px; width:50px; height: 50px; display: flex; justify-content: center; align-items: center;  "
-
-                  >
-                    <div>
-                      <i class="bi bi-pencil" style="width: 50px; height: 50px"></i>
-                    </div>
-
+                <div class="absolute -right-2">
+                  <!-- Botón para cambiar imagen -->
+                  <input type="file" accept="image/*" #fileInput hidden (change)="onImageChange($event)" />
+                  <button type="button" mat-raised-button color="primary"
+                          (click)="fileInput.click()"
+                          class="w-12 h-12 rounded-full flex justify-center items-center">
+                    <i class="bi bi-pencil text-xl"></i>
                   </button>
                 </div>
 
               </div>
+            </div>
 
-              <div style="margin-top: 20px">
-                <div style="display: flex; justify-items: center; align-items: center; gap:10px">
-                  <mat-form-field color="primary"
-                                  style="border-radius: 10px; width: calc(100% );"
-                  >
-                    <mat-label>Nombre</mat-label>
-                    <span matPrefix>
-                  <i class="bi bi-person-circle" style="font-size: 24px; color: white; margin-left: 10px; margin-right: 10px"></i>
-                </span>
-                    <input formControlName="name" style=";width: 100%; " matInput placeholder="Introduzca su nombre..."
-                    >
-                  </mat-form-field>
-
-                  <mat-form-field color="primary"
-                                  style="border-radius: 10px; width: calc(100% );"
-                  >
-                    <mat-label>Apellidos</mat-label>
-
-                    <input formControlName="cognames" style=";width: 100%; " matInput placeholder="Introduzca su apellido..."
-                    >
-                  </mat-form-field>
-                </div>
-
-                <mat-form-field color="primary"
-                                style="border-radius: 10px; width: calc(100% );"
-                >
-                  <mat-label>Telefono</mat-label>
+            <!-- Campos de perfil -->
+            <div class="">
+              <div class="flex gap-4">
+                <mat-form-field color="primary" class="flex-1 rounded-lg w-full">
+                  <mat-label>Nombre</mat-label>
                   <span matPrefix>
-                  <i class="bi bi-phone" style="font-size: 24px; color: white; margin-left: 10px; margin-right: 10px"></i>
-                </span>
-                  <input formControlName="tlf" style=";width: 100%; " matInput placeholder="Introduzca su número de teléfono..."
-                  >
+                    <i class="bi bi-person-circle text-white text-xl mx-2"></i>
+                  </span>
+                  <input formControlName="name" matInput placeholder="Introduzca su nombre..." class="w-full">
+                </mat-form-field>
+
+                <mat-form-field color="primary" class="flex-1 rounded-lg w-full">
+                  <mat-label>Apellidos</mat-label>
+                  <input formControlName="cognames" matInput placeholder="Introduzca su apellido..." class="w-full">
                 </mat-form-field>
               </div>
-            </div>
-            <div style="  display: flex; justify-content: space-between; align-items: center;">
-              <div style="width: 100%; display: flex; justify-content: end; align-items: center">
-                <button mat-raised-button (click)="updateProfile()" color="primary"
-                        style=" padding-right: 16px; height: 40px; color: white; border-radius: 10px;"
-                        >
-                  <i class="bi bi-pencil" style="margin-right: 4px"></i>Actualizar perfil
-                </button>
-              </div>
 
+              <mat-form-field color="primary" class="w-full rounded-lg">
+                <mat-label>Teléfono</mat-label>
+                <span matPrefix>
+                  <i class="bi bi-phone text-white text-xl mx-2"></i>
+                </span>
+                <input formControlName="tlf" matInput placeholder="Introduzca su número de teléfono..." class="w-full">
+              </mat-form-field>
+            </div>
+
+            <!-- Botón actualizar perfil -->
+            <div class="flex justify-end ">
+              <button mat-raised-button color="primary" (click)="updateProfile()" class="flex items-center  px-4 py-2 rounded-lg">
+                <i class="bi bi-pencil"></i>Actualizar perfil
+              </button>
             </div>
 
           </form>
         </div>
 
-
-        <div
-          style="background-color: #1a1d20; border-radius: 5px; padding: 20px; box-shadow: 3px 3px 6px rgba(0,0,0,0.5); margin-top: 20px; margin-bottom: 20px">
-          <form [formGroup]="formPassword">
-            <div style="text-align: center; padding-right: 20px; padding-left: 20px; margin-bottom: 20px">
-              <h2 class="text-primary" style="color: white; margin: 0">Cambiar mi contraseña</h2>
+        <!-- Cambiar contraseña -->
+        <div class="bg-[#1a1d20] rounded-md p-5 shadow-lg">
+          <form [formGroup]="formPassword" class="">
+            <div class="text-center px-5 mb-5">
+              <h2 class="text-white text-xl font-bold m-0">Cambiar mi contraseña</h2>
             </div>
 
-            <mat-form-field color="primary"
-                            style="border-radius: 10px; width: calc(100% );"
-            >
+            <mat-form-field color="primary" class="w-full rounded-lg">
               <mat-label>Contraseña</mat-label>
               <span matPrefix>
-                  <i class="bi bi-lock" style="font-size: 24px; color: white; margin-left: 10px; margin-right: 10px"></i>
-                </span>
-              <input formControlName="password" style=";width: 100%; " matInput placeholder="Introduzca su nueva contraseña..."
-              >
+                <i class="bi bi-lock text-white text-xl mx-2"></i>
+              </span>
+              <input formControlName="password" matInput placeholder="Introduzca su nueva contraseña..." class="w-full">
             </mat-form-field>
 
-            <mat-form-field color="primary"
-                            style="border-radius: 10px; width: calc(100% );"
-            >
+            <mat-form-field color="primary" class="w-full rounded-lg">
               <mat-label>Repetir contraseña</mat-label>
               <span matPrefix>
-                  <i class="bi bi-lock" style="font-size: 24px; color: white; margin-left: 10px; margin-right: 10px"></i>
-                </span>
-              <input formControlName="repeatPassword" style=";width: 100%; " matInput placeholder="Introduzca de nuevo su nueva contraseña..."
-              >
+                <i class="bi bi-lock text-white text-xl mx-2"></i>
+              </span>
+              <input formControlName="repeatPassword" matInput placeholder="Introduzca de nuevo su nueva contraseña..." class="w-full">
             </mat-form-field>
 
-
-            <div style=" display: flex; justify-content: space-between; align-items: center;">
-              <div style="width: 100%">
-              </div>
-              <div style="width: 100%; display: flex; justify-content: end; align-items: center">
-                <button (click)="updatePassword()"
-                        mat-raised-button
-                        color="primary"
-                        style="padding-left: 16px; padding-right: 16px; border-radius: 10px;"
-                       >
-                  <i class="bi bi-pencil" style="margin-right: 4px"></i>Actualizar contraseña
-                </button>
-              </div>
-
+            <div class="flex justify-end ">
+              <button mat-raised-button color="primary" (click)="updatePassword()" class="flex items-center  px-4 py-2 rounded-lg">
+                <i class="bi bi-pencil"></i>Actualizar contraseña
+              </button>
             </div>
+
           </form>
         </div>
 
       </div>
     </div>
-
   </div>
-
 
 </app-container>
