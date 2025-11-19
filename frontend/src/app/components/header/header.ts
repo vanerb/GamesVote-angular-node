@@ -28,7 +28,7 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
   ],
   styleUrl: './header.css'
 })
-export class Header  implements OnInit{
+export class Header implements OnInit {
   type: string | false | null = null;
   previewCoverImage!: string;
 
@@ -50,7 +50,6 @@ export class Header  implements OnInit{
   async ngOnInit() {
 
 
-
     this.isLogged = this.authService.isLoggedIn()
     this.breakpointObserver.observe([Breakpoints.Handset])
       .subscribe(result => {
@@ -63,28 +62,34 @@ export class Header  implements OnInit{
       });
 
 
-    this.user = await firstValueFrom(this.authService.getUserByToken())
-    this.previewCoverImage = 'http://localhost:3000/' + cleanUrlImage(this.user.Images[0].url)
+
+    if(this.authService.getToken()){
+      this.user = await firstValueFrom(this.authService.getUserByToken()) || null
+      this.previewCoverImage = 'http://localhost:3000/' + cleanUrlImage(this.user.Images[0].url)
+    }
+    else{
+      this.user = null
+    }
+
+
 
 
   }
 
 
-
-
-  gotTo(url: string){
+  gotTo(url: string) {
 
     this.router.navigate([url])
   }
 
-  open(){
+  open() {
     this.isOpen = !this.isOpen
   }
 
   async closeSession() {
     await this.authService.logout()
     window.location.reload();
-   this.isOpen = false
+    this.isOpen = false
   }
 
   onDrawerClosed() {

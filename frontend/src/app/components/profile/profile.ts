@@ -9,6 +9,8 @@ import {firstValueFrom} from 'rxjs';
 import {cleanUrlImage, getImage} from '../../services/utilities-service';
 import {MatFormField, MatInput, MatInputModule} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
+import {WarningModal} from '../general/warning-modal/warning-modal';
+import {ModalService} from '../../services/modal-service';
 
 @Component({
   selector: 'app-profile',
@@ -37,7 +39,7 @@ export class Profile implements OnInit{
   deletedCoverImage: boolean = false;
   previewCoverImage!: string;
 
-  constructor(private readonly authService: AuthService, private router: Router, private fb: FormBuilder, private cd: ChangeDetectorRef) {
+  constructor(private readonly authService: AuthService, private router: Router, private fb: FormBuilder, private cd: ChangeDetectorRef, private readonly modalService: ModalService) {
     this.formProfile = this.fb.group({
       name: ['', [Validators.required]],
       cognames: ['', [Validators.required]],
@@ -52,7 +54,16 @@ export class Profile implements OnInit{
   }
 
   async ngOnInit() {
-    this.user = await firstValueFrom(this.authService.getUserByToken())
+    try {
+      this.user = await firstValueFrom(this.authService.getUserByToken()) || null
+    }
+    catch (e){
+      this.user = null
+      console.log(e)
+    }
+    finally {
+
+    }
 
     this.formProfile.get('name')?.setValue(this.user.name)
     this.formProfile.get('cognames')?.setValue(this.user.cognames)
@@ -100,32 +111,83 @@ export class Profile implements OnInit{
           }
         });
       }
+      else{
+        this.modalService.open(WarningModal, {
+            width: '60vh',
+          },
+          {
+            props: {
+              title: 'Error',
+              message: 'The passwords do not match, please check.',
+              type: 'info'
+            }
+          }).then(async (item: FormData) => {
+        })
+          .catch(() => {
+            this.modalService.close()
+          });
+      }
+    }
+    else{
+      this.modalService.open(WarningModal, {
+          width: '60vh',
+        },
+        {
+          props: {
+            title: 'Error',
+            message: 'Password fields cannot be left empty.',
+            type: 'info'
+          }
+        }).then(async (item: FormData) => {
+      })
+        .catch(() => {
+          this.modalService.close()
+        });
     }
   }
 
   updateProfile() {
 
 
-    const formData = new FormData();
+    if(this.formProfile.valid){
+      const formData = new FormData();
 
-    formData.append('name', this.formProfile.get('name')?.value);
-    formData.append('cognames', this.formProfile.get('cognames')?.value); // <- coincide con backend
-    formData.append('tlf', this.formProfile.get('tlf')?.value); // <- coincide con backend
+      formData.append('name', this.formProfile.get('name')?.value);
+      formData.append('cognames', this.formProfile.get('cognames')?.value); // <- coincide con backend
+      formData.append('tlf', this.formProfile.get('tlf')?.value); // <- coincide con backend
 
 
-    if (this.selectedImagesCover.length > 0) {
-      formData.append('profileImage', this.selectedImagesCover[0], this.selectedImagesCover[0].name);
+      if (this.selectedImagesCover.length > 0) {
+        formData.append('profileImage', this.selectedImagesCover[0], this.selectedImagesCover[0].name);
+      }
+
+
+      this.authService.update(formData).subscribe({
+        next: async () => {
+
+        },
+        error: (err) => {
+          console.error('Error en registro:', err);
+        }
+      });
+    }
+    else{
+      this.modalService.open(WarningModal, {
+          width: '60vh',
+        },
+        {
+          props: {
+            title: 'Error',
+            message: 'You need to complete all the fields.',
+            type: 'info'
+          }
+        }).then(async (item: FormData) => {
+      })
+        .catch(() => {
+          this.modalService.close()
+        });
     }
 
-
-    this.authService.update(formData).subscribe({
-      next: async () => {
-
-      },
-      error: (err) => {
-        console.error('Error en registro:', err);
-      }
-    });
 
   }
 }

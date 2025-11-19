@@ -89,10 +89,13 @@ export class Details implements OnInit {
 
     await this.searchUser()
 
-    console.log("USER", this.user)
 
 
-    this.searchMyValorationsByGameId()
+
+    if(this.user){
+      this.searchMyValorationsByGameId()
+    }
+
 
     this.getAllValorationsByGameId()
 
@@ -101,7 +104,7 @@ export class Details implements OnInit {
     this.editMode = false
 
 
-    console.log("AAAAAAAA", this.valorationsWitouthMyValoration)
+
 
     await sleep(1000)
 
@@ -111,16 +114,15 @@ export class Details implements OnInit {
   }
 
   async searchUser() {
-    try {
+
+    if(this.authService.getToken()){
       this.user = await firstValueFrom(this.authService.getUserByToken()) || null
     }
-    catch (e){
+    else{
       this.user = null
-      console.log(e)
     }
-    finally {
 
-    }
+
 
   }
 
@@ -201,7 +203,6 @@ export class Details implements OnInit {
       }
     })
 
-    console.log("AAAAAAAA", this.valorationsWitouthMyValoration)
   }
 
   searchMyValorationsByGameId() {

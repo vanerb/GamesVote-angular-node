@@ -8,6 +8,8 @@ import {Images} from '../../interfaces/images';
 import {getLocalImage} from "../../services/utilities-service";
 import {MatFormField, MatInput, MatInputModule} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
+import {ModalService} from '../../services/modal-service';
+import {WarningModal} from '../general/warning-modal/warning-modal';
 
 @Component({
   selector: 'app-register',
@@ -27,23 +29,21 @@ import {MatButton} from '@angular/material/button';
 })
 export class Register {
 
-  form!:FormGroup
+  form!: FormGroup
 
   selectedImagesCover: File[] = [];
   existingCoverImage: Images | null = null;
   deletedCoverImage: boolean = false;
   previewCoverImage!: string;
 
-  constructor(private  readonly  authService: AuthService, private router: Router,private fb: FormBuilder, private  cd: ChangeDetectorRef) {
+  constructor(private readonly authService: AuthService, private router: Router, private fb: FormBuilder, private cd: ChangeDetectorRef, private readonly modalService: ModalService) {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       subname: ['', [Validators.required]],
       email: ['', [Validators.required]],
-      prefix: ['', [Validators.required]],
       phone: ['', [Validators.required]],
-      password: ['',[Validators.required]],
-      repeatPassword: ['',[Validators.required]],
-      type: ['', [Validators.required]],
+      password: ['', [Validators.required]],
+      repeatPassword: ['', [Validators.required]],
       profile_photo: [null],
     });
   }
@@ -68,9 +68,8 @@ export class Register {
   }
 
 
-
   register() {
-    if(this.form.valid){
+    if (this.form.valid) {
       if (this.form.get('password')?.value !== '' && this.form.get('repeatPassword')?.value !== '') {
         if (this.form.get('password')?.value === this.form.get('repeatPassword')?.value) {
 
@@ -88,27 +87,80 @@ export class Register {
             formData.append('profileImage', this.selectedImagesCover[0], this.selectedImagesCover[0].name);
           }
 
-          // Estos campos no existen en el backend actual, así que los quitamos
-          // if (this.existingCoverImage) {
-          //   formData.append('existing_profile_photo', this.existingCoverImage.id.toString());
-          // }
-          // if (this.deletedCoverImage) {
-          //   formData.append('deleted_profile_photo', '1');
-          // }
 
           this.authService.register(formData).subscribe({
             next: async () => {
               await this.authService.logout();
             },
             error: (err) => {
-              console.error('Error en registro:', err);
+              this.modalService.open(WarningModal, {
+                  width: '60vh',
+                },
+                {
+                  props: {
+                    title: 'Error',
+                    message: 'An unexpected error occurred while creating the account. The error is ' + err.error.error,
+                    type: 'info'
+                  }
+                }).then(async (item: FormData) => {
+              })
+                .catch(() => {
+                  this.modalService.close()
+                });
             }
           });
+
+
+        } else {
+          this.modalService.open(WarningModal, {
+              width: '60vh',
+            },
+            {
+              props: {
+                title: 'Error',
+                message: 'The passwords do not match, please check.',
+                type: 'info'
+              }
+            }).then(async (item: FormData) => {
+          })
+            .catch(() => {
+              this.modalService.close()
+            });
         }
+      } else {
+        this.modalService.open(WarningModal, {
+            width: '60vh',
+          },
+          {
+            props: {
+              title: 'Error',
+              message: 'Password fields cannot be left empty.',
+              type: 'info'
+            }
+          }).then(async (item: FormData) => {
+        })
+          .catch(() => {
+            this.modalService.close()
+          });
       }
+    } else {
+      this.modalService.open(WarningModal, {
+          width: '60vh',
+        },
+        {
+          props: {
+            title: 'Error',
+            message: 'You need to complete all the fields.',
+            type: 'info'
+          }
+        }).then(async (item: FormData) => {
+      })
+        .catch(() => {
+          this.modalService.close()
+        });
     }
 
   }
 
-    protected readonly getLocalImage = getLocalImage;
+  protected readonly getLocalImage = getLocalImage;
 }
