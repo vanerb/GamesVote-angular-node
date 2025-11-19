@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {NgIf} from '@angular/common';
+import {ModalProps} from '../../../interfaces/modal';
 
 @Component({
   selector: 'app-warning-modal',
@@ -14,11 +15,7 @@ import {NgIf} from '@angular/common';
 })
 export class WarningModal {
 
-  props: {
-    title: string,
-    message: string,
-    type: string,
-  } = {
+  props: ModalProps = {
     title: '',
     message: '',
     type: 'info'

@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {NgForOf, NgStyle} from '@angular/common';
 import {getImage} from '../../../services/utilities-service';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {ScreenShots} from '../../../interfaces/games';
 
 @Component({
   selector: 'app-carrousel-images',
@@ -14,7 +15,7 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
   standalone: true
 })
 export class CarrouselImages implements OnInit{
-  @Input() images: any[] = [];
+  @Input() images: ScreenShots[] = [];
 
   currentIndex = 0;
   visibleSlides = 3;

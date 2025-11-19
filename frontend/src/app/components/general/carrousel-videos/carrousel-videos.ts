@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {NgForOf, NgStyle} from '@angular/common';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {Videos} from '../../../interfaces/games';
 
 @Component({
   selector: 'app-carrousel-videos',
@@ -15,7 +16,7 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 })
 export class CarrouselVideos implements OnInit{
 
-  @Input() videos: any[] = [];
+  @Input() videos: Videos[] = [];
   currentIndex = 0;
   visibleSlides = 2; // Número de videos visibles a la vez
 

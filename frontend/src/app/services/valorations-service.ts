@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Game} from './games-services';
 import {AuthService} from './auth-service';
 import {Valoration} from '../interfaces/valoration';
 

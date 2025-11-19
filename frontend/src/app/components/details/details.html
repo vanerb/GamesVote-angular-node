@@ -39,7 +39,7 @@
       </div>
 
       <!-- Genres -->
-      <div *ngIf="game?.genres && game.genres.length > 0"
+      <div *ngIf="game?.genres "
            class="mt-5 bg-[#363636] p-5 rounded-[10px] shadow-lg flex justify-center items-center gap-2.5 flex-wrap">
         <div *ngFor="let genre of game.genres"
              class="px-5 h-9 rounded-[20px] border border-[#363636] flex justify-center items-center">
@@ -49,7 +49,7 @@
       </div>
 
       <!-- Platforms -->
-      <div *ngIf="game?.platforms && game.platforms.length > 0"
+      <div *ngIf="game?.platforms"
            class="mt-5 bg-[#363636] p-5 rounded-[10px] shadow-lg flex justify-center items-center gap-2.5 flex-wrap">
         <div *ngFor="let platform of game.platforms"
              class="px-5 h-9 rounded-[20px] border border-[#363636] flex justify-center items-center">
@@ -61,13 +61,13 @@
       <!-- Screenshots -->
       <div *ngIf="game?.screenshots" class="mt-5 bg-[#363636] p-5 rounded-[10px] shadow-lg w-[calc(100%)]">
         <h2 class="m-0">Captures</h2>
-        <app-carrousel-images [images]="game.screenshots"></app-carrousel-images>
+        <app-carrousel-images [images]="game?.screenshots || []"></app-carrousel-images>
       </div>
 
       <!-- Videos -->
       <div *ngIf="game?.videos" class="mt-5 bg-[#363636] p-5 rounded-[10px] shadow-lg w-[calc(100%)]">
         <h2 class="mb-2">Videos</h2>
-        <app-carrousel-videos [videos]="game.videos"></app-carrousel-videos>
+        <app-carrousel-videos [videos]="game?.videos || []"></app-carrousel-videos>
       </div>
 
       <!-- Comments -->
@@ -93,7 +93,7 @@
                 <mat-form-field class="w-full mb-[-20px]">
                   <mat-label>Comment</mat-label>
                   <span matPrefix>
-                    <img [src]="'http://localhost:3000/'+cleanUrlImage(user.Images[0].url)"
+                    <img [src]="userImage('me')"
                          class="w-11 h-11 object-cover rounded-full mx-2.5">
                   </span>
                   <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
@@ -122,7 +122,7 @@
                 <!-- Review box -->
                 <div class="w-full bg-[rgb(66,66,66)] rounded-[10px] shadow-lg p-2 relative z-1 text-white">
                   <div class="flex items-center">
-                    <img [src]="'http://localhost:3000/'+cleanUrlImage(val.User.Images[0].url)"
+                    <img [src]="userImage('others', val)"
                          class="w-11 h-11 object-cover rounded-full">
                     <span class="bg-[#7b1fa2] w-[30px] text-center p-2 m-1 rounded-[10px] text-white">
                       {{ val.value }}
@@ -187,7 +187,7 @@
                     <mat-form-field class="w-full mb-[-20px]">
                       <mat-label>Comentario</mat-label>
                       <span matPrefix>
-                        <img [src]="'http://localhost:3000/'+cleanUrlImage(user.Images[0].url)"
+                        <img  [src]="userImage('me')"
                              class="w-11 h-11 object-cover rounded-full mx-2.5">
                       </span>
                       <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
@@ -222,7 +222,7 @@
           <div *ngFor="let val of valorationsWitouthMyValoration"
                class="mt-2 bg-[rgb(66,66,66)]  rounded-[10px] shadow-lg p-2 text-white">
             <div class="flex items-center">
-              <img [src]="'http://localhost:3000/'+cleanUrlImage(val.User.Images[0].url)"
+              <img [src]="userImage('others', val)"
                    class="w-11 h-11 object-cover rounded-full">
               <span
                 class="bg-[#7b1fa2] md:w-[60px] sm:w-[40px] text-center p-2 m-1 rounded-[10px] text-white">{{ val.value }}</span>
@@ -234,6 +234,26 @@
             </div>
             <div class="text-right mt-2">{{ transformDate(val.createdAt) }}</div>
           </div>
+        </div>
+        <div class="flex justify-center items-center w-full gap-2.5 text-white mt-4">
+          <button *ngIf="page > 1"
+            mat-raised-button
+            color="primary"
+            (click)="paginator('prev')"
+            class="my-small-btn"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <p>{{ this.page }}</p>
+          <button
+            *ngIf="page < totalPages"
+            mat-raised-button
+            color="primary"
+            (click)="paginator('next')"
+            class="my-small-btn"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
         </div>
 
       </div>

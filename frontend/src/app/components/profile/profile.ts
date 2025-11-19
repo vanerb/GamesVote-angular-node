@@ -11,6 +11,7 @@ import {MatFormField, MatInput, MatInputModule} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
 import {WarningModal} from '../general/warning-modal/warning-modal';
 import {ModalService} from '../../services/modal-service';
+import {User} from '../../interfaces/user';
 
 @Component({
   selector: 'app-profile',
@@ -32,7 +33,7 @@ export class Profile implements OnInit{
   formProfile!: FormGroup
   formPassword!: FormGroup
 
-  user!: any
+  user!: User
 
   selectedImagesCover: File[] = [];
   existingCoverImage: Images | null = null;
@@ -58,7 +59,7 @@ export class Profile implements OnInit{
       this.user = await firstValueFrom(this.authService.getUserByToken()) || null
     }
     catch (e){
-      this.user = null
+
       console.log(e)
     }
     finally {

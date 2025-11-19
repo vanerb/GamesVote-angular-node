@@ -10,6 +10,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatButton} from '@angular/material/button';
 import {firstValueFrom} from 'rxjs';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {User} from '../../interfaces/user';
 
 
 @Component({
@@ -32,7 +33,7 @@ export class Header implements OnInit {
   type: string | false | null = null;
   previewCoverImage!: string;
 
-  user!: any
+  user!: User
 
   isLogged: boolean = false;
 
@@ -68,7 +69,7 @@ export class Header implements OnInit {
       this.previewCoverImage = 'http://localhost:3000/' + cleanUrlImage(this.user.Images[0].url)
     }
     else{
-      this.user = null
+
     }
 
 

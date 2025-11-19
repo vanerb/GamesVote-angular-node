@@ -19,19 +19,25 @@ export function transformDate(dateISO: string): string {
 }
 
 
-export function cleanUrlImage(url: string){
-  url = url.replace(/\\/g, '/');
+export function cleanUrlImage(url?: string) {
+
+  if(url){
+    url = url.replace(/\\/g, '/');
+  }
+
+
+
   return url
 }
 
 
-export function getImage(url: string | undefined, type: string = 't_cover_big'){
+export function getImage(url: string | undefined, type: string = 't_cover_big') {
   const imageUrl = url?.replace('t_thumb', type);
   return imageUrl;
 }
 
-export function getLocalImage(name: string){
-  return 'http://localhost:3000/uploads/'+name
+export function getLocalImage(name: string) {
+  return 'http://localhost:3000/uploads/' + name
 }
 
 
@@ -55,11 +61,11 @@ export function getMediaValue(array: any[]): number {
 }
 
 
-export function getPlatforms(){
+export function getPlatforms() {
   return platformIcons;
 }
 
-export function getGenres(){
+export function getGenres() {
   return genreIcons;
 }
 

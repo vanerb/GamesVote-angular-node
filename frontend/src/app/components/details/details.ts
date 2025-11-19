@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Container} from '../general/container/container';
 import {ActivatedRoute} from '@angular/router';
-import {Game, GamesServices} from '../../services/games-services';
+import {GamesServices} from '../../services/games-services';
 import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {CarrouselImages} from '../general/carrousel-images/carrousel-images';
@@ -23,6 +23,8 @@ import {MatButton} from '@angular/material/button';
 import {MatFormField, MatInput, MatInputModule} from '@angular/material/input';
 import {ModalService} from '../../services/modal-service';
 import {Loader} from '../general/loader/loader';
+import {User} from '../../interfaces/user';
+import {Games} from '../../interfaces/games';
 
 @Component({
   selector: 'app-details',
@@ -42,14 +44,31 @@ import {Loader} from '../general/loader/loader';
   ],
   templateUrl: './details.html',
   styleUrl: './details.css',
-  standalone: true
+  standalone: true,
+  styles: [`
+    ::ng-deep .my-small-btn.mat-mdc-raised-button {
+      min-width: 40px !important;
+      height: 40px !important;
+      padding: 0 !important;
+    }
+
+    ::ng-deep .my-small-btn .mdc-button__label {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    ::ng-deep .my-small-btn .mat-mdc-button-touch-target {
+      height: 40px !important;
+      width: 40px !important;
+    }
+  `]
 
 })
 export class Details implements OnInit {
 
   id: string = ""
-  game!: Game
-  user: any | null = null
+  game!: Games
+  user?: User
   createValoration: CreateValoration = {
     value: 0,
     description: "",
@@ -74,6 +93,9 @@ export class Details implements OnInit {
   mediaValue: number = 0
 
   confirmDeleteId: string | null = null
+  page: number = 1
+  limit: number = 10
+  totalPages = 0;
 
   constructor(private readonly activatedRoute: ActivatedRoute, private readonly gamesService: GamesServices, private sanitizer: DomSanitizer, private readonly valorationsService: ValorationsService, private readonly authService: AuthService, private modalService: ModalService) {
   }
@@ -104,9 +126,9 @@ export class Details implements OnInit {
     this.editMode = false
 
 
-
-
     await sleep(1000)
+    this.page = 1;
+    this.updatePagination();
 
     this.modalService.close()
 
@@ -119,16 +141,28 @@ export class Details implements OnInit {
       this.user = await firstValueFrom(this.authService.getUserByToken()) || null
     }
     else{
-      this.user = null
+      this.user =undefined
     }
 
 
 
   }
 
+  userImage(type: 'me' | 'others', val?: Valoration): string | null {
+    let img: string | undefined;
+
+    if (type === 'me') {
+      img = this.user?.Images?.[0]?.url;
+    } else if (val) {
+      img = val.User?.Images?.[0]?.url;
+    }
+
+    return img ? 'http://localhost:3000/' + this.cleanUrlImage(img) : null;
+  }
+
   searchGameById(id: number): void {
     this.gamesService.getGameById(id).subscribe({
-      next: async (game: Game[]) => {
+      next: async (game: Games[]) => {
 
         this.game = game[0]
       },
@@ -191,7 +225,7 @@ export class Details implements OnInit {
       next: async (valorations: Valoration[]) => {
         this.valorations = valorations
         if(this.user !== null){
-          this.valorationsWitouthMyValoration = valorations.filter(el => el.userId !== this.user.id)
+          this.valorationsWitouthMyValoration = valorations.filter(el => el.userId !== this.user?.id)
         }
         else{
           this.valorationsWitouthMyValoration = valorations
@@ -207,7 +241,7 @@ export class Details implements OnInit {
 
   searchMyValorationsByGameId() {
     this.valorationsService.getMyValorationsByGameId(this.id).subscribe({
-      next: async (valorations: any[]) => {
+      next: async (valorations: Valoration[]) => {
         this.myValorations = valorations
       },
       error: error => {
@@ -252,7 +286,7 @@ export class Details implements OnInit {
     formData.append('gameId', this.id);
 
     this.valorationsService.create(formData).subscribe({
-      next: async (data: any) => {
+      next: async () => {
 
         this.getAllValorationsByGameId()
         this.searchMyValorationsByGameId()
@@ -270,6 +304,41 @@ export class Details implements OnInit {
     })
     console.log(this.createValoration);
 
+  }
+
+  async paginator(type: string) {
+    if (type === 'next') {
+      this.page = this.page + 1;
+    } else if (type === 'prev') {
+      if (this.page > 1) {
+        this.page = this.page - 1;
+      }
+    }
+
+    this.updatePagination();
+  }
+
+  prepareData() {
+    if (this.user !== null) {
+      this.valorationsWitouthMyValoration = this.valorations.filter(
+        el => el.userId !== this.user?.id
+      );
+    } else {
+      this.valorationsWitouthMyValoration = [...this.valorations];
+    }
+  }
+
+  updatePagination() {
+    this.prepareData()
+
+    let valorations = this.valorationsWitouthMyValoration
+
+    const start = (this.page - 1) * this.limit;
+    const end = start + this.limit;
+
+    this.valorationsWitouthMyValoration = valorations.slice(start, end);
+
+    this.totalPages = Math.ceil(valorations.length / this.limit);
   }
 
   protected readonly transformDate = transformDate;

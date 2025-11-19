@@ -15,6 +15,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatButtonModule} from '@angular/material/button';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import {Card} from '../general/card/card';
+import {Games} from '../../interfaces/games';
 
 @Component({
   selector: 'app-index',
@@ -55,7 +56,7 @@ import {Card} from '../general/card/card';
   `]
 })
 export class Index implements OnInit {
-  games: any[] = [];
+  games: Games[] = [];
   search = '';
   page = 1;
   limit = 27;
@@ -121,13 +122,13 @@ export class Index implements OnInit {
       this.modalService.open(Loader, {}, {text: 'Loading...'});
       if(this.isPhone){
         this.gamesService.searchGames(filters.search || '', filters, this.page, this.limit).subscribe({
-          next: (games) => this.games = games,
+          next: (games: Games[]) => this.games = games,
           error: (err) => console.error(err)
         });
       }
       else{
         this.gamesService.searchGames(this.search, filters, this.page, this.limit).subscribe({
-          next: (games) => this.games = games,
+          next: (games:Games[]) => this.games = games,
           error: (err) => console.error(err)
         });
       }
@@ -151,7 +152,7 @@ export class Index implements OnInit {
   }
 
 
-  details(id: string) {
+  details(id: number) {
     this.router.navigate(['details', id]);
   }
 
