@@ -1,4 +1,5 @@
 import {Images} from './images';
+import {Games} from './games';
 
 export interface Valoration {
   "id": string,
@@ -8,6 +9,7 @@ export interface Valoration {
   "createdAt": string,
   "updatedAt":string,
   "userId": number,
+  game?: Games,
   "User": {
     "email": string,
     "Images": Images[]

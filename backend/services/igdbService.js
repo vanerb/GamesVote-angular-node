@@ -138,7 +138,14 @@ class IgdbService {
     }
 
 
+    async getGamesByIds(ids) {
+        const query = `
+        fields id, name, summary, cover.url;
+        where id = (${ids.join(",")});
+    `;
 
+        return this.makeRequest("games", query);
+    }
 
 
     async getGameById(id) {

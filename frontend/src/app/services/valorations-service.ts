@@ -26,6 +26,13 @@ export class ValorationsService {
     return this.http.get<Valoration[]>(this.url+'/getMyValorationsByGameId/'+gameId, {headers});
   }
 
+  getMyValorationsByUserId(){
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get<Valoration[]>(this.url+'/getMyValorationsByUserId/', {headers});
+  }
+
   //getValorationByIdAndByGameId
 
   getValorationByIdAndByGameId(id: string, gameId: string){

@@ -5,6 +5,10 @@ const Image = require("../models/Image");
 const User = require("../models/User");
 const Valoration = require("../models/Valoration.js");
 const multer = require("multer");
+const IgdbService = require("../services/igdbService");
+
+const igdbService = new IgdbService();
+igdbService.init().catch(err => console.error("Error inicializando IGDB:", err));
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, "uploads/"),
@@ -175,6 +179,69 @@ router.get("/getMyValorationsByGameId/:id", authMiddleware, async (req, res) => 
         res.json(valorations);
     } catch (err) {
         res.status(500).json({error: err.message});
+    }
+});
+
+router.get("/getMyValorationsByUserId", authMiddleware, async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const valorations = await Valoration.findAll({
+            where: { userId },
+            include: [
+                {
+                    model: User,
+                    attributes: ["email"],
+                    include: [
+                        {
+                            model: Image,
+                            where: { from: "user" },
+                            required: false
+                        }
+                    ]
+                },
+                {
+                    model: Image,
+                    where: { from: "valoration" },
+                    required: false
+                }
+            ]
+        });
+
+        // 1. Obtener los gameId únicos y convertir a número
+        const gameIds = [...new Set(valorations.map(v => Number(v.gameId)))].filter(id => !isNaN(id));
+
+        if (gameIds.length === 0)
+            return res.json([]);
+
+        // 2. Llamar a IGDB una sola vez
+        const games = await igdbService.getGamesByIds(gameIds);
+
+        // 3. Mapear juegos por id (asegurándonos que sean números)
+        const gameMap = new Map();
+        games.forEach(g => gameMap.set(Number(g.id), g));
+
+        // 4. Unir valoraciones y juegos
+        const result = valorations.map(v => {
+            const gameIdNum = Number(v.gameId);
+            const gameData = gameMap.get(gameIdNum) || {
+                id: gameIdNum,
+                name: "Juego no encontrado",
+                summary: "",
+                cover: null
+            };
+
+            return {
+                ...v.toJSON(),
+                game: gameData
+            };
+        });
+
+        res.json(result);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
     }
 });
 

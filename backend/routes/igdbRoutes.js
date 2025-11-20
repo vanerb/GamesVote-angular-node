@@ -2,7 +2,6 @@ const express = require("express");
 const IgdbService = require("../services/igdbService");
 const router = express.Router();
 
-
 const igdbService = new IgdbService();
 igdbService.init().catch(err => console.error("Error inicializando IGDB:", err));
 
@@ -52,6 +51,9 @@ router.get("/getGameById/:id", async (req, res) => {
         res.status(500).json({ error: err.message || "Error en IGDB API" });
     }
 })
+
+
+
 
 router.get("/getAllPlatforms", async (req, res) => {
     try {

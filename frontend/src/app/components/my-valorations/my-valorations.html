@@ -1,0 +1,23 @@
+<app-container>
+  <div class="w-full  md:h-[calc(100vh-150px)]  overflow-auto">
+    <div class="p-2.5
+            overflow-auto
+            grid justify-center
+            grid-cols-[repeat(auto-fill,minmax(200px,1fr))]
+            gap-2.5
+            text-white font-sans
+            auto-rows-auto">
+      <div
+        *ngFor="let game of gamesRated"
+        (click)="details(game.game?.id)"
+        class="rounded-[5px] bg-[#363636] w-[200px] p-5 cursor-pointer shadow-[3px_3px_6px_rgba(0,0,0,0.5)] transition-shadow duration-300 flex flex-col items-center"
+        onmouseover="this.style.boxShadow='0 0 8px rgb(123, 31, 162)'"
+        onmouseout="this.style.boxShadow='3px 3px 6px rgba(0,0,0,0.5)'"
+      >
+        <app-card [game]="game.game"></app-card>
+      </div>
+    </div>
+  </div>
+
+
+</app-container>
