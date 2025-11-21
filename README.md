@@ -28,7 +28,7 @@ Asegúrate de tener instalado:
 
 
 📥 Clonar el repositorio
-git clone https://github.com/tu-usuario/tu-repo.git
+git clone https://github.com/vanerb/GamesVote-angular-node.git
 cd tu-repo
 
 🖥️ Instalación y ejecución
