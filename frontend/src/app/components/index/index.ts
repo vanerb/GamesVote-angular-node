@@ -10,7 +10,6 @@ import {ValorationsService} from '../../services/valorations-service';
 import {ModalService} from '../../services/modal-service';
 import {Loader} from '../general/loader/loader';
 import {Filters} from '../filters/filters';
-import {MatFormField, MatInput, MatInputModule} from '@angular/material/input';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatButtonModule} from '@angular/material/button';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -25,9 +24,6 @@ import {Games} from '../../interfaces/games';
     Container,
     NgIf,
     Filters,
-    MatFormField,
-    MatInput,
-    MatInputModule,
     MatSidenavModule,
     MatButtonModule,
     NgStyle,

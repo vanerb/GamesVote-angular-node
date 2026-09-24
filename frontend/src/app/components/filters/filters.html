@@ -1,109 +1,107 @@
-<div class="w-[260px]">
-  <form [formGroup]="form" class="w-full flex flex-col items-center justify-center">
-    <div class="mt-5">
-      <h1 class="m-0">Filters</h1>
+<aside class="filters-panel">
+  <form [formGroup]="form" (ngSubmit)="filter()" class="filters-form">
+    <header class="filters-heading">
+      <span class="filter-icon"><i class="bi bi-sliders"></i></span>
+      <div>
+        <span class="eyebrow">PERSONALIZA TU BÚSQUEDA</span>
+        <h1>Filtros</h1>
+      </div>
+    </header>
+    <div class="filters-scroll">
+      <div *ngIf="isPhone" class="filter-group">
+        <label class="filter-label" for="filter-search">BUSCAR</label>
+        <div class="game-input-wrap">
+          <i class="bi bi-search"></i
+          ><input
+            id="filter-search"
+            class="game-input"
+            placeholder="Nombre del juego"
+            formControlName="search"
+          />
+        </div>
+      </div>
+      <section class="filter-group">
+        <label class="filter-label" for="filter-order">ORDENAR POR</label
+        ><select id="filter-order" class="game-select" formControlName="order">
+          <option value="">Recomendados</option>
+          <option value="rating__asc">Nota: menor a mayor</option>
+          <option value="rating__desc">Nota: mayor a menor</option>
+          <option value="name__asc">Nombre: A–Z</option>
+          <option value="name__desc">Nombre: Z–A</option>
+          <option value="first_release_date__asc">Fecha: más antiguos</option>
+          <option value="first_release_date__desc">Fecha: más recientes</option>
+        </select>
+      </section>
+      <section class="filter-group">
+        <label class="filter-label" for="filter-platform">PLATAFORMAS</label>
+        <div class="game-input-wrap">
+          <i class="bi bi-controller"></i
+          ><input
+            id="filter-platform"
+            class="game-input"
+            placeholder="Escribe para buscar"
+            [formControl]="platformsControl"
+            [matAutocomplete]="autoPlatforms"
+          /><mat-autocomplete
+            #autoPlatforms="matAutocomplete"
+            class="game-autocomplete-panel"
+            (optionSelected)="addPlatform($event.option.value)"
+            ><mat-option *ngFor="let option of filteredPlatforms | async" [value]="option"
+              ><i [ngClass]="'bi bi-' + getPlatformIcon(option.id)"></i>
+              {{ option.name }}</mat-option
+            ></mat-autocomplete
+          >
+        </div>
+        <div *ngIf="platformsFormArray.controls.length" class="filter-chips">
+          <span class="filter-chip"
+            *ngFor="let platform of platformsFormArray.controls; let i = index"
+            >{{ platform.value.name }}<button type="button" (click)="removePlatform(i)" [attr.aria-label]="'Eliminar plataforma ' + platform.value.name"><i class="bi bi-x"></i></button></span>
+        </div>
+      </section>
+      <section class="filter-group">
+        <label class="filter-label" for="filter-genre">GÉNEROS</label>
+        <div class="game-input-wrap">
+          <i class="bi bi-controller"></i
+          ><input
+            id="filter-genre"
+            class="game-input"
+            placeholder="Escribe para buscar"
+            [formControl]="genresControl"
+            [matAutocomplete]="autoGenres"
+          /><mat-autocomplete
+            #autoGenres="matAutocomplete"
+            class="game-autocomplete-panel"
+            (optionSelected)="addGenre($event.option.value)"
+            ><mat-option *ngFor="let option of filteredGenres | async" [value]="option"
+              ><i [ngClass]="'bi bi-' + getGenreIcon(option.id)"></i> {{ option.name }}</mat-option
+            ></mat-autocomplete
+          >
+        </div>
+        <div *ngIf="genresFormArray.controls.length" class="filter-chips">
+          <span class="filter-chip"
+            *ngFor="let genre of genresFormArray.controls; let i = index"
+            >{{ genre.value.name }}<button type="button" (click)="removeGenre(i)" [attr.aria-label]="'Eliminar género ' + genre.value.name"><i class="bi bi-x"></i></button></span>
+        </div>
+      </section>
+      <section class="filter-group rating-group">
+        <div class="rating-title">
+          <span class="filter-label">VALORACIÓN</span
+          ><span class="rating-range">{{ form.value.minRate }} — {{ form.value.maxRate }}</span>
+        </div>
+        <div class="range-fields">
+          <label
+            >Mínima<input type="range" min="0" max="10" step="1" formControlName="minRate" /></label
+          ><label
+            >Máxima<input type="range" min="0" max="10" step="1" formControlName="maxRate"
+          /></label>
+        </div>
+        <div class="rating-ends"><span>0 · Cualquiera</span><span>10 · Excelente</span></div>
+      </section>
     </div>
-
-    <div class="h-[calc(100vh-170px)] w-full overflow-auto p-5 flex flex-col justify-start items-center">
-
-      <!-- Buscar SOLO MOVIL -->
-      <mat-form-field *ngIf="isPhone"  color="primary" appearance="fill" class="w-full rounded-[10px]">
-                <span matPrefix>
-                  <i class="bi bi-search text-white text-2xl mx-2"></i>
-                </span>
-        <input
-          matInput
-          placeholder="Search..."
-          formControlName="search"
-          class="w-full"
-        />
-      </mat-form-field>
-
-      <!-- Ordenar -->
-      <mat-form-field class="w-full">
-        <mat-label>Order</mat-label>
-        <mat-select formControlName="order">
-          <mat-option value="rating__asc"><i class="bi bi-sort-up"></i> By rating </mat-option>
-          <mat-option value="rating__desc"><i class="bi bi-sort-down"></i> By rating</mat-option>
-
-          <mat-option value="name__asc"><i class="bi bi-sort-up"></i> By name </mat-option>
-          <mat-option value="name__desc"><i class="bi bi-sort-down"></i> By name</mat-option>
-
-          <mat-option value="first_release_date__asc"><i class="bi bi-sort-up"></i> By date </mat-option>
-          <mat-option value="first_release_date__desc"><i class="bi bi-sort-down"></i> By date</mat-option>
-        </mat-select>
-
-      </mat-form-field>
-
-      <!-- Plataformas -->
-      <mat-form-field class="w-full">
-        <mat-label>Platforms</mat-label>
-        <input
-          type="text"
-          matInput
-          [formControl]="platformsControl"
-          [matAutocomplete]="autoPlatforms"
-        >
-        <mat-autocomplete #autoPlatforms="matAutocomplete" (optionSelected)="addPlatform($event.option.value)">
-          <mat-option *ngFor="let option of filteredPlatforms | async" [value]="option">
-            <i [ngClass]="'bi bi-' + getPlatformIcon(option.id)" class="text-lg mr-2.5"></i>
-            {{ option.name }}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-
-      <div *ngIf="platformsFormArray.controls.length > 0" class="w-full flex justify-center items-center flex-wrap gap-2.5 mb-5">
-        <mat-chip-row *ngFor="let platform of platformsFormArray.controls; let i = index" (removed)="removePlatform(i)">
-          {{ platform.value.name }}
-          <button matChipRemove [attr.aria-label]="'remove template form' + platform.value.id">
-            <i class="bi bi-trash3"></i>
-          </button>
-        </mat-chip-row>
-      </div>
-
-      <!-- Géneros -->
-      <mat-form-field class="w-full">
-        <mat-label>Genres</mat-label>
-        <input
-          type="text"
-          matInput
-          [formControl]="genresControl"
-          [matAutocomplete]="autoGenres"
-        >
-        <mat-autocomplete #autoGenres="matAutocomplete" (optionSelected)="addGenre($event.option.value)">
-          <mat-option *ngFor="let option of filteredGenres | async" [value]="option">
-            <i [ngClass]="'bi bi-' + getGenreIcon(option.id)" class="text-lg mr-2.5"></i>
-            {{ option.name }}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-
-      <div *ngIf="genresFormArray.controls.length > 0" class="w-full flex justify-center items-center flex-wrap gap-2.5 mb-5">
-        <mat-chip-row *ngFor="let genre of genresFormArray.controls; let i = index" (removed)="removeGenre(i)">
-          {{ genre.value.name }}
-          <button matChipRemove [attr.aria-label]="'remove template form' + genre.value.id">
-            <i class="bi bi-trash3"></i>
-          </button>
-        </mat-chip-row>
-      </div>
-
-      <!-- Nota -->
-      <div class="w-full flex flex-col justify-center items-center">
-        <label class="text-start w-full">Note: </label>
-        <mat-slider class="w-full" min="0" max="10" step="1" showTickMarks discrete>
-          <input formControlName="minRate" value="0" matSliderStartThumb>
-          <input formControlName="maxRate" value="10" matSliderEndThumb>
-        </mat-slider>
-      </div>
-
-    </div>
-
-    <!-- Botón Filtrar -->
-    <div class="mt-5 w-[calc(100%-20px)]">
-      <button (click)="filter()" color="primary" mat-raised-button class="w-full rounded-[10px]">
-        Filter
+    <footer class="filters-footer">
+      <button type="submit" class="apply-filters">
+        <i class="bi bi-check2"></i> Aplicar filtros
       </button>
-    </div>
-
+    </footer>
   </form>
-</div>
+</aside>

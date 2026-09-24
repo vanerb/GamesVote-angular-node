@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Container} from '../general/container/container';
 import {ActivatedRoute} from '@angular/router';
 import {GamesServices} from '../../services/games-services';
-import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {CarrouselImages} from '../general/carrousel-images/carrousel-images';
 import {CarrouselVideos} from '../general/carrousel-videos/carrousel-videos';
@@ -19,8 +19,7 @@ import {
 } from '../../services/utilities-service';
 import {CreateValoration, UpdateValoration, Valoration} from '../../interfaces/valoration';
 import {firstValueFrom} from 'rxjs';
-import {MatButton} from '@angular/material/button';
-import {MatFormField, MatInput, MatInputModule} from '@angular/material/input';
+import {TextFieldModule} from '@angular/cdk/text-field';
 import {ModalService} from '../../services/modal-service';
 import {Loader} from '../general/loader/loader';
 import {User} from '../../interfaces/user';
@@ -35,12 +34,8 @@ import {Games} from '../../interfaces/games';
     CarrouselVideos,
     NgClass,
     FormsModule,
-    NgStyle,
     NgIf,
-    MatButton,
-    MatFormField,
-    MatInput,
-    MatInputModule
+    TextFieldModule
   ],
   templateUrl: './details.html',
   styleUrl: './details.css',

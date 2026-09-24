@@ -1,264 +1,45 @@
 <app-container>
-  <div class="responsive-container">
-
-    <!-- LEFT -->
-    <div class="left flex flex-col justify-center items-center w-full h-full">
-      <div class="w-full h-full flex items-center justify-center overflow-hidden rounded-[10px]">
-        <img *ngIf="game?.cover?.url" [src]="getImage(game?.cover?.url, 't_720p')"
-             class="object-contain w-full h-auto rounded-[10px] overflow-hidden shadow-lg">
-        <img *ngIf="!game?.cover?.url" [src]="getLocalImage('No_Image_Available.jpg')"
-             class="object-contain w-full h-auto rounded-[10px] overflow-hidden shadow-lg">
-      </div>
-      <div class="text-center text-[36px] font-bold w-full h-[80px] flex justify-center items-center mt-5 gap-2.5">
-        <div class="bg-[#363636] rounded-[10px] shadow-lg w-full flex justify-center items-center h-full">
-          <img width="32" height="32" [src]="getLocalImage('android-chrome-512x512.png')" class="mr-2.5 rounded-[10px]">
-          <span *ngIf="game?.rating">{{ game?.rating?.toFixed(0) }}</span>
-          <span *ngIf="!game?.rating">0</span>
+  <main class="detail-page" *ngIf="game">
+    <section class="game-hero">
+      <div class="poster-frame"><img *ngIf="game.cover?.url; else fallbackCover" [src]="getImage(game?.cover?.url, 't_720p')" [alt]="game.name + ' portada'"><ng-template #fallbackCover><img [src]="getLocalImage('No_Image_Available.jpg')" alt="Portada no disponible"></ng-template><span class="poster-glow"></span></div>
+      <div class="hero-info">
+        <span class="eyebrow"><i class="bi bi-controller"></i> FICHA DEL JUEGO</span>
+        <h1>{{ game.name }}</h1>
+        <div *ngIf="game.genres?.length" class="tag-list"><span class="game-tag" *ngFor="let genre of game.genres"><i [ngClass]="'bi bi-' + getGenreIcon(genre.id)"></i>{{ genre.name }}</span></div>
+        <p *ngIf="game.summary" class="hero-summary">{{ game.summary }}</p>
+        <div class="rating-cards">
+          <div class="rating-card"><span class="rating-symbol"><i class="bi bi-stars"></i></span><span class="rating-number">{{ game.rating ? game.rating.toFixed(0) : '0' }}<small>/100</small></span><span class="rating-caption">Nota de la crítica</span></div>
+          <div class="rating-card"><span class="rating-symbol community"><i class="bi bi-people-fill"></i></span><span class="rating-number">{{ getMediaValue(valorations) }}<small>/10</small></span><span class="rating-caption">Nota de la comunidad</span></div>
         </div>
-        <div class="bg-[#363636] rounded-[10px] shadow-lg w-full flex justify-center items-center h-full">
-          <img width="32" height="32" [src]="getLocalImage('Games VOte.png')" class="mr-2.5 rounded-[10px]">
-          <span>{{ getMediaValue(valorations) }}</span>
-        </div>
+        <div *ngIf="game.platforms?.length" class="platform-list"><span class="platform-caption">DISPONIBLE EN</span><span *ngFor="let platform of game.platforms" class="platform-tag"><i [ngClass]="'bi bi-' + getPlatformIcon(platform.id)"></i>{{ platform.name }}</span></div>
       </div>
-    </div>
+    </section>
 
-    <!-- RIGHT -->
-    <div class="right p-1.5">
-      <h1 class="text-center m-0">{{ game?.name }}</h1>
+    <section *ngIf="game.storyline" class="detail-panel story-panel"><span class="section-kicker">LA HISTORIA</span><h2>Sinopsis</h2><p>{{ game.storyline }}</p></section>
+    <section *ngIf="game.screenshots?.length" class="detail-panel media-panel"><div class="section-title"><div><span class="section-kicker">DENTRO DEL JUEGO</span><h2>Capturas</h2></div><i class="bi bi-images"></i></div><app-carrousel-images [images]="game.screenshots || []"></app-carrousel-images></section>
+    <section *ngIf="game.videos?.length" class="detail-panel media-panel"><div class="section-title"><div><span class="section-kicker">MÍRALO EN ACCIÓN</span><h2>Vídeos</h2></div><i class="bi bi-play-btn"></i></div><app-carrousel-videos [videos]="game.videos || []"></app-carrousel-videos></section>
 
-      <!-- Summary -->
-      <div *ngIf="game?.summary" class="mt-5 bg-[#363636] p-5 rounded-[10px] shadow-lg">
-        <h2 class="m-0 mb-2">Description</h2>
-        <p class="m-0">{{ game?.summary }}</p>
+    <section class="detail-panel reviews-panel">
+      <div class="section-title"><div><span class="section-kicker">OPINIONES DE JUGADORES</span><h2>Reseñas de la comunidad</h2></div><span class="review-count"><i class="bi bi-chat-square-heart"></i>{{ valorations.length }}</span></div>
+      <div *ngIf="myValorations.length === 0 && user" class="write-review">
+        <div class="review-form-heading"><div><h3>¿Qué te ha parecido?</h3><p>Tu opinión ayuda a otros jugadores a elegir su próxima aventura.</p></div><span class="selected-score" *ngIf="createValoration.value">{{ createValoration.value }}<small>/10</small></span></div>
+        <div class="score-picker" aria-label="Elige una nota"><button type="button" *ngFor="let n of [].constructor(10); let i = index" (click)="setNote(i+1, 'create')" [class.score-active]="createValoration.value === i+1">{{ i+1 }}</button></div>
+        <label class="field-label">Tu reseña</label><div class="game-input-wrap review-input-wrap"><img *ngIf="userImage('me')" [src]="userImage('me')" class="review-input-avatar" alt="Tu avatar"><span *ngIf="!userImage('me')" class="review-avatar-fallback"><i class="bi bi-person"></i></span><textarea class="game-input game-textarea review-input" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="6" [(ngModel)]="createValoration.description" placeholder="Cuéntanos qué te ha parecido..."></textarea></div>
+        <button type="button" class="primary-action submit-review" (click)="createMyValoration()" [disabled]="!createValoration.value"><i class="bi bi-send"></i> Publicar reseña</button>
       </div>
-
-      <!-- Storyline -->
-      <div *ngIf="game?.storyline" class="mt-5 bg-[#363636] p-5 rounded-[10px] shadow-lg">
-        <h2 class="m-0 mb-2">Sinopsis</h2>
-        <p class="m-0">{{ game?.storyline }}</p>
+      <div *ngIf="myValorations.length > 0" class="my-review-block"><div class="my-review-banner"><i class="bi bi-check-circle-fill"></i><span>Ya has valorado este juego</span></div>
+        <article *ngFor="let val of myValorations" class="review-card own-review">
+          <ng-container *ngIf="!editMode"><div class="review-author"><img *ngIf="userImage('others', val)" [src]="userImage('others', val)" alt="Avatar del usuario"><span *ngIf="!userImage('others', val)" class="review-avatar-fallback"><i class="bi bi-person"></i></span><span class="review-score"><i class="bi bi-star-fill"></i>{{ val.value }}<small>/10</small></span><span class="review-date">{{ transformDate(val.createdAt) }}</span></div><p class="review-copy">{{ val.description }}</p><div class="review-actions"><button type="button" class="icon-action" aria-label="Editar reseña" (click)="changeEditMode(val.id, val.gameId)"><i class="bi bi-pencil"></i></button><button type="button" class="icon-action danger" aria-label="Eliminar reseña" (click)="confirmDeleteId = val.id"><i class="bi bi-trash"></i></button></div></ng-container>
+          <ng-container *ngIf="editMode"><span class="section-kicker">ACTUALIZA TU OPINIÓN</span><div class="score-picker"><button type="button" *ngFor="let n of [].constructor(10); let i = index" (click)="setNote(i+1,'update')" [class.score-active]="updateValoration?.value===i+1">{{ i+1 }}</button></div><div class="game-input-wrap review-input-wrap"><textarea class="game-input game-textarea review-input" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="6" [(ngModel)]="updateValoration.description" placeholder="Edita tu reseña..."></textarea></div><div class="review-actions"><button type="button" class="primary-action" (click)="updateMyValoration()"><i class="bi bi-check2"></i> Guardar cambios</button><button type="button" class="secondary-action" (click)="cancelEditMode()">Cancelar</button></div></ng-container>
+          <div *ngIf="confirmDeleteId === val.id" class="delete-confirm"><div><i class="bi bi-trash3"></i><p>¿Eliminar tu reseña de <strong>{{ game.name }}</strong>?</p><span>Esta acción no se puede deshacer.</span><div class="confirm-actions"><button type="button" class="secondary-action" (click)="confirmDeleteId=null">Cancelar</button><button type="button" class="danger-action" (click)="deleteReview(val.id)">Eliminar reseña</button></div></div></div>
+        </article>
       </div>
-
-      <!-- Genres -->
-      <div *ngIf="game?.genres "
-           class="mt-5 bg-[#363636] p-5 rounded-[10px] shadow-lg flex justify-center items-center gap-2.5 flex-wrap">
-        <div *ngFor="let genre of game.genres"
-             class="px-5 h-9 rounded-[20px] border border-[#363636] flex justify-center items-center">
-          <i [ngClass]="'bi bi-'+getGenreIcon(genre.id)" class="text-lg mr-2.5"></i>
-          <span>{{ genre?.name }}</span>
-        </div>
+      <div *ngIf="!user && myValorations.length === 0" class="login-hint"><i class="bi bi-chat-dots"></i><span>Inicia sesión para compartir tu reseña.</span></div>
+      <div class="community-reviews">
+        <h3>Lo que opina la comunidad</h3><p *ngIf="valorationsWitouthMyValoration.length===0" class="empty-reviews">Todavía no hay reseñas. ¡Sé el primero en compartir tu opinión!</p>
+        <article *ngFor="let val of valorationsWitouthMyValoration" class="review-card"><div class="review-author"><img *ngIf="userImage('others', val)" [src]="userImage('others', val)" alt="Avatar del usuario"><span *ngIf="!userImage('others', val)" class="review-avatar-fallback"><i class="bi bi-person"></i></span><span class="review-score"><i class="bi bi-star-fill"></i>{{ val.value }}<small>/10</small></span><span class="review-date">{{ transformDate(val.createdAt) }}</span></div><p class="review-copy">{{ val.description }}</p></article>
+        <nav *ngIf="totalPages > 1" class="review-pagination" aria-label="Páginas de reseñas"><button *ngIf="page > 1" type="button" (click)="paginator('prev')" aria-label="Reseñas anteriores"><i class="bi bi-arrow-left"></i></button><span>{{ page }} / {{ totalPages }}</span><button *ngIf="page < totalPages" type="button" (click)="paginator('next')" aria-label="Más reseñas"><i class="bi bi-arrow-right"></i></button></nav>
       </div>
-
-      <!-- Platforms -->
-      <div *ngIf="game?.platforms"
-           class="mt-5 bg-[#363636] p-5 rounded-[10px] shadow-lg flex justify-center items-center gap-2.5 flex-wrap">
-        <div *ngFor="let platform of game.platforms"
-             class="px-5 h-9 rounded-[20px] border border-[#363636] flex justify-center items-center">
-          <i [ngClass]="'bi bi-'+getPlatformIcon(platform.id)" class="text-lg mr-2.5"></i>
-          <span>{{ platform?.name }}</span>
-        </div>
-      </div>
-
-      <!-- Screenshots -->
-      <div *ngIf="game?.screenshots" class="mt-5 bg-[#363636] p-5 rounded-[10px] shadow-lg w-[calc(100%)]">
-        <h2 class="m-0">Captures</h2>
-        <app-carrousel-images [images]="game?.screenshots || []"></app-carrousel-images>
-      </div>
-
-      <!-- Videos -->
-      <div *ngIf="game?.videos" class="mt-5 bg-[#363636] p-5 rounded-[10px] shadow-lg w-[calc(100%)]">
-        <h2 class="mb-2">Videos</h2>
-        <app-carrousel-videos [videos]="game?.videos || []"></app-carrousel-videos>
-      </div>
-
-      <!-- Comments -->
-      <div class="mt-5 bg-[#363636] p-5 rounded-[10px] shadow-lg">
-        <h2 class="mb-2">Commentaries</h2>
-
-        <!-- No valorations -->
-        <div *ngIf="myValorations.length === 0 && user"
-             class="w-full flex flex-col items-center">
-
-          <div class="w-full flex justify-center items-center flex-wrap mb-2">
-            <button *ngFor="let n of [].constructor(10); let i = index" mat-raised-button
-                    (click)="setNote(i+1, 'create')"
-                    [ngStyle]="createValoration?.value === i+1 ? {'background-color':'rgb(123,31,162)','color':'white','border':'1px solid rgb(123,31,162)','font-weight':'bold'}:{'background-color':'white','color':'rgb(123,31,162)','font-weight':'bold','border':'2px solid rgb(123,31,162)'}"
-                    class="p-0 min-h-[42px] min-w-[42px] rounded-[10px] cursor-pointer m-1">
-              {{ i + 1 }}
-            </button>
-          </div>
-
-          <div class="w-full flex justify-center items-end">
-            <div class="w-full flex flex-wrap justify-center items-center">
-              <div class="w-full">
-                <mat-form-field class="w-full mb-[-20px]">
-                  <mat-label>Comment</mat-label>
-                  <span matPrefix>
-                    <img [src]="userImage('me')"
-                         class="w-11 h-11 object-cover rounded-full mx-2.5">
-                  </span>
-                  <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-                            cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
-                            [(ngModel)]="createValoration.description"></textarea>
-                </mat-form-field>
-              </div>
-            </div>
-            <button mat-raised-button color="primary"
-                    class="p-0 min-h-[42px] min-w-[42px] rounded-[10px] ml-2.5"
-                    (click)="createMyValoration()">
-              <i class="bi bi-send"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- My valorations -->
-        <div *ngIf="myValorations.length > 0">
-          <span class="text-center block">You have already valued "{{ game.name }}".🙂👍</span>
-          <div class="w-full">
-            <h3>My commentary</h3>
-
-            <!-- Normal mode -->
-            <div *ngIf="editMode === false">
-              <div *ngFor="let val of myValorations" class="relative flex flex-col mt-2 w-full">
-                <!-- Review box -->
-                <div class="w-full bg-[rgb(66,66,66)] rounded-[10px] shadow-lg p-2 relative z-1 text-white">
-                  <div class="flex items-center">
-                    <img [src]="userImage('others', val)"
-                         class="w-11 h-11 object-cover rounded-full">
-                    <span class="bg-[#7b1fa2] md:w-[60px] sm:w-[40px] text-center p-2 m-1 rounded-[10px] text-white">
-                      {{ val.value }}
-                    </span>
-                  </div>
-                  <div class="flex mt-2 w-full">
-                       <span class="text-white break-words w-full">
-                          {{ val.description }}
-                          </span>
-                  </div>
-                  <div class="text-right mt-2 text-white">{{ transformDate(val.createdAt) }}</div>
-                </div>
-
-                <!-- Buttons -->
-                <div class="ml-2 flex justify-end mt-2">
-                  <button mat-raised-button color="primary"
-                          class="p-0 min-h-[42px] min-w-[42px] rounded-[10px] mb-2 flex justify-center items-center mr-2"
-                          (click)="changeEditMode(val.id, val.gameId)">
-                    <i class="bi bi-pencil"></i>
-                  </button>
-                  <button mat-raised-button color="warn"
-                          class="p-0 min-h-[42px] min-w-[42px] rounded-[10px] flex justify-center items-center"
-                          (click)="confirmDeleteId = val.id">
-                    <i class="bi bi-trash"></i>
-                  </button>
-                </div>
-
-                <!-- Delete confirmation overlay -->
-                <div *ngIf="confirmDeleteId === val.id"
-                     class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 rounded-[10px] flex justify-center items-center z-10">
-                  <div class="rounded-[10px] p-4 text-center w-[90%] max-w-[350px]">
-                    <span>¿Seguro que quieres eliminar la reseña de "{{ game.name }}"?</span>
-                    <span class="block font-bold my-2">Esta acción no se puede deshacer.</span>
-                    <div class="flex justify-between mt-2 gap-2">
-                      <button mat-stroked-button color="warn"
-                              class="p-1 w-full rounded-[8px] text-white"
-                              (click)="confirmDeleteId=null">Cancelar
-                      </button>
-                      <button mat-raised-button color="warn"
-                              class="p-1 w-full rounded-[8px] text-white"
-                              (click)="deleteReview(val.id)">Aceptar
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Edit mode -->
-            <div *ngIf="editMode === true">
-              <div *ngFor="let val of myValorations" class="flex flex-col mt-2 w-full">
-                <div
-                  class="w-full bg-[rgb(66,66,66)] rounded-[10px] shadow-lg p-2 flex flex-col items-center">
-                  <div class="flex flex-wrap justify-center items-center w-full gap-2.5 mb-2">
-                    <button *ngFor="let n of [].constructor(10); let i = index" mat-raised-button
-                            (click)="setNote(i+1,'update')"
-                            [ngStyle]="updateValoration?.value===i+1?{'background-color':'rgb(123,31,162)','color':'white','border':'1px solid rgb(123,31,162)','font-weight':'bold'}:{'background-color':'white','color':'rgb(123,31,162)','border':'2px solid rgb(123,31,162)','font-weight':'bold'}"
-                            class="p-0 min-h-[42px] min-w-[42px] rounded-[10px] cursor-pointer m-1">{{ i + 1 }}
-                    </button>
-                  </div>
-                  <div class="w-full flex justify-end mb-2">
-                    <mat-form-field class="w-full mb-[-20px]">
-                      <mat-label>Comentario</mat-label>
-                      <span matPrefix>
-                        <img  [src]="userImage('me')"
-                             class="w-11 h-11 object-cover rounded-full mx-2.5">
-                      </span>
-                      <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-                                cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
-                                [(ngModel)]="updateValoration.description"></textarea>
-                    </mat-form-field>
-                  </div>
-                  <div class="text-right w-full mt-2 text-white">{{ transformDate(val.createdAt) }}</div>
-                </div>
-
-                <!-- Update / Cancel buttons -->
-                <div class="ml-2 flex justify-end mt-2">
-                  <button mat-raised-button color="primary"
-                          class="p-0 min-h-[42px] min-w-[42px] rounded-[10px] mb-2 flex justify-center items-center mr-2"
-                          (click)="updateMyValoration()"><i class="bi bi-check-circle"></i></button>
-                  <button mat-raised-button color="warn"
-                          class="p-0 min-h-[42px] min-w-[42px] rounded-[10px] flex justify-center items-center"
-                          (click)="cancelEditMode()"><i class="bi bi-x-circle"></i></button>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Other valorations -->
-        <div class="mt-2 w-full">
-          <h3>Others commentaries</h3>
-          <div *ngIf="valorationsWitouthMyValoration.length===0" class="text-center">
-            <span>Aún no hay reseñas...</span>
-          </div>
-          <div *ngFor="let val of valorationsWitouthMyValoration"
-               class="mt-2 bg-[rgb(66,66,66)]  rounded-[10px] shadow-lg p-2 text-white">
-            <div class="flex items-center">
-              <img [src]="userImage('others', val)"
-                   class="w-11 h-11 object-cover rounded-full">
-              <span
-                class="bg-[#7b1fa2] md:w-[60px] sm:w-[40px] text-center p-2 m-1 rounded-[10px] text-white">{{ val.value }}</span>
-            </div>
-            <div class="flex mt-2 w-full ">
-                       <span class="text-black break-words w-full text-white">
-                          {{ val.description }}
-                          </span>
-            </div>
-            <div class="text-right mt-2">{{ transformDate(val.createdAt) }}</div>
-          </div>
-        </div>
-        <div class="flex justify-center items-center w-full gap-2.5 text-white mt-4">
-          <button *ngIf="page > 1"
-            mat-raised-button
-            color="primary"
-            (click)="paginator('prev')"
-            class="my-small-btn"
-          >
-            <i class="bi bi-chevron-left"></i>
-          </button>
-          <p>{{ this.page }}</p>
-          <button
-            *ngIf="page < totalPages"
-            mat-raised-button
-            color="primary"
-            (click)="paginator('next')"
-            class="my-small-btn"
-          >
-            <i class="bi bi-chevron-right"></i>
-          </button>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
+    </section>
+  </main>
 </app-container>

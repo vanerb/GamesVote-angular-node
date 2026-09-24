@@ -6,8 +6,6 @@ import {Container} from '../general/container/container';
 import {NgIf} from '@angular/common';
 import {Images} from '../../interfaces/images';
 import {getLocalImage} from "../../services/utilities-service";
-import {MatFormField, MatInput, MatInputModule} from '@angular/material/input';
-import {MatButton} from '@angular/material/button';
 import {ModalService} from '../../services/modal-service';
 import {WarningModal} from '../general/warning-modal/warning-modal';
 
@@ -18,10 +16,6 @@ import {WarningModal} from '../general/warning-modal/warning-modal';
     RouterLink,
     Container,
     NgIf,
-    MatFormField,
-    MatInput,
-    MatInputModule,
-    MatButton
   ],
   templateUrl: './register.html',
   styleUrl: './register.css',

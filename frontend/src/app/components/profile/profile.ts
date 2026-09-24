@@ -7,8 +7,6 @@ import {NgIf} from '@angular/common';
 import {Router, RouterLink} from '@angular/router';
 import {firstValueFrom} from 'rxjs';
 import {cleanUrlImage, getImage} from '../../services/utilities-service';
-import {MatFormField, MatInput, MatInputModule} from '@angular/material/input';
-import {MatButton} from '@angular/material/button';
 import {WarningModal} from '../general/warning-modal/warning-modal';
 import {ModalService} from '../../services/modal-service';
 import {User} from '../../interfaces/user';
@@ -20,10 +18,6 @@ import {User} from '../../interfaces/user';
     Container,
     NgIf,
     RouterLink,
-    MatFormField,
-    MatInput,
-    MatInputModule,
-    MatButton
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.css',

@@ -1,33 +1,19 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
-import {MatButton} from '@angular/material/button';
-import {MatRadioModule} from '@angular/material/radio';
-import {MatCheckboxModule} from '@angular/material/checkbox';
 import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {getGenreIcon, getGenres, getPlatformIcon, getPlatforms} from '../../services/utilities-service';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {AsyncPipe} from '@angular/common';
 import {map, Observable, startWith} from 'rxjs';
-import {MatChipsModule} from '@angular/material/chips';
-import {MatSliderModule} from '@angular/material/slider';
 
 @Component({
   selector: 'app-filters',
   imports: [
-    MatInputModule,
-    MatSelectModule,
-    MatButton,
-    MatCheckboxModule,
-    MatRadioModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
     NgForOf,
     NgClass,
     AsyncPipe,
-    MatChipsModule,
-    MatSliderModule,
     NgIf
 
   ],

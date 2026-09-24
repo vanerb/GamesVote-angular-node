@@ -1,89 +1,50 @@
-<mat-drawer-container class="example-container ">
-  <mat-drawer (closedStart)="onDrawerClosed()" [mode]="drawerMode" position="end" [opened]="isOpen">
+<mat-drawer-container class="games-shell" [hasBackdrop]="drawerMode === 'over'">
+  <mat-drawer (closedStart)="onDrawerClosed()" [mode]="drawerMode" position="end" [opened]="isOpen" class="filter-drawer">
     <app-filters [isPhone]="isPhone" (search)="searchFunc($event,true)"></app-filters>
   </mat-drawer>
 
   <mat-drawer-content>
-    <app-container>
-      <div class="w-full  md:h-[calc(100vh-160px)]  overflow-auto">
-        <div class="w-full flex justify-center items-center">
-          <div class="w-full flex justify-center items-center">
-            <div *ngIf="!isPhone" class="flex justify-center items-center w-full">
-              <mat-form-field  color="primary" appearance="fill" class="w-full rounded-[10px]">
-                <span matPrefix>
-                  <i class="bi bi-search text-white text-2xl mx-2"></i>
-                </span>
-                <input
-                  matInput
-                  placeholder="Search..."
-                  [(ngModel)]="this.search"
-                  (keyup.enter)="searchFunc({},true)"
-                  (input)="searchFunc({},true)"
-                  class="w-full"
-                />
-              </mat-form-field>
-              <div class="ml-2.5">
-                <button
-                  (click)="openDrawer()"
-                  color="primary"
-                  mat-raised-button
-                  class="rounded-[10px]"
-                >
-                  <i class="bi bi-filter-right text-2xl"></i>
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <button  *ngIf="isPhone" (click)="openDrawer()"
-                       class="fixed bottom-4 right-4 bg-[rgb(123,31,162)] text-white p-3  rounded-[10px] shadow-lg transition"
-              >
-                <i class="bi bi-search text-2xl"></i>
-              </button>
-            </div>
-
+    <app-container class="catalog-container">
+      <main class="catalog catalog-scroll">
+        <section class="welcome-panel">
+          <div class="welcome-copy">
+            <span class="eyebrow"><span class="live-dot"></span> TU PRÓXIMA AVENTURA EMPIEZA AQUÍ</span>
+            <h1>Encuentra tu <span>siguiente juego</span></h1>
+            <p>Explora, compara y descubre qué merece un lugar en tu biblioteca.</p>
           </div>
+          <div class="welcome-art" aria-hidden="true"><i class="bi bi-controller"></i><span></span></div>
+        </section>
+
+        <section class="catalog-toolbar" aria-label="Buscar juegos">
+          <label class="search-box" *ngIf="!isPhone">
+            <i class="bi bi-search"></i>
+            <input placeholder="Busca un juego, saga o estudio..." [(ngModel)]="search" (keyup.enter)="searchFunc({},true)" (input)="searchFunc({},true)" />
+            <kbd>↵</kbd>
+          </label>
+          <button class="filter-button" (click)="openDrawer()" [class.filter-mobile]="isPhone">
+            <i class="bi" [ngClass]="isPhone ? 'bi-search' : 'bi-sliders'"></i>
+            <span>{{ isPhone ? 'Buscar y filtrar' : 'Filtros' }}</span>
+          </button>
+        </section>
+
+        <div class="section-heading">
+          <div><span class="eyebrow">CATÁLOGO</span><h2>Juegos para descubrir</h2></div>
+          <span class="page-count">Página {{ page }}</span>
         </div>
 
-        <div class="p-2.5
-            overflow-auto
-            grid justify-center
-            grid-cols-[repeat(auto-fill,minmax(200px,1fr))]
-            gap-2.5
-            text-white font-sans
-            auto-rows-auto">
-          <div
-            *ngFor="let game of games"
-            (click)="details(game.id)"
-            class="rounded-[5px] bg-[#363636] w-[200px] p-5 cursor-pointer shadow-[3px_3px_6px_rgba(0,0,0,0.5)] transition-shadow duration-300 flex flex-col items-center"
-            onmouseover="this.style.boxShadow='0 0 8px rgb(123, 31, 162)'"
-            onmouseout="this.style.boxShadow='3px 3px 6px rgba(0,0,0,0.5)'"
-            [ngClass]="isPhone ? 'w-[calc(100%)]' : 'w-[200px]'"
-          >
+        <section class="game-grid" aria-label="Catálogo de juegos">
+          <article *ngFor="let game of games" (click)="details(game.id)" class="game-tile" tabindex="0" (keyup.enter)="details(game.id)">
             <app-card [game]="game"></app-card>
-          </div>
-        </div>
-      </div>
+            <span class="tile-arrow"><i class="bi bi-arrow-up-right"></i></span>
+          </article>
+        </section>
 
-      <div class="flex justify-center items-center w-full gap-2.5 text-white mt-4">
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="paginator('prev')"
-          class="my-small-btn"
-        >
-          <i class="bi bi-chevron-left"></i>
-        </button>
-        <p>{{ this.page }}</p>
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="paginator('next')"
-          class="my-small-btn"
-        >
-          <i class="bi bi-chevron-right"></i>
-        </button>
-      </div>
+        <nav class="pagination" aria-label="Paginación">
+          <button (click)="paginator('prev')" [disabled]="page === 1" aria-label="Página anterior"><i class="bi bi-arrow-left"></i></button>
+          <span><b>{{ page }}</b><span class="page-divider">/</span> catálogo</span>
+          <button (click)="paginator('next')" aria-label="Página siguiente"><i class="bi bi-arrow-right"></i></button>
+        </nav>
+      </main>
     </app-container>
   </mat-drawer-content>
 </mat-drawer-container>

@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {GamesServices} from '../../services/games-services';
 import {Router} from '@angular/router';
 import {ValorationsService} from '../../services/valorations-service';
 import {ModalService} from '../../services/modal-service';
 import {BreakpointObserver} from '@angular/cdk/layout';
-import {NgClass, NgForOf} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
+import {RouterLink} from '@angular/router';
 import {Card} from '../general/card/card';
 import {FormsModule} from '@angular/forms';
 import {Container} from '../general/container/container';
@@ -14,7 +15,9 @@ import {Valoration} from '../../interfaces/valoration';
   selector: 'app-my-valorations',
   imports: [
     NgForOf,
+    NgIf,
     NgClass,
+    RouterLink,
     Card,
     FormsModule,
     Container
@@ -27,7 +30,7 @@ export class MyValorations implements OnInit{
   gamesRated: Valoration[] = [];
 
 
-  constructor(private gamesService: GamesServices, private readonly router: Router, private readonly valorationService: ValorationsService, private readonly modalService: ModalService, private breakpointObserver: BreakpointObserver) {
+  constructor(private gamesService: GamesServices, private readonly router: Router, private cdr: ChangeDetectorRef, private readonly valorationService: ValorationsService, private readonly modalService: ModalService, private breakpointObserver: BreakpointObserver) {
   }
 
   async ngOnInit() {
@@ -48,7 +51,7 @@ export class MyValorations implements OnInit{
       error: (err) => console.error(err)
     });
 
-
+    this.cdr.detectChanges();
 
 
   }

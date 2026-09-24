@@ -1,82 +1,39 @@
 <app-container>
-  <div class="flex flex-col items-center justify-center">
-    <div class="w-[calc(60vh-60px)]">
+  <main class="contact-page">
+    <div class="contact-card">
       <div class="w-full h-full">
-        <div class="bg-[#1a1d20] rounded-[5px] p-5 shadow-[3px_3px_6px_rgba(0,0,0,0.5)]">
+        <div class="contact-panel">
 
-          <div class="text-center px-5">
-            <h1 class="text-white m-0 text-primary">Contact</h1>
+          <div class="contact-heading">
+            <span class="eyebrow">ESTAMOS PARA ESCUCHARTE</span><h1>Hablemos</h1><p>¿Tienes una idea, duda o sugerencia? Escríbenos.</p>
           </div>
 
           <form
             [formGroup]="form"
-            class="bg-[var(--background-four)] border-2 border-transparent rounded-[5px] "
+              class="contact-form"
           >
 
             <div class="mt-5">
-              <div class="flex justify-center items-center gap-2.5">
+                <div class="contact-row">
 
-                <!-- Nombre -->
-                <mat-form-field color="primary" class="rounded-[10px] w-full">
-                  <mat-label>Name</mat-label>
-                  <span matPrefix>
-                    <i class="bi bi-person-circle text-white text-2xl mx-2.5"></i>
-                  </span>
-                  <input
-                    formControlName="name"
-                    matInput
-                    placeholder="Input your name..."
-                    class="w-full"
-                  >
-                </mat-form-field>
-
-                <!-- Apellidos -->
-                <mat-form-field color="primary" class="rounded-[10px] w-full">
-                  <mat-label>Cognames</mat-label>
-                  <input
-                    formControlName="cognames"
-                    matInput
-                    placeholder="Input your cognames..."
-                    class="w-full"
-                  >
-                </mat-form-field>
+                <div class="native-field"><label class="field-label">Nombre</label><div class="game-input-wrap"><i class="bi bi-person"></i><input class="game-input" formControlName="name" autocomplete="given-name"></div></div>
+                <div class="native-field"><label class="field-label">Apellidos</label><div class="game-input-wrap"><input class="game-input no-icon" formControlName="cognames" autocomplete="family-name"></div></div>
 
               </div>
 
-              <mat-form-field color="primary" class="rounded-[10px] w-full">
-                <mat-label>Email</mat-label>
-                <input
-                  formControlName="email"
-                  matInput type="email"
-                  placeholder="Input your email..."
-                  class="w-full"
-                >
-              </mat-form-field>
+              <div class="native-field"><label class="field-label">Correo electrónico</label><div class="game-input-wrap"><i class="bi bi-envelope"></i><input class="game-input" formControlName="email" type="email" autocomplete="email"></div></div>
 
               <!-- Mensaje -->
-              <mat-form-field class="w-full ">
-                <mat-label>Message</mat-label>
-                <textarea
-                  formControlName="message"
-                  matInput
-                  cdkTextareaAutosize
-                  #autosize="cdkTextareaAutosize"
-                  cdkAutosizeMinRows="5"
-                  cdkAutosizeMaxRows="20"
-                  class="w-full"
-                ></textarea>
-              </mat-form-field>
+              <div class="native-field"><label class="field-label">Mensaje</label><textarea class="game-input game-textarea" formControlName="message" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="20" placeholder="Cuéntanos en qué podemos ayudarte..."></textarea></div>
             </div>
 
             <!-- Botón enviar -->
             <div class="flex justify-end  w-full">
               <button
                 (click)="sendEmail()"
-                mat-raised-button
-                color="primary"
-                class="flex items-center justify-center px-4 h-10 text-white rounded-[10px]"
+                class="contact-submit"
               >
-                <i class="bi bi-send mr-1"></i>Send
+                <i class="bi bi-send mr-1"></i>Enviar mensaje
               </button>
             </div>
 
@@ -84,5 +41,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </main>
 </app-container>

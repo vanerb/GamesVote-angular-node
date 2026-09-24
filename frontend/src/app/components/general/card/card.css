@@ -1,0 +1,6 @@
+:host { display:flex; width:100%; min-width:0; flex-direction:column; align-items:stretch; }
+:host > div:first-child { width:100%!important; height:auto!important; aspect-ratio:3 / 4; border-radius:11px; background:#242530; }
+:host img { display:block; width:100%; height:100%; object-fit:cover; transition:transform .45s cubic-bezier(.2,.75,.25,1); }
+:host-context(.game-tile:hover) img { transform:scale(1.045); }
+:host > div:last-child { height:auto!important; min-height:42px; margin-top:10px!important; justify-content:flex-start!important; text-align:left; font-size:12px; font-weight:700; line-height:1.4; }
+:host > div:last-child span { display:-webkit-box; overflow:hidden; -webkit-box-orient:vertical; -webkit-line-clamp:2; }

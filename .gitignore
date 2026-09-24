@@ -29,6 +29,7 @@ backend/yarn-error.log
 backend/.DS_Store
 backend/.vscode/
 backend/.idea/
+backend/uploads/
 
 # Logs
 backend/logs/

@@ -1,92 +1,34 @@
-<mat-drawer-container [hasBackdrop]="drawerMode === 'over'">
-  <!-- Drawer lateral -->
-  <mat-drawer
-    [mode]="drawerMode"
-    [opened]="isOpen"
-
-    (closedStart)="onDrawerClosed()"
-    #drawer
-    position="start"
-    class="flex flex-col max-w-[120px] text-center"
-  >
-    <div
-      [ngClass]="{
-        'h-[calc(100vh-218px)]': isLogged,
-        'h-[calc(100vh-189px)]': !isLogged
-      }"
-      class="overflow-auto flex flex-col justify-start items-center "
-    >
-      <div
-        (click)="gotTo('/')"
-        class="menu-item flex flex-col justify-center items-center w-full p-5 cursor-pointer"
-      >
-        <i class="bi bi-dpad text-2xl"></i>
-        <span class="mt-2">Games</span>
+<mat-drawer-container [hasBackdrop]="drawerMode === 'over'" class="app-shell">
+  <mat-drawer [mode]="drawerMode" [opened]="isOpen" (closedStart)="onDrawerClosed()" #drawer position="start" class="navigation-drawer">
+    <div class="drawer-brand"><span class="brand-mark"><i class="bi bi-controller"></i></span><span>GAMES<span class="brand-accent">VOTE</span></span></div>
+    <div class="drawer-links">
+      <span class="nav-label">EXPLORAR</span>
+      <div (click)="gotTo('/')" class="menu-item"><i class="bi bi-grid-1x2-fill"></i><span>Juegos</span></div>
+      <div (click)="gotTo('/my-valorations')" class="menu-item"><i class="bi bi-heart-fill"></i><span>Mis reseñas</span></div>
+      <div (click)="gotTo('/contact')" class="menu-item"><i class="bi bi-chat-square-dots-fill"></i><span>Contacto</span></div>
+    </div>
+    <div class="drawer-account" *ngIf="isLogged">
+      <div (click)="gotTo('/profile')" class="menu-item account-item">
+        <div class="avatar"><img *ngIf="previewCoverImage" [src]="previewCoverImage" alt="Foto de perfil" /><img *ngIf="!previewCoverImage" src="http://localhost:3000/uploads/No_Image_Available.jpg" alt="Foto de perfil" /></div>
+        <span>Mi perfil</span>
       </div>
-
-      <div
-        (click)="gotTo('/my-valorations')"
-        class="menu-item flex flex-col justify-center items-center w-full p-5 cursor-pointer"
-      >
-        <i class="bi bi-heart text-2xl"></i>
-        <span class="mt-2">My valorations</span>
-      </div>
-
-      <div
-        (click)="gotTo('/contact')"
-        class="menu-item flex flex-col justify-center items-center w-full p-5 cursor-pointer"
-      >
-        <i class="bi bi-person-exclamation text-2xl"></i>
-        <span class="mt-2">Contact</span>
-      </div>
+      <div (click)="closeSession()" class="menu-item"><i class="bi bi-box-arrow-right"></i><span>Cerrar sesión</span></div>
     </div>
-
-    <div *ngIf="isLogged" (click)="gotTo('/profile')" class="menu-item flex flex-col justify-center items-center py-5 cursor-pointer">
-      <div class="w-12 h-12 overflow-hidden rounded-full border border-transparent">
-        <img
-          *ngIf="this.previewCoverImage"
-          [src]="previewCoverImage"
-          alt="No Image"
-          class="w-full h-full object-cover object-center"
-        />
-        <img
-          *ngIf="!this.previewCoverImage"
-          src="http://localhost:3000/uploads/No_Image_Available.jpg"
-          class="w-full h-full object-cover object-center"
-        />
-      </div>
-      <span class="mt-2">My Profile</span>
+    <div class="drawer-account" *ngIf="!isLogged">
+      <span class="nav-label">TU CUENTA</span>
+      <div (click)="gotTo('/login')" class="menu-item"><i class="bi bi-person-circle"></i><span>Iniciar sesión</span></div>
+      <div (click)="gotTo('/register')" class="menu-item"><i class="bi bi-person-plus-fill"></i><span>Crear cuenta</span></div>
     </div>
-
-    <div *ngIf="isLogged" (click)="closeSession()" class="menu-item flex flex-col justify-center items-center p-5 cursor-pointer">
-      <i class="bi bi-box-arrow-right text-2xl"></i>
-      <span class="mt-2">Logout</span>
-    </div>
-
-    <!-- NO ESTA INICIADA LA SESION -->
-    <div *ngIf="!isLogged" (click)="gotTo('/login')" class="menu-item flex flex-col justify-center items-center p-5 cursor-pointer">
-      <i class="bi bi-person text-2xl"></i>
-      <span class="mt-2">Login</span>
-    </div>
-
-    <div *ngIf="!isLogged" (click)="gotTo('/register')" class="menu-item flex flex-col justify-center items-center p-5 cursor-pointer">
-      <i class="bi bi-person-add text-2xl"></i>
-      <span class="mt-2">Register</span>
-    </div>
+    <div class="drawer-footer"><span class="status-dot"></span> Comunidad gamer, mejores recomendaciones</div>
   </mat-drawer>
 
-  <!-- Contenido principal -->
   <mat-drawer-content>
-    <mat-toolbar color="primary" class="flex items-center px-4">
-      <button mat-button class="text-2xl" (click)="open()">
-        <i class="bi bi-list"></i>
-      </button>
-      <span class="ml-5">Games Vote</span>
-      <span class="flex-1"></span>
+    <mat-toolbar class="topbar">
+      <button mat-button class="menu-toggle" (click)="open()" aria-label="Abrir menú"><i class="bi bi-list"></i></button>
+      <span class="mobile-brand">GAMES<span>VOTE</span></span>
+      <span class="toolbar-spacer"></span>
+      <span class="topbar-caption"><i class="bi bi-stars"></i> Tu comunidad de videojuegos</span>
     </mat-toolbar>
-
-    <div class="main-content">
-      <ng-content></ng-content>
-    </div>
+    <div class="main-content"><ng-content></ng-content></div>
   </mat-drawer-content>
 </mat-drawer-container>

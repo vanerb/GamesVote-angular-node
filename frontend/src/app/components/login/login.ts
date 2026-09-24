@@ -4,15 +4,12 @@ import {AuthService} from '../../services/auth-service';
 import {Router, RouterLink} from '@angular/router';
 import {LoginForm, Token} from '../../interfaces/auth';
 import {Container} from '../general/container/container';
-import {MatFormField, MatInput, MatInputModule} from '@angular/material/input';
-import {MatButton} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
 import {WarningModal} from '../general/warning-modal/warning-modal';
 import {ModalService} from '../../services/modal-service';
 
 @Component({
   selector: 'app-login',
-  imports: [Container, ReactiveFormsModule, RouterLink, MatFormField, MatInput, MatInputModule, MatButton, MatIconModule],
+  imports: [Container, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
   standalone: true

@@ -20,13 +20,7 @@
   </div>
 
   <!-- Botones -->
-  <button (click)="prevSlide()"
-          class="absolute top-1/2 left-2.5 -translate-y-1/2 bg-black/50 text-white border-none rounded-full w-10 h-10 cursor-pointer text-2xl leading-[36px]">
-    ‹
-  </button>
+  <button type="button" (click)="prevSlide()" aria-label="Imagen anterior" class="carousel-arrow carousel-arrow-left"><i class="bi bi-chevron-left"></i></button>
 
-  <button (click)="nextSlide()"
-          class="absolute top-1/2 right-2.5 -translate-y-1/2 bg-black/50 text-white border-none rounded-full w-10 h-10 cursor-pointer text-2xl leading-[36px]">
-    ›
-  </button>
+  <button type="button" (click)="nextSlide()" aria-label="Imagen siguiente" class="carousel-arrow carousel-arrow-right"><i class="bi bi-chevron-right"></i></button>
 </div>
