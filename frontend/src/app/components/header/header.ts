@@ -1,9 +1,8 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {Router} from '@angular/router';
 import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {AuthService} from '../../services/auth-service';
-import {HeaderItem} from '../../interfaces/header';
-import {cleanUrlImage, getLocalImage, sleep} from '../../services/utilities-service';
+import {getLocalImage} from '../../services/utilities-service';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -11,7 +10,6 @@ import {MatButton} from '@angular/material/button';
 import {firstValueFrom} from 'rxjs';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {User} from '../../interfaces/user';
-
 
 @Component({
   selector: 'app-header',
@@ -30,72 +28,130 @@ import {User} from '../../interfaces/user';
   styleUrl: './header.css'
 })
 export class Header implements OnInit {
-  type: string | false | null = null;
-  previewCoverImage!: string;
 
-  user!: User
+  type = signal<string | false | null>(null);
 
-  isLogged: boolean = false;
+  previewCoverImage = signal<string>('');
 
-  isOpen: boolean = false
-  drawerMode: 'side' | 'over' = 'side';
+  user = signal<User | null>(null);
+
+  isLogged = signal<boolean>(false);
+
+  isOpen = signal<boolean>(false);
+
+  drawerMode = signal<'side' | 'over'>('side');
+
 
   constructor(
     private readonly authService: AuthService,
-    private router: Router,
-    private breakpointObserver: BreakpointObserver
+    private readonly router: Router,
+    private readonly breakpointObserver: BreakpointObserver
   ) {
-
   }
 
-  async ngOnInit() {
+
+  async ngOnInit(): Promise<void> {
+
+    this.isLogged.set(
+      this.authService.isLoggedIn()
+    );
 
 
-    this.isLogged = this.authService.isLoggedIn()
-    this.breakpointObserver.observe([Breakpoints.Handset])
+    this.breakpointObserver
+      .observe([Breakpoints.Handset])
       .subscribe(result => {
+
         if (result.matches) {
-          this.drawerMode = 'over';
-          this.isOpen = false; // se cierra al cambiar a móvil
+
+          this.drawerMode.set('over');
+
+          this.isOpen.set(false);
+
         } else {
-          this.drawerMode = 'side';
+
+          this.drawerMode.set('side');
+
         }
+
       });
 
 
+    const token = this.authService.getToken();
 
-    if(this.authService.getToken()){
-      this.user = await firstValueFrom(this.authService.getUserByToken()) || null
-      this.previewCoverImage = 'http://localhost:3000/' + cleanUrlImage(this.user.Images[0].url)
-    }
-    else{
-
+    if (!token) {
+      return;
     }
 
 
+    try {
 
+      const user = await firstValueFrom(
+        this.authService.getUserByToken()
+      );
+
+      if (!user) {
+        return;
+      }
+
+      this.user.set(user);
+
+
+      if (user.Images?.length > 0) {
+
+        this.previewCoverImage.set(
+          'http://localhost:3000/' +
+          user.Images[0].url
+            .replace(/^\/+/, '')
+        );
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        'Error al obtener el usuario:',
+        error
+      );
+
+    }
 
   }
 
 
-  gotTo(url: string) {
+  gotTo(url: string): void {
 
-    this.router.navigate([url])
+    this.router.navigate([url]);
+
   }
 
-  open() {
-    this.isOpen = !this.isOpen
+
+  open(): void {
+
+    this.isOpen.update(
+      value => !value
+    );
+
   }
 
-  async closeSession() {
-    await this.authService.logout()
+
+  async closeSession(): Promise<void> {
+
+    await this.authService.logout();
+
+    this.isOpen.set(false);
+
     window.location.reload();
-    this.isOpen = false
+
   }
 
-  onDrawerClosed() {
-    this.isOpen = false;
+
+  onDrawerClosed(): void {
+
+    this.isOpen.set(false);
+
   }
+
 
   protected readonly getLocalImage = getLocalImage;
+
 }

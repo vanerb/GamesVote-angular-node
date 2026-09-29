@@ -1,16 +1,165 @@
 <app-container>
-  <main class="auth-page"><section class="auth-card register-card">
-    <div class="auth-art"><span class="auth-orbit"></span><i class="bi bi-controller"></i><span class="eyebrow">ENTRA EN LA COMUNIDAD</span></div>
-    <div class="auth-content"><span class="eyebrow">NUEVA PARTIDA</span><h1>Crea tu cuenta</h1><p class="auth-description">Guarda tus juegos favoritos y comparte lo que piensas con otros jugadores.</p>
-      <form [formGroup]="form" class="auth-form register-form">
-        <div class="avatar-picker"><div class="register-avatar"><img *ngIf="previewCoverImage" [src]="previewCoverImage" alt="Vista previa del avatar"><img *ngIf="!previewCoverImage" [src]="getLocalImage('No_Image_Available.jpg')" alt="Avatar predeterminado"></div><input type="file" accept="image/*" #fileInput hidden (change)="onImageChange($event)"><button type="button" class="avatar-edit" (click)="fileInput.click()" aria-label="Elegir foto de perfil"><i class="bi bi-camera-fill"></i></button><span>Elige tu avatar</span></div>
-        <div class="auth-row"><div class="native-field"><label class="field-label">Nombre</label><div class="game-input-wrap"><i class="bi bi-person"></i><input class="game-input" formControlName="name" autocomplete="given-name" placeholder="Tu nombre"></div></div><div class="native-field"><label class="field-label">Apellidos</label><div class="game-input-wrap"><input class="game-input no-icon" formControlName="subname" autocomplete="family-name" placeholder="Tus apellidos"></div></div></div>
-        <div class="native-field"><label class="field-label">Correo electrónico</label><div class="game-input-wrap"><i class="bi bi-envelope"></i><input class="game-input" type="email" formControlName="email" autocomplete="email" placeholder="tu@email.com"></div></div>
-        <div class="native-field"><label class="field-label">Teléfono</label><div class="game-input-wrap"><i class="bi bi-phone"></i><input class="game-input" formControlName="phone" autocomplete="tel" placeholder="Tu teléfono"></div></div>
-        <div class="auth-row"><div class="native-field"><label class="field-label">Contraseña</label><div class="game-input-wrap"><i class="bi bi-lock"></i><input class="game-input" type="password" formControlName="password" autocomplete="new-password" placeholder="Contraseña"></div></div><div class="native-field"><label class="field-label">Repetir contraseña</label><div class="game-input-wrap"><input class="game-input no-icon" type="password" formControlName="repeatPassword" autocomplete="new-password" placeholder="Repite contraseña"></div></div></div>
-        <button type="button" (click)="register()" class="auth-submit">Crear cuenta <i class="bi bi-arrow-right"></i></button>
-      </form>
-      <p class="auth-switch">¿Ya tienes cuenta? <a [routerLink]="['/login']">Inicia sesión</a></p>
-    </div>
-  </section></main>
+  <main class="auth-page">
+    <section class="auth-card register-card">
+      <div class="auth-art">
+        <span class="auth-orbit"></span>
+
+        <i class="bi bi-controller"></i>
+
+        <span class="eyebrow"> ENTRA EN LA COMUNIDAD </span>
+      </div>
+
+      <div class="auth-content">
+        <span class="eyebrow"> NUEVA PARTIDA </span>
+
+        <h1>Crea tu cuenta</h1>
+
+        <p class="auth-description">
+          Guarda tus juegos favoritos y comparte lo que piensas con otros jugadores.
+        </p>
+
+        <form [formGroup]="form" class="auth-form register-form">
+          <div class="avatar-picker">
+            <div class="register-avatar">
+              <img
+                *ngIf="previewCoverImage()"
+                [src]="previewCoverImage()"
+                alt="Vista previa del avatar"
+              />
+
+              <img
+                *ngIf="!previewCoverImage()"
+                [src]="getLocalImage('No_Image_Available.jpg')"
+                alt="Avatar predeterminado"
+              />
+            </div>
+
+            <input
+              type="file"
+              accept="image/*"
+              #fileInput
+              hidden
+              (change)="onImageChange($event)"
+            />
+
+            <button
+              type="button"
+              class="avatar-edit"
+              (click)="fileInput.click()"
+              aria-label="Elegir foto de perfil"
+            >
+              <i class="bi bi-camera-fill"></i>
+            </button>
+
+            <span> Elige tu avatar </span>
+          </div>
+
+          <div class="auth-row">
+            <div class="native-field">
+              <label class="field-label"> Nombre </label>
+
+              <div class="game-input-wrap">
+                <i class="bi bi-person"></i>
+
+                <input
+                  class="game-input"
+                  formControlName="name"
+                  autocomplete="given-name"
+                  placeholder="Tu nombre"
+                />
+              </div>
+            </div>
+
+            <div class="native-field">
+              <label class="field-label"> Apellidos </label>
+
+              <div class="game-input-wrap">
+                <input
+                  class="game-input no-icon"
+                  formControlName="subname"
+                  autocomplete="family-name"
+                  placeholder="Tus apellidos"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="native-field">
+            <label class="field-label"> Correo electrónico </label>
+
+            <div class="game-input-wrap">
+              <i class="bi bi-envelope"></i>
+
+              <input
+                class="game-input"
+                type="email"
+                formControlName="email"
+                autocomplete="email"
+                placeholder="tu@email.com"
+              />
+            </div>
+          </div>
+
+          <div class="native-field">
+            <label class="field-label"> Teléfono </label>
+
+            <div class="game-input-wrap">
+              <i class="bi bi-phone"></i>
+
+              <input
+                class="game-input"
+                formControlName="phone"
+                autocomplete="tel"
+                placeholder="Tu teléfono"
+              />
+            </div>
+          </div>
+
+          <div class="auth-row">
+            <div class="native-field">
+              <label class="field-label"> Contraseña </label>
+
+              <div class="game-input-wrap">
+                <i class="bi bi-lock"></i>
+
+                <input
+                  class="game-input"
+                  type="password"
+                  formControlName="password"
+                  autocomplete="new-password"
+                  placeholder="Contraseña"
+                />
+              </div>
+            </div>
+
+            <div class="native-field">
+              <label class="field-label"> Repetir contraseña </label>
+
+              <div class="game-input-wrap">
+                <input
+                  class="game-input no-icon"
+                  type="password"
+                  formControlName="repeatPassword"
+                  autocomplete="new-password"
+                  placeholder="Repite contraseña"
+                />
+              </div>
+            </div>
+          </div>
+
+          <button type="button" (click)="register()" class="auth-submit">
+            Crear cuenta
+
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </form>
+
+        <p class="auth-switch">
+          ¿Ya tienes cuenta?
+
+          <a [routerLink]="['/login']"> Inicia sesión </a>
+        </p>
+      </div>
+    </section>
+  </main>
 </app-container>

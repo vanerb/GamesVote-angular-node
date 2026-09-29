@@ -1,6 +1,78 @@
 <app-container>
-  <main class="reviews-page"><header class="reviews-heading"><span class="eyebrow">TU BIBLIOTECA PERSONAL</span><h1>Mis reseñas</h1><p>Los juegos que has valorado y las historias que has compartido.</p></header>
-    <section *ngIf="gamesRated.length; else emptyReviews" class="reviews-grid"><article *ngFor="let game of gamesRated" (click)="details(game.game?.id)" class="review-tile" tabindex="0" (keyup.enter)="details(game.game?.id)"><app-card [game]="game.game"></app-card><span class="review-score"><i class="bi bi-star-fill"></i>{{ game.value }}</span></article></section>
-    <ng-template #emptyReviews><section class="empty-reviews"><i class="bi bi-controller"></i><h2>Aún no has valorado ningún juego</h2><p>Explora el catálogo y deja tu primera reseña.</p><a routerLink="/">Descubrir juegos <i class="bi bi-arrow-right"></i></a></section></ng-template>
+
+  <main class="reviews-page">
+
+    <header class="reviews-heading">
+
+      <span class="eyebrow">
+        TU BIBLIOTECA PERSONAL
+      </span>
+
+      <h1>
+        Mis reseñas
+      </h1>
+
+      <p>
+        Los juegos que has valorado y las historias que has compartido.
+      </p>
+
+    </header>
+
+
+    <section
+      *ngIf="gamesRated().length; else emptyReviews"
+      class="reviews-grid"
+    >
+
+      <article
+        *ngFor="let game of gamesRated()"
+        (click)="details(game.game?.id)"
+        class="review-tile"
+        tabindex="0"
+        (keyup.enter)="details(game.game?.id)"
+      >
+
+        <app-card
+          [game]="game.game"
+        ></app-card>
+
+        <span class="review-score">
+
+          <i class="bi bi-star-fill"></i>
+
+          {{ game.value }}
+
+        </span>
+
+      </article>
+
+    </section>
+
+
+    <ng-template #emptyReviews>
+
+      <section class="empty-reviews">
+
+        <i class="bi bi-controller"></i>
+
+        <h2>
+          Aún no has valorado ningún juego
+        </h2>
+
+        <p>
+          Explora el catálogo y deja tu primera reseña.
+        </p>
+
+        <a routerLink="/">
+          Descubrir juegos
+
+          <i class="bi bi-arrow-right"></i>
+        </a>
+
+      </section>
+
+    </ng-template>
+
   </main>
+
 </app-container>

@@ -1,26 +1,61 @@
 <div class="relative w-full overflow-hidden mx-auto rounded-[10px]">
+
   <!-- Contenedor del slider -->
   <div class="w-full overflow-hidden h-[250px] rounded-[10px]">
+
     <!-- Slides -->
-    <div class="flex gap-2.5 h-full transition-transform duration-500 ease-in-out"
-         [style.transform]="'translateX(-' + (currentIndex * (100 / visibleSlides)) + '%)'">
-      <div *ngFor="let img of images"
-           [ngStyle]="{
-             flex: '0 0 calc((100% / ' + visibleSlides + ') - 10px)',
-             height: '100%',
-             display: 'flex',
-             'justify-content': 'center',
-             'align-items': 'center'
-           }">
-        <img [src]="getImage(img.url, 't_screenshot_big')"
-             alt=""
-             class="max-w-full max-h-full rounded-[10px] object-contain">
+    <div
+      class="flex gap-2.5 h-full transition-transform duration-500 ease-in-out"
+      [style.transform]="
+        'translateX(-' +
+        (currentIndex() * (100 / visibleSlides())) +
+        '%)'
+      "
+    >
+
+      <div
+        *ngFor="let img of images"
+        [ngStyle]="{
+          flex: '0 0 calc((100% / ' + visibleSlides() + ') - 10px)',
+          height: '100%',
+          display: 'flex',
+          'justify-content': 'center',
+          'align-items': 'center'
+        }"
+      >
+
+        <img
+          [src]="getImage(img.url, 't_screenshot_big')"
+          alt=""
+          class="max-w-full max-h-full rounded-[10px] object-contain"
+        >
+
       </div>
+
     </div>
+
   </div>
 
-  <!-- Botones -->
-  <button type="button" (click)="prevSlide()" aria-label="Imagen anterior" class="carousel-arrow carousel-arrow-left"><i class="bi bi-chevron-left"></i></button>
 
-  <button type="button" (click)="nextSlide()" aria-label="Imagen siguiente" class="carousel-arrow carousel-arrow-right"><i class="bi bi-chevron-right"></i></button>
+  <!-- Botón anterior -->
+  <button
+    type="button"
+    (click)="prevSlide()"
+    aria-label="Imagen anterior"
+    class="carousel-arrow carousel-arrow-left"
+  >
+    <i class="bi bi-chevron-left"></i>
+  </button>
+
+
+  <!-- Botón siguiente -->
+  <button
+    type="button"
+    (click)="nextSlide()"
+    aria-label="Imagen siguiente"
+    class="carousel-arrow carousel-arrow-right"
+  >
+    <i class="bi bi-chevron-right"></i>
+  </button>
+
 </div>

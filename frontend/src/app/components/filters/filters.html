@@ -1,18 +1,26 @@
 <aside class="filters-panel">
   <form [formGroup]="form" (ngSubmit)="filter()" class="filters-form">
     <header class="filters-heading">
-      <span class="filter-icon"><i class="bi bi-sliders"></i></span>
+      <span class="filter-icon">
+        <i class="bi bi-sliders"></i>
+      </span>
+
       <div>
-        <span class="eyebrow">PERSONALIZA TU BÚSQUEDA</span>
+        <span class="eyebrow"> PERSONALIZA TU BÚSQUEDA </span>
+
         <h1>Filtros</h1>
       </div>
     </header>
+
     <div class="filters-scroll">
+      <!-- BUSCAR EN MÓVIL -->
       <div *ngIf="isPhone" class="filter-group">
-        <label class="filter-label" for="filter-search">BUSCAR</label>
+        <label class="filter-label" for="filter-search"> BUSCAR </label>
+
         <div class="game-input-wrap">
-          <i class="bi bi-search"></i
-          ><input
+          <i class="bi bi-search"></i>
+
+          <input
             id="filter-search"
             class="game-input"
             placeholder="Nombre del juego"
@@ -20,87 +28,157 @@
           />
         </div>
       </div>
+
+      <!-- ORDENAR -->
       <section class="filter-group">
-        <label class="filter-label" for="filter-order">ORDENAR POR</label
-        ><select id="filter-order" class="game-select" formControlName="order">
+        <label class="filter-label" for="filter-order"> ORDENAR POR </label>
+
+        <select id="filter-order" class="game-select" formControlName="order">
           <option value="">Recomendados</option>
+
           <option value="rating__asc">Nota: menor a mayor</option>
+
           <option value="rating__desc">Nota: mayor a menor</option>
+
           <option value="name__asc">Nombre: A–Z</option>
+
           <option value="name__desc">Nombre: Z–A</option>
+
           <option value="first_release_date__asc">Fecha: más antiguos</option>
+
           <option value="first_release_date__desc">Fecha: más recientes</option>
         </select>
       </section>
+
+      <!-- PLATAFORMAS -->
       <section class="filter-group">
-        <label class="filter-label" for="filter-platform">PLATAFORMAS</label>
+        <label class="filter-label" for="filter-platform"> PLATAFORMAS </label>
+
         <div class="game-input-wrap">
-          <i class="bi bi-controller"></i
-          ><input
+          <i class="bi bi-controller"></i>
+
+          <input
             id="filter-platform"
             class="game-input"
             placeholder="Escribe para buscar"
             [formControl]="platformsControl"
             [matAutocomplete]="autoPlatforms"
-          /><mat-autocomplete
+          />
+
+          <mat-autocomplete
             #autoPlatforms="matAutocomplete"
             class="game-autocomplete-panel"
             (optionSelected)="addPlatform($event.option.value)"
-            ><mat-option *ngFor="let option of filteredPlatforms | async" [value]="option"
-              ><i [ngClass]="'bi bi-' + getPlatformIcon(option.id)"></i>
-              {{ option.name }}</mat-option
-            ></mat-autocomplete
           >
+            <mat-option *ngFor="let option of filteredPlatforms | async" [value]="option">
+              <i [ngClass]="'bi bi-' + getPlatformIcon(option.id)"></i>
+
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete>
         </div>
+
         <div *ngIf="platformsFormArray.controls.length" class="filter-chips">
-          <span class="filter-chip"
+          <span
+            class="filter-chip"
             *ngFor="let platform of platformsFormArray.controls; let i = index"
-            >{{ platform.value.name }}<button type="button" (click)="removePlatform(i)" [attr.aria-label]="'Eliminar plataforma ' + platform.value.name"><i class="bi bi-x"></i></button></span>
+          >
+            {{ platform.value.name }}
+
+            <button
+              type="button"
+              (click)="removePlatform(i)"
+              [attr.aria-label]="'Eliminar plataforma ' + platform.value.name"
+            >
+              <i class="bi bi-x"></i>
+            </button>
+          </span>
         </div>
       </section>
+
+      <!-- GÉNEROS -->
       <section class="filter-group">
-        <label class="filter-label" for="filter-genre">GÉNEROS</label>
+        <label class="filter-label" for="filter-genre"> GÉNEROS </label>
+
         <div class="game-input-wrap">
-          <i class="bi bi-controller"></i
-          ><input
+          <i class="bi bi-controller"></i>
+
+          <input
             id="filter-genre"
             class="game-input"
             placeholder="Escribe para buscar"
             [formControl]="genresControl"
             [matAutocomplete]="autoGenres"
-          /><mat-autocomplete
+          />
+
+          <mat-autocomplete
             #autoGenres="matAutocomplete"
             class="game-autocomplete-panel"
             (optionSelected)="addGenre($event.option.value)"
-            ><mat-option *ngFor="let option of filteredGenres | async" [value]="option"
-              ><i [ngClass]="'bi bi-' + getGenreIcon(option.id)"></i> {{ option.name }}</mat-option
-            ></mat-autocomplete
           >
+            <mat-option *ngFor="let option of filteredGenres | async" [value]="option">
+              <i [ngClass]="'bi bi-' + getGenreIcon(option.id)"></i>
+
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete>
         </div>
+
         <div *ngIf="genresFormArray.controls.length" class="filter-chips">
-          <span class="filter-chip"
-            *ngFor="let genre of genresFormArray.controls; let i = index"
-            >{{ genre.value.name }}<button type="button" (click)="removeGenre(i)" [attr.aria-label]="'Eliminar género ' + genre.value.name"><i class="bi bi-x"></i></button></span>
+          <span class="filter-chip" *ngFor="let genre of genresFormArray.controls; let i = index">
+            {{ genre.value.name }}
+
+            <button
+              type="button"
+              (click)="removeGenre(i)"
+              [attr.aria-label]="'Eliminar género ' + genre.value.name"
+            >
+              <i class="bi bi-x"></i>
+            </button>
+          </span>
         </div>
       </section>
+
+      <!-- VALORACIÓN -->
       <section class="filter-group rating-group">
         <div class="rating-title">
-          <span class="filter-label">VALORACIÓN</span
-          ><span class="rating-range">{{ form.value.minRate }} — {{ form.value.maxRate }}</span>
+          <span class="filter-label"> VALORACIÓN </span>
+
+          <span class="rating-range">
+            {{ form.value.minRate }}
+            —
+            {{ form.value.maxRate }}
+          </span>
         </div>
+
         <div class="range-fields">
-          <label
-            >Mínima<input type="range" min="0" max="10" step="1" formControlName="minRate" /></label
-          ><label
-            >Máxima<input type="range" min="0" max="10" step="1" formControlName="maxRate"
-          /></label>
+          <label>
+            Mínima
+
+            <input type="range" min="0" max="10" step="1" formControlName="minRate" />
+          </label>
+
+          <label>
+            Máxima
+
+            <input type="range" min="0" max="10" step="1" formControlName="maxRate" />
+          </label>
         </div>
-        <div class="rating-ends"><span>0 · Cualquiera</span><span>10 · Excelente</span></div>
+
+        <div class="rating-ends">
+          <span> 0 · Cualquiera </span>
+
+          <span> 10 · Excelente </span>
+        </div>
       </section>
     </div>
+
+    <!-- FOOTER -->
     <footer class="filters-footer">
       <button type="submit" class="apply-filters">
-        <i class="bi bi-check2"></i> Aplicar filtros
+        <i class="bi bi-check2"></i>
+
+        Aplicar filtros
       </button>
     </footer>
   </form>

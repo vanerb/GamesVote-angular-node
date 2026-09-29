@@ -1,50 +1,210 @@
-<mat-drawer-container class="games-shell" [hasBackdrop]="drawerMode === 'over'">
-  <mat-drawer (closedStart)="onDrawerClosed()" [mode]="drawerMode" position="end" [opened]="isOpen" class="filter-drawer">
-    <app-filters [isPhone]="isPhone" (search)="searchFunc($event,true)"></app-filters>
+<mat-drawer-container
+  class="games-shell"
+  [hasBackdrop]="drawerMode() === 'over'"
+>
+
+  <mat-drawer
+    (closedStart)="onDrawerClosed()"
+    [mode]="drawerMode()"
+    position="end"
+    [opened]="isOpen()"
+    class="filter-drawer"
+  >
+
+    <app-filters
+      [isPhone]="isPhone()"
+      (search)="searchFunc($event, true)"
+    ></app-filters>
+
   </mat-drawer>
 
+
   <mat-drawer-content>
+
     <app-container class="catalog-container">
+
       <main class="catalog catalog-scroll">
+
+
         <section class="welcome-panel">
+
           <div class="welcome-copy">
-            <span class="eyebrow"><span class="live-dot"></span> TU PRÓXIMA AVENTURA EMPIEZA AQUÍ</span>
-            <h1>Encuentra tu <span>siguiente juego</span></h1>
-            <p>Explora, compara y descubre qué merece un lugar en tu biblioteca.</p>
+
+            <span class="eyebrow">
+
+              <span class="live-dot"></span>
+
+              TU PRÓXIMA AVENTURA EMPIEZA AQUÍ
+
+            </span>
+
+            <h1>
+              Encuentra tu
+              <span>siguiente juego</span>
+            </h1>
+
+            <p>
+              Explora, compara y descubre qué merece un lugar en tu biblioteca.
+            </p>
+
           </div>
-          <div class="welcome-art" aria-hidden="true"><i class="bi bi-controller"></i><span></span></div>
+
+
+          <div
+            class="welcome-art"
+            aria-hidden="true"
+          >
+
+            <i class="bi bi-controller"></i>
+
+            <span></span>
+
+          </div>
+
         </section>
 
-        <section class="catalog-toolbar" aria-label="Buscar juegos">
-          <label class="search-box" *ngIf="!isPhone">
+
+        <section
+          class="catalog-toolbar"
+          aria-label="Buscar juegos"
+        >
+
+          <label
+            class="search-box"
+            *ngIf="!isPhone()"
+          >
+
             <i class="bi bi-search"></i>
-            <input placeholder="Busca un juego, saga o estudio..." [(ngModel)]="search" (keyup.enter)="searchFunc({},true)" (input)="searchFunc({},true)" />
+
+            <input
+              placeholder="Busca un juego, saga o estudio..."
+              [(ngModel)]="search"
+              (keyup.enter)="searchFunc({}, true)"
+              (input)="searchFunc({}, true)"
+            />
+
             <kbd>↵</kbd>
+
           </label>
-          <button class="filter-button" (click)="openDrawer()" [class.filter-mobile]="isPhone">
-            <i class="bi" [ngClass]="isPhone ? 'bi-search' : 'bi-sliders'"></i>
-            <span>{{ isPhone ? 'Buscar y filtrar' : 'Filtros' }}</span>
+
+
+          <button
+            class="filter-button"
+            (click)="openDrawer()"
+            [class.filter-mobile]="isPhone()"
+          >
+
+            <i
+              class="bi"
+              [ngClass]="isPhone() ? 'bi-search' : 'bi-sliders'"
+            ></i>
+
+            <span>
+              {{ isPhone() ? 'Buscar y filtrar' : 'Filtros' }}
+            </span>
+
           </button>
+
         </section>
+
 
         <div class="section-heading">
-          <div><span class="eyebrow">CATÁLOGO</span><h2>Juegos para descubrir</h2></div>
-          <span class="page-count">Página {{ page }}</span>
+
+          <div>
+
+            <span class="eyebrow">
+              CATÁLOGO
+            </span>
+
+            <h2>
+              Juegos para descubrir
+            </h2>
+
+          </div>
+
+
+          <span class="page-count">
+            Página {{ page() }}
+          </span>
+
         </div>
 
-        <section class="game-grid" aria-label="Catálogo de juegos">
-          <article *ngFor="let game of games" (click)="details(game.id)" class="game-tile" tabindex="0" (keyup.enter)="details(game.id)">
-            <app-card [game]="game"></app-card>
-            <span class="tile-arrow"><i class="bi bi-arrow-up-right"></i></span>
+
+        <section
+          class="game-grid"
+          aria-label="Catálogo de juegos"
+        >
+
+          <article
+            *ngFor="let game of games()"
+            (click)="details(game.id)"
+            class="game-tile"
+            tabindex="0"
+            (keyup.enter)="details(game.id)"
+          >
+
+            <app-card
+              [game]="game"
+            ></app-card>
+
+            <span class="tile-arrow">
+
+              <i class="bi bi-arrow-up-right"></i>
+
+            </span>
+
           </article>
+
         </section>
 
-        <nav class="pagination" aria-label="Paginación">
-          <button (click)="paginator('prev')" [disabled]="page === 1" aria-label="Página anterior"><i class="bi bi-arrow-left"></i></button>
-          <span><b>{{ page }}</b><span class="page-divider">/</span> catálogo</span>
-          <button (click)="paginator('next')" aria-label="Página siguiente"><i class="bi bi-arrow-right"></i></button>
+
+        <nav
+          class="pagination"
+          aria-label="Paginación"
+        >
+
+          <button
+            (click)="paginator('prev')"
+            [disabled]="page() === 1"
+            aria-label="Página anterior"
+          >
+
+            <i class="bi bi-arrow-left"></i>
+
+          </button>
+
+
+          <span>
+
+            <b>
+              {{ page() }}
+            </b>
+
+            <span class="page-divider">
+              /
+            </span>
+
+            catálogo
+
+          </span>
+
+
+          <button
+            (click)="paginator('next')"
+            aria-label="Página siguiente"
+          >
+
+            <i class="bi bi-arrow-right"></i>
+
+          </button>
+
         </nav>
+
+
       </main>
+
     </app-container>
+
   </mat-drawer-content>
+
 </mat-drawer-container>

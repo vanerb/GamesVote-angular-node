@@ -1,20 +1,19 @@
 import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Container} from '../general/container/container';
-import {TextFieldModule} from '@angular/cdk/text-field';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Container } from '../general/container/container';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 @Component({
   selector: 'app-contact',
   imports: [ReactiveFormsModule, Container, TextFieldModule],
   templateUrl: './contact.html',
   styleUrl: './contact.css',
-  standalone: true
+  standalone: true,
 })
 export class Contact {
-  form!: FormGroup
+  form: FormGroup;
 
-
-  constructor( private fb: FormBuilder) {
+  constructor(private readonly fb: FormBuilder) {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       cognames: ['', [Validators.required]],
@@ -23,8 +22,13 @@ export class Contact {
     });
   }
 
+  sendEmail(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
-  sendEmail(){
-    console.log("MAIL ENVIADO")
+    console.log('MAIL ENVIADO');
+    console.log(this.form.value);
   }
 }

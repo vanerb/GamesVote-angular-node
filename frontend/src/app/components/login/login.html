@@ -1,13 +1,107 @@
 <app-container>
-  <main class="auth-page"><section class="auth-card login-card">
-    <div class="auth-art"><span class="auth-orbit"></span><i class="bi bi-controller"></i><span class="eyebrow">GAMESVOTE COMMUNITY</span></div>
-    <div class="auth-content"><span class="eyebrow">QUÉ BUENO VERTE</span><h1>Vuelve al juego</h1><p class="auth-description">Inicia sesión para compartir tus reseñas y descubrir nuevas aventuras.</p>
-      <form [formGroup]="form" (ngSubmit)="login()" class="auth-form">
-        <label class="field-label">Correo electrónico</label><div class="game-input-wrap"><i class="bi bi-envelope"></i><input class="game-input" formControlName="email" type="email" autocomplete="email" placeholder="tu@email.com"></div>
-        <label class="field-label">Contraseña</label><div class="game-input-wrap"><i class="bi bi-lock"></i><input class="game-input" formControlName="password" type="password" autocomplete="current-password" placeholder="Tu contraseña"></div>
-        <button type="submit" class="auth-submit">Iniciar sesión <i class="bi bi-arrow-right"></i></button>
-      </form>
-      <p class="auth-switch">¿Todavía no tienes cuenta? <a [routerLink]="['/register']">Crear una cuenta</a></p>
-    </div>
-  </section></main>
+
+  <main class="auth-page">
+
+    <section class="auth-card login-card">
+
+      <div class="auth-art">
+
+        <span class="auth-orbit"></span>
+
+        <i class="bi bi-controller"></i>
+
+        <span class="eyebrow">
+          GAMESVOTE COMMUNITY
+        </span>
+
+      </div>
+
+
+      <div class="auth-content">
+
+        <span class="eyebrow">
+          QUÉ BUENO VERTE
+        </span>
+
+        <h1>
+          Vuelve al juego
+        </h1>
+
+        <p class="auth-description">
+          Inicia sesión para compartir tus reseñas y descubrir nuevas aventuras.
+        </p>
+
+
+        <form
+          [formGroup]="form"
+          (ngSubmit)="login()"
+          class="auth-form"
+        >
+
+          <label class="field-label">
+            Correo electrónico
+          </label>
+
+          <div class="game-input-wrap">
+
+            <i class="bi bi-envelope"></i>
+
+            <input
+              class="game-input"
+              formControlName="email"
+              type="email"
+              autocomplete="email"
+              placeholder="tu@email.com"
+            >
+
+          </div>
+
+
+          <label class="field-label">
+            Contraseña
+          </label>
+
+          <div class="game-input-wrap">
+
+            <i class="bi bi-lock"></i>
+
+            <input
+              class="game-input"
+              formControlName="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Tu contraseña"
+            >
+
+          </div>
+
+
+          <button
+            type="submit"
+            class="auth-submit"
+          >
+            Iniciar sesión
+
+            <i class="bi bi-arrow-right"></i>
+          </button>
+
+        </form>
+
+
+        <p class="auth-switch">
+
+          ¿Todavía no tienes cuenta?
+
+          <a [routerLink]="['/register']">
+            Crear una cuenta
+          </a>
+
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
 </app-container>

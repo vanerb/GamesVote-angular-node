@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Container} from '../general/container/container';
 import {AuthService} from '../../services/auth-service';
@@ -6,7 +6,7 @@ import {Images} from '../../interfaces/images';
 import {NgIf} from '@angular/common';
 import {Router, RouterLink} from '@angular/router';
 import {firstValueFrom} from 'rxjs';
-import {cleanUrlImage, getImage} from '../../services/utilities-service';
+import {cleanUrlImage} from '../../services/utilities-service';
 import {WarningModal} from '../general/warning-modal/warning-modal';
 import {ModalService} from '../../services/modal-service';
 import {User} from '../../interfaces/user';
@@ -23,18 +23,26 @@ import {User} from '../../interfaces/user';
   styleUrl: './profile.css',
   standalone: true
 })
-export class Profile implements OnInit{
-  formProfile!: FormGroup
-  formPassword!: FormGroup
+export class Profile implements OnInit {
 
-  user!: User
+  formProfile!: FormGroup;
+  formPassword!: FormGroup;
+
+  user = signal<User | null>(null);
 
   selectedImagesCover: File[] = [];
   existingCoverImage: Images | null = null;
-  deletedCoverImage: boolean = false;
-  previewCoverImage!: string;
+  deletedCoverImage = false;
 
-  constructor(private readonly authService: AuthService, private router: Router, private fb: FormBuilder, private cd: ChangeDetectorRef, private readonly modalService: ModalService) {
+  previewCoverImage = signal<string>('');
+
+  constructor(
+    private readonly authService: AuthService,
+    private router: Router,
+    private fb: FormBuilder,
+    private readonly modalService: ModalService
+  ) {
+
     this.formProfile = this.fb.group({
       name: ['', [Validators.required]],
       cognames: ['', [Validators.required]],
@@ -50,81 +58,77 @@ export class Profile implements OnInit{
 
   async ngOnInit() {
     try {
-      this.user = await firstValueFrom(this.authService.getUserByToken()) || null
+
+      const user = await firstValueFrom(
+        this.authService.getUserByToken()
+      );
+
+      if (!user) {
+        return;
+      }
+
+      this.user.set(user);
+
+      this.formProfile.patchValue({
+        name: user.name,
+        cognames: user.cognames,
+        tlf: user.tlf
+      });
+
+      if (user.Images?.length > 0) {
+        this.previewCoverImage.set(
+          'http://localhost:3000/' +
+          cleanUrlImage(user.Images[0].url)
+        );
+      }
+
+    } catch (e) {
+      console.log(e);
     }
-    catch (e){
-
-      console.log(e)
-    }
-    finally {
-
-    }
-
-    this.formProfile.get('name')?.setValue(this.user.name)
-    this.formProfile.get('cognames')?.setValue(this.user.cognames)
-    this.formProfile.get('tlf')?.setValue(this.user.tlf)
-
-
-    this.previewCoverImage = 'http://localhost:3000/'+ cleanUrlImage(this.user.Images[0].url)
   }
 
 
   async onImageChange(event: Event) {
+
     const input = event.target as HTMLInputElement;
-    if (input.files?.length) {
-      this.selectedImagesCover = [input.files[0]];
-      if (this.existingCoverImage) {
-        this.deletedCoverImage = true;
-        this.existingCoverImage = null;
-      }
+
+    if (!input.files?.length) {
+      return;
     }
 
+    const file = input.files[0];
+
+    this.selectedImagesCover = [file];
+
+    if (this.existingCoverImage) {
+      this.deletedCoverImage = true;
+      this.existingCoverImage = null;
+    }
 
     const reader = new FileReader();
+
     reader.onload = () => {
-      this.previewCoverImage = reader.result as string;
+
+      this.previewCoverImage.set(
+        reader.result as string
+      );
+
     };
-    reader.readAsDataURL(this.selectedImagesCover[0]);
-    this.cd.detectChanges()
+
+    reader.readAsDataURL(file);
   }
 
 
   updatePassword() {
-    if (this.formPassword.get('password')?.value !== '' && this.formPassword.get('repeatPassword')?.value !== '') {
-      if (this.formPassword.get('password')?.value === this.formPassword.get('repeatPassword')?.value) {
 
-        const formData = new FormData();
+    const password = this.formPassword.get('password')?.value;
+    const repeatPassword = this.formPassword.get('repeatPassword')?.value;
 
-        formData.append('password', this.formProfile.get('name')?.value);
+    if (password === '' || repeatPassword === '') {
 
-        this.authService.update(formData).subscribe({
-          next: async () => {
-
-          },
-          error: (err) => {
-            console.error('Error en registro:', err);
-          }
-        });
-      }
-      else{
-        this.modalService.open(WarningModal, {
-            width: '60vh',
-          },
-          {
-            props: {
-              title: 'Error',
-              message: 'The passwords do not match, please check.',
-              type: 'info'
-            }
-          }).then(async (item: FormData) => {
-        })
-          .catch(() => {
-            this.modalService.close()
-          });
-      }
-    }
-    else{
-      this.modalService.open(WarningModal, {
+      this.modalService.open(
+        WarningModal,
+        {
           width: '60vh',
         },
         {
@@ -133,41 +137,57 @@ export class Profile implements OnInit{
             message: 'Password fields cannot be left empty.',
             type: 'info'
           }
-        }).then(async (item: FormData) => {
-      })
-        .catch(() => {
-          this.modalService.close()
-        });
+        }
+      ).catch(() => {
+        this.modalService.close();
+      });
+
+      return;
     }
+
+    if (password !== repeatPassword) {
+
+      this.modalService.open(
+        WarningModal,
+        {
+          width: '60vh',
+        },
+        {
+          props: {
+            title: 'Error',
+            message: 'The passwords do not match, please check.',
+            type: 'info'
+          }
+        }
+      ).catch(() => {
+        this.modalService.close();
+      });
+
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append('password', password);
+
+    this.authService.update(formData).subscribe({
+      next: async () => {
+        // Actualización correcta
+      },
+      error: (err) => {
+        console.error('Error en actualización de contraseña:', err);
+      }
+    });
   }
+
 
   updateProfile() {
 
+    if (!this.formProfile.valid) {
 
-    if(this.formProfile.valid){
-      const formData = new FormData();
-
-      formData.append('name', this.formProfile.get('name')?.value);
-      formData.append('cognames', this.formProfile.get('cognames')?.value); // <- coincide con backend
-      formData.append('tlf', this.formProfile.get('tlf')?.value); // <- coincide con backend
-
-
-      if (this.selectedImagesCover.length > 0) {
-        formData.append('profileImage', this.selectedImagesCover[0], this.selectedImagesCover[0].name);
-      }
-
-
-      this.authService.update(formData).subscribe({
-        next: async () => {
-
-        },
-        error: (err) => {
-          console.error('Error en registro:', err);
-        }
-      });
-    }
-    else{
-      this.modalService.open(WarningModal, {
+      this.modalService.open(
+        WarningModal,
+        {
           width: '60vh',
         },
         {
@@ -176,13 +196,57 @@ export class Profile implements OnInit{
             message: 'You need to complete all the fields.',
             type: 'info'
           }
-        }).then(async (item: FormData) => {
-      })
-        .catch(() => {
-          this.modalService.close()
-        });
+        }
+      ).catch(() => {
+        this.modalService.close();
+      });
+
+      return;
     }
 
+    const formData = new FormData();
 
+    formData.append(
+      'name',
+      this.formProfile.get('name')?.value
+    );
+
+    formData.append(
+      'cognames',
+      this.formProfile.get('cognames')?.value
+    );
+
+    formData.append(
+      'tlf',
+      this.formProfile.get('tlf')?.value
+    );
+
+    if (this.selectedImagesCover.length > 0) {
+
+      formData.append(
+        'profileImage',
+        this.selectedImagesCover[0],
+        this.selectedImagesCover[0].name
+      );
+    }
+
+    this.authService.update(formData).subscribe({
+      next: async () => {
+
+        // Si el backend devuelve el usuario actualizado,
+        // puedes actualizar el signal aquí.
+        const updatedUser = await firstValueFrom(
+          this.authService.getUserByToken()
+        );
+
+        if (updatedUser) {
+          this.user.set(updatedUser);
+        }
+
+      },
+      error: (err) => {
+        console.error('Error en actualización de perfil:', err);
+      }
+    });
   }
 }

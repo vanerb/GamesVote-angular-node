@@ -1,32 +1,46 @@
-import {Component, OnInit} from '@angular/core';
-import {Container} from '../general/container/container';
-import {ActivatedRoute} from '@angular/router';
-import {GamesServices} from '../../services/games-services';
-import {NgClass, NgForOf, NgIf} from '@angular/common';
-import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-import {CarrouselImages} from '../general/carrousel-images/carrousel-images';
-import {CarrouselVideos} from '../general/carrousel-videos/carrousel-videos';
-import {ValorationsService} from '../../services/valorations-service';
-import {AuthService} from '../../services/auth-service';
-import {FormsModule} from '@angular/forms';
+import { Component, OnInit, computed, signal } from '@angular/core';
+
+import { Container } from '../general/container/container';
+import { ActivatedRoute } from '@angular/router';
+import { GamesServices } from '../../services/games-services';
+
+import { NgClass, NgForOf, NgIf } from '@angular/common';
+
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
+import { CarrouselImages } from '../general/carrousel-images/carrousel-images';
+import { CarrouselVideos } from '../general/carrousel-videos/carrousel-videos';
+
+import { ValorationsService } from '../../services/valorations-service';
+import { AuthService } from '../../services/auth-service';
+
+import { FormsModule } from '@angular/forms';
+
 import {
   cleanUrlImage,
   getGenreIcon,
-  getImage, getLocalImage,
+  getImage,
+  getLocalImage,
   getMediaValue,
-  getPlatformIcon, sleep,
-  transformDate
+  getPlatformIcon,
+  transformDate,
 } from '../../services/utilities-service';
-import {CreateValoration, UpdateValoration, Valoration} from '../../interfaces/valoration';
-import {firstValueFrom} from 'rxjs';
-import {TextFieldModule} from '@angular/cdk/text-field';
-import {ModalService} from '../../services/modal-service';
-import {Loader} from '../general/loader/loader';
-import {User} from '../../interfaces/user';
-import {Games} from '../../interfaces/games';
+
+import { CreateValoration, UpdateValoration, Valoration } from '../../interfaces/valoration';
+
+import { firstValueFrom } from 'rxjs';
+
+import { TextFieldModule } from '@angular/cdk/text-field';
+
+import { ModalService } from '../../services/modal-service';
+import { Loader } from '../general/loader/loader';
+
+import { User } from '../../interfaces/user';
+import { Games } from '../../interfaces/games';
 
 @Component({
   selector: 'app-details',
+  standalone: true,
   imports: [
     Container,
     NgForOf,
@@ -35,313 +49,390 @@ import {Games} from '../../interfaces/games';
     NgClass,
     FormsModule,
     NgIf,
-    TextFieldModule
+    TextFieldModule,
   ],
   templateUrl: './details.html',
   styleUrl: './details.css',
-  standalone: true,
-  styles: [`
-    ::ng-deep .my-small-btn.mat-mdc-raised-button {
-      min-width: 40px !important;
-      height: 40px !important;
-      padding: 0 !important;
-    }
+  styles: [
+    `
+      ::ng-deep .my-small-btn.mat-mdc-raised-button {
+        min-width: 40px !important;
+        height: 40px !important;
+        padding: 0 !important;
+      }
 
-    ::ng-deep .my-small-btn .mdc-button__label {
-      padding: 0 !important;
-      margin: 0 !important;
-    }
+      ::ng-deep .my-small-btn .mdc-button__label {
+        padding: 0 !important;
+        margin: 0 !important;
+      }
 
-    ::ng-deep .my-small-btn .mat-mdc-button-touch-target {
-      height: 40px !important;
-      width: 40px !important;
-    }
-  `]
-
+      ::ng-deep .my-small-btn .mat-mdc-button-touch-target {
+        height: 40px !important;
+        width: 40px !important;
+      }
+    `,
+  ],
 })
 export class Details implements OnInit {
+  id = signal<string>('');
 
-  id: string = ""
-  game!: Games
-  user?: User
-  createValoration: CreateValoration = {
+  game = signal<Games | null>(null);
+
+  user = signal<User | null>(null);
+
+  createValoration = signal<CreateValoration>({
     value: 0,
-    description: "",
-    gameId: null
-  }
+    description: '',
+    gameId: null,
+  });
 
-  updateValoration: UpdateValoration = {
+  updateValoration = signal<UpdateValoration>({
     id: null,
-    description: "",
+    description: '',
     value: 0,
-    gameId: null
-  }
+    gameId: null,
+  });
 
-  valorations: Valoration[] = []
+  valorations = signal<Valoration[]>([]);
 
-  valorationsWitouthMyValoration: Valoration[] = []
+  myValorations = signal<Valoration[]>([]);
 
-  myValorations: Valoration[] = []
+  editMode = signal<boolean>(false);
 
-  editMode: boolean = false
+  confirmDeleteId = signal<string | null>(null);
 
-  mediaValue: number = 0
+  page = signal<number>(1);
 
-  confirmDeleteId: string | null = null
-  page: number = 1
-  limit: number = 10
-  totalPages = 0;
+  limit = 10;
 
-  constructor(private readonly activatedRoute: ActivatedRoute, private readonly gamesService: GamesServices, private sanitizer: DomSanitizer, private readonly valorationsService: ValorationsService, private readonly authService: AuthService, private modalService: ModalService) {
-  }
+  /**
+   * Todas las valoraciones excepto la del usuario actual.
+   */
+  valorationsWitouthMyValoration = computed(() => {
+    const allValorations = this.valorations();
 
+    const currentUser = this.user();
 
-  async ngOnInit() {
-
-    this.id = this.activatedRoute.snapshot.params['id'];
-
-    this.modalService.open(Loader, {}, {text: 'Loading...'});
-
-    this.searchGameById(parseInt(this.id))
-
-    await this.searchUser()
-
-
-
-
-    if(this.user){
-      this.searchMyValorationsByGameId()
+    if (!currentUser) {
+      return allValorations;
     }
 
+    return allValorations.filter((valoration) => valoration.userId !== currentUser.id);
+  });
 
-    this.getAllValorationsByGameId()
+  /**
+   * Valoraciones de la página actual.
+   */
+  paginatedValorations = computed(() => {
+    const valorations = this.valorationsWitouthMyValoration();
 
+    const start = (this.page() - 1) * this.limit;
 
-    this.mediaValue = getMediaValue(this.valorations)
-    this.editMode = false
+    const end = start + this.limit;
 
+    return valorations.slice(start, end);
+  });
 
-    await sleep(1000)
-    this.page = 1;
-    this.updatePagination();
+  /**
+   * Número total de páginas.
+   */
+  totalPages = computed(() => {
+    return Math.ceil(this.valorationsWitouthMyValoration().length / this.limit);
+  });
 
-    this.modalService.close()
+  /**
+   * Media de las valoraciones.
+   */
+  mediaValue = computed(() => {
+    return getMediaValue(this.valorations());
+  });
 
+  constructor(
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly gamesService: GamesServices,
+    private readonly sanitizer: DomSanitizer,
+    private readonly valorationsService: ValorationsService,
+    private readonly authService: AuthService,
+    private readonly modalService: ModalService,
+  ) {}
 
+  async ngOnInit(): Promise<void> {
+    const routeId = this.activatedRoute.snapshot.params['id'];
+
+    this.id.set(routeId);
+
+    this.modalService.open(
+      Loader,
+      {},
+      {
+        text: 'Loading...',
+      },
+    );
+
+    await this.searchUser();
+
+    this.searchGameById(parseInt(this.id()));
+
+    if (this.user()) {
+      this.searchMyValorationsByGameId();
+    }
+
+    this.getAllValorationsByGameId();
+
+    this.editMode.set(false);
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    this.page.set(1);
+
+    this.modalService.close();
   }
 
-  async searchUser() {
+  async searchUser(): Promise<void> {
+    if (!this.authService.getToken()) {
+      this.user.set(null);
 
-    if(this.authService.getToken()){
-      this.user = await firstValueFrom(this.authService.getUserByToken()) || null
-    }
-    else{
-      this.user =undefined
+      return;
     }
 
+    try {
+      const user = await firstValueFrom(this.authService.getUserByToken());
 
+      this.user.set(user || null);
+    } catch (error) {
+      console.error('Error al obtener el usuario:', error);
 
+      this.user.set(null);
+    }
   }
 
   userImage(type: 'me' | 'others', val?: Valoration): string | null {
     let img: string | undefined;
 
     if (type === 'me') {
-      img = this.user?.Images?.[0]?.url;
+      img = this.user()?.Images?.[0]?.url;
     } else if (val) {
       img = val.User?.Images?.[0]?.url;
     }
 
-    return img ? 'http://localhost:3000/' + this.cleanUrlImage(img) : null;
+    return img ? 'http://localhost:3000/' + cleanUrlImage(img) : null;
   }
 
   searchGameById(id: number): void {
     this.gamesService.getGameById(id).subscribe({
-      next: async (game: Games[]) => {
-
-        this.game = game[0]
+      next: (games: Games[]) => {
+        this.game.set(games[0] ?? null);
       },
-      error: error => {
-        console.log(error)
-      }
-    })
-  }
 
-  changeEditMode(id: string, gameId: string) {
-    this.editMode = true;
-    this.searchValorationByIdAndByGameId(id, gameId)
+      error: (error) => {
+        console.error('Error al obtener el juego:', error);
 
-
-  }
-
-  updateMyValoration() {
-    let formData = new FormData();
-    formData.append('description', this.updateValoration.description)
-    formData.append('value', this.updateValoration.value.toString())
-
-    this.valorationsService.update(this.updateValoration.id, formData).subscribe({
-      next: async () => {
-        this.cancelEditMode()
-        this.searchMyValorationsByGameId()
-
-        this.getAllValorationsByGameId()
+        this.game.set(null);
       },
-      error: error => {
-        console.log(error)
-      }
-    })
+    });
   }
 
-  deleteReview(id: string) {
+  changeEditMode(id: string, gameId: string): void {
+    this.editMode.set(true);
+
+    this.searchValorationByIdAndByGameId(id, gameId);
+  }
+
+  updateMyValoration(): void {
+    const currentValoration = this.updateValoration();
+
+    if (!currentValoration.id) {
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append('description', currentValoration.description);
+
+    formData.append('value', currentValoration.value.toString());
+
+    this.valorationsService.update(currentValoration.id, formData).subscribe({
+      next: () => {
+        this.cancelEditMode();
+
+        this.searchMyValorationsByGameId();
+
+        this.getAllValorationsByGameId();
+      },
+
+      error: (error) => {
+        console.error('Error al actualizar la valoración:', error);
+      },
+    });
+  }
+
+  deleteReview(id: string): void {
     this.valorationsService.delete(id).subscribe({
       next: async () => {
-        this.confirmDeleteId = null
-        this.searchMyValorationsByGameId()
-        this.getAllValorationsByGameId()
-        await this.searchUser()
+        this.confirmDeleteId.set(null);
 
+        this.searchMyValorationsByGameId();
 
+        this.getAllValorationsByGameId();
+
+        await this.searchUser();
       },
-      error: error => {
-        console.log(error)
-      }
-    })
 
-
+      error: (error) => {
+        console.error('Error al eliminar la valoración:', error);
+      },
+    });
   }
 
-  cancelEditMode() {
-    this.editMode = false
+  cancelEditMode(): void {
+    this.editMode.set(false);
   }
 
+  getAllValorationsByGameId(): void {
+    this.valorationsService.getAllByGameId(this.id()).subscribe({
+      next: (valorations: Valoration[]) => {
+        this.valorations.set(valorations);
 
-  getAllValorationsByGameId() {
-    this.valorationsService.getAllByGameId(this.id).subscribe({
-      next: async (valorations: Valoration[]) => {
-        this.valorations = valorations
-        if(this.user !== null){
-          this.valorationsWitouthMyValoration = valorations.filter(el => el.userId !== this.user?.id)
+        const totalPages = Math.ceil(this.valorationsWitouthMyValoration().length / this.limit);
+
+        if (totalPages > 0 && this.page() > totalPages) {
+          this.page.set(totalPages);
         }
-        else{
-          this.valorationsWitouthMyValoration = valorations
+
+        if (totalPages === 0) {
+          this.page.set(1);
         }
-
       },
-      error: error => {
-        console.log(error)
-      }
-    })
 
+      error: (error) => {
+        console.error('Error al obtener las valoraciones:', error);
+
+        this.valorations.set([]);
+      },
+    });
   }
 
-  searchMyValorationsByGameId() {
-    this.valorationsService.getMyValorationsByGameId(this.id).subscribe({
-      next: async (valorations: Valoration[]) => {
-        this.myValorations = valorations
+  searchMyValorationsByGameId(): void {
+    this.valorationsService.getMyValorationsByGameId(this.id()).subscribe({
+      next: (valorations: Valoration[]) => {
+        this.myValorations.set(valorations);
       },
-      error: error => {
-        console.log(error)
-      }
-    })
+
+      error: (error) => {
+        console.error('Error al obtener mis valoraciones:', error);
+
+        this.myValorations.set([]);
+      },
+    });
   }
 
   searchValorationByIdAndByGameId(id: string, gameId: string): void {
     this.valorationsService.getValorationByIdAndByGameId(id, gameId).subscribe({
-      next: async (valoration: Valoration) => {
-        this.updateValoration = {
+      next: (valoration: Valoration) => {
+        this.updateValoration.set({
           id: valoration.id,
-          description: valoration.description,
-          value: parseInt(valoration.value),
-          gameId: valoration.gameId
-        }
 
+          description: valoration.description,
+
+          value: parseInt(valoration.value),
+
+          gameId: valoration.gameId,
+        });
       },
-      error: error => {
-        console.log(error)
-      }
-    })
+
+      error: (error) => {
+        console.error('Error al obtener la valoración:', error);
+      },
+    });
   }
 
-
-  setNote(note: number, type: 'update' | 'create') {
+  setNote(note: number, type: 'update' | 'create'): void {
     if (type === 'update') {
-      this.updateValoration.value = note
-    } else if (type === 'create') {
-      this.createValoration.value = note
+      this.updateValoration.update((valoration) => ({
+        ...valoration,
+        value: note,
+      }));
+    } else {
+      this.createValoration.update((valoration) => ({
+        ...valoration,
+        value: note,
+      }));
     }
   }
 
+  updateCreateDescription(description: string): void {
+    this.createValoration.update((valoration) => ({
+      ...valoration,
+      description,
+    }));
+  }
 
-  createMyValoration() {
+  updateUpdateDescription(description: string): void {
+    this.updateValoration.update((valoration) => ({
+      ...valoration,
+      description,
+    }));
+  }
+
+  createMyValoration(): void {
+    const currentValoration = this.createValoration();
 
     const formData = new FormData();
 
-    formData.append('description', this.createValoration.description);
-    formData.append('value', this.createValoration.value.toString());
-    formData.append('gameId', this.id);
+    formData.append('description', currentValoration.description);
+
+    formData.append('value', currentValoration.value.toString());
+
+    formData.append('gameId', this.id());
 
     this.valorationsService.create(formData).subscribe({
-      next: async () => {
+      next: () => {
+        this.getAllValorationsByGameId();
 
-        this.getAllValorationsByGameId()
-        this.searchMyValorationsByGameId()
+        this.searchMyValorationsByGameId();
 
+        this.createValoration.set({
+          description: '',
 
-        this.createValoration = {
-          description: "",
           gameId: null,
-          value: 0
-        }
+
+          value: 0,
+        });
       },
-      error: error => {
-        console.log(error)
-      }
-    })
-    console.log(this.createValoration);
 
+      error: (error) => {
+        console.error('Error al crear la valoración:', error);
+      },
+    });
   }
 
-  async paginator(type: string) {
+  paginator(type: 'next' | 'prev'): void {
     if (type === 'next') {
-      this.page = this.page + 1;
-    } else if (type === 'prev') {
-      if (this.page > 1) {
-        this.page = this.page - 1;
+      const totalPages = this.totalPages();
+
+      if (this.page() < totalPages) {
+        this.page.update((value) => value + 1);
+      }
+    } else {
+      if (this.page() > 1) {
+        this.page.update((value) => value - 1);
       }
     }
-
-    this.updatePagination();
-  }
-
-  prepareData() {
-    if (this.user !== null) {
-      this.valorationsWitouthMyValoration = this.valorations.filter(
-        el => el.userId !== this.user?.id
-      );
-    } else {
-      this.valorationsWitouthMyValoration = [...this.valorations];
-    }
-  }
-
-  updatePagination() {
-    this.prepareData()
-
-    let valorations = this.valorationsWitouthMyValoration
-
-    const start = (this.page - 1) * this.limit;
-    const end = start + this.limit;
-
-    this.valorationsWitouthMyValoration = valorations.slice(start, end);
-
-    this.totalPages = Math.ceil(valorations.length / this.limit);
   }
 
   protected readonly transformDate = transformDate;
+
   protected readonly cleanUrlImage = cleanUrlImage;
+
   protected readonly getImage = getImage;
+
   protected readonly getPlatformIcon = getPlatformIcon;
+
   protected readonly getGenreIcon = getGenreIcon;
+
   protected readonly getMediaValue = getMediaValue;
+
   protected readonly parseInt = parseInt;
+
   protected readonly getLocalImage = getLocalImage;
 }

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, signal} from '@angular/core';
 import {NgForOf, NgStyle} from '@angular/common';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
@@ -6,47 +6,104 @@ import {Videos} from '../../../interfaces/games';
 
 @Component({
   selector: 'app-carrousel-videos',
+  standalone: true,
   imports: [
     NgForOf,
     NgStyle
   ],
   templateUrl: './carrousel-videos.html',
-  styleUrl: './carrousel-videos.css',
-  standalone: true
+  styleUrl: './carrousel-videos.css'
 })
-export class CarrouselVideos implements OnInit{
+export class CarrouselVideos implements OnInit {
 
-  @Input() videos: Videos[] = [];
-  currentIndex = 0;
-  visibleSlides = 2; // Número de videos visibles a la vez
+  @Input()
+  videos: Videos[] = [];
 
-  constructor(private sanitizer: DomSanitizer,private breakpointObserver: BreakpointObserver) {}
+  currentIndex = signal<number>(0);
 
-  prevSlide() {
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
-    }
+  visibleSlides = signal<number>(2);
+
+
+  constructor(
+    private readonly sanitizer: DomSanitizer,
+    private readonly breakpointObserver: BreakpointObserver
+  ) {
   }
 
-  nextSlide() {
-    if (this.currentIndex < this.videos.length - this.visibleSlides) {
-      this.currentIndex++;
+
+  prevSlide(): void {
+
+    if (this.currentIndex() > 0) {
+
+      this.currentIndex.update(
+        value => value - 1
+      );
+
     }
+
   }
+
+
+  nextSlide(): void {
+
+    const maxIndex = Math.max(
+      0,
+      this.videos.length - this.visibleSlides()
+    );
+
+
+    if (this.currentIndex() < maxIndex) {
+
+      this.currentIndex.update(
+        value => value + 1
+      );
+
+    }
+
+  }
+
 
   ngOnInit(): void {
 
-    this.breakpointObserver.observe([Breakpoints.Handset])
+    this.breakpointObserver
+      .observe([Breakpoints.Handset])
       .subscribe(result => {
+
         if (result.matches) {
-          this.visibleSlides = 1
+
+          this.visibleSlides.set(1);
+
         } else {
-          this.visibleSlides = 3
+
+          this.visibleSlides.set(3);
+
         }
+
+
+        // Evita que el índice actual quede fuera de rango
+        const maxIndex = Math.max(
+          0,
+          this.videos.length - this.visibleSlides()
+        );
+
+
+        if (this.currentIndex() > maxIndex) {
+
+          this.currentIndex.set(maxIndex);
+
+        }
+
       });
+
   }
 
+
   getSafeUrl(videoId: string): SafeResourceUrl {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${videoId}`);
+
+    return this.sanitizer.bypassSecurityTrustResourceUrl(
+      `https://www.youtube.com/embed/${videoId}`
+    );
+
   }
+
 }

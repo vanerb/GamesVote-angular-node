@@ -1,34 +1,222 @@
-<mat-drawer-container [hasBackdrop]="drawerMode === 'over'" class="app-shell">
-  <mat-drawer [mode]="drawerMode" [opened]="isOpen" (closedStart)="onDrawerClosed()" #drawer position="start" class="navigation-drawer">
-    <div class="drawer-brand"><span class="brand-mark"><i class="bi bi-controller"></i></span><span>GAMES<span class="brand-accent">VOTE</span></span></div>
+<mat-drawer-container
+  [hasBackdrop]="drawerMode() === 'over'"
+  class="app-shell"
+>
+
+  <mat-drawer
+    [mode]="drawerMode()"
+    [opened]="isOpen()"
+    (closedStart)="onDrawerClosed()"
+    #drawer
+    position="start"
+    class="navigation-drawer"
+  >
+
+    <div class="drawer-brand">
+
+      <span class="brand-mark">
+        <i class="bi bi-controller"></i>
+      </span>
+
+      <span>
+        GAMES<span class="brand-accent">VOTE</span>
+      </span>
+
+    </div>
+
+
     <div class="drawer-links">
-      <span class="nav-label">EXPLORAR</span>
-      <div (click)="gotTo('/')" class="menu-item"><i class="bi bi-grid-1x2-fill"></i><span>Juegos</span></div>
-      <div (click)="gotTo('/my-valorations')" class="menu-item"><i class="bi bi-heart-fill"></i><span>Mis reseñas</span></div>
-      <div (click)="gotTo('/contact')" class="menu-item"><i class="bi bi-chat-square-dots-fill"></i><span>Contacto</span></div>
-    </div>
-    <div class="drawer-account" *ngIf="isLogged">
-      <div (click)="gotTo('/profile')" class="menu-item account-item">
-        <div class="avatar"><img *ngIf="previewCoverImage" [src]="previewCoverImage" alt="Foto de perfil" /><img *ngIf="!previewCoverImage" src="http://localhost:3000/uploads/No_Image_Available.jpg" alt="Foto de perfil" /></div>
-        <span>Mi perfil</span>
+
+      <span class="nav-label">
+        EXPLORAR
+      </span>
+
+
+      <div
+        (click)="gotTo('/')"
+        class="menu-item"
+      >
+
+        <i class="bi bi-grid-1x2-fill"></i>
+
+        <span>
+          Juegos
+        </span>
+
       </div>
-      <div (click)="closeSession()" class="menu-item"><i class="bi bi-box-arrow-right"></i><span>Cerrar sesión</span></div>
+
+
+      <div
+        (click)="gotTo('/my-valorations')"
+        class="menu-item"
+      >
+
+        <i class="bi bi-heart-fill"></i>
+
+        <span>
+          Mis reseñas
+        </span>
+
+      </div>
+
+
+      <div
+        (click)="gotTo('/contact')"
+        class="menu-item"
+      >
+
+        <i class="bi bi-chat-square-dots-fill"></i>
+
+        <span>
+          Contacto
+        </span>
+
+      </div>
+
     </div>
-    <div class="drawer-account" *ngIf="!isLogged">
-      <span class="nav-label">TU CUENTA</span>
-      <div (click)="gotTo('/login')" class="menu-item"><i class="bi bi-person-circle"></i><span>Iniciar sesión</span></div>
-      <div (click)="gotTo('/register')" class="menu-item"><i class="bi bi-person-plus-fill"></i><span>Crear cuenta</span></div>
+
+
+    <div
+      class="drawer-account"
+      *ngIf="isLogged()"
+    >
+
+      <div
+        (click)="gotTo('/profile')"
+        class="menu-item account-item"
+      >
+
+        <div class="avatar">
+
+          <img
+            *ngIf="previewCoverImage()"
+            [src]="previewCoverImage()"
+            alt="Foto de perfil"
+          >
+
+          <img
+            *ngIf="!previewCoverImage()"
+            src="http://localhost:3000/uploads/No_Image_Available.jpg"
+            alt="Foto de perfil"
+          >
+
+        </div>
+
+        <span>
+          Mi perfil
+        </span>
+
+      </div>
+
+
+      <div
+        (click)="closeSession()"
+        class="menu-item"
+      >
+
+        <i class="bi bi-box-arrow-right"></i>
+
+        <span>
+          Cerrar sesión
+        </span>
+
+      </div>
+
     </div>
-    <div class="drawer-footer"><span class="status-dot"></span> Comunidad gamer, mejores recomendaciones</div>
+
+
+    <div
+      class="drawer-account"
+      *ngIf="!isLogged()"
+    >
+
+      <span class="nav-label">
+        TU CUENTA
+      </span>
+
+
+      <div
+        (click)="gotTo('/login')"
+        class="menu-item"
+      >
+
+        <i class="bi bi-person-circle"></i>
+
+        <span>
+          Iniciar sesión
+        </span>
+
+      </div>
+
+
+      <div
+        (click)="gotTo('/register')"
+        class="menu-item"
+      >
+
+        <i class="bi bi-person-plus-fill"></i>
+
+        <span>
+          Crear cuenta
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="drawer-footer">
+
+      <span class="status-dot"></span>
+
+      Comunidad gamer, mejores recomendaciones
+
+    </div>
+
   </mat-drawer>
 
+
   <mat-drawer-content>
+
     <mat-toolbar class="topbar">
-      <button mat-button class="menu-toggle" (click)="open()" aria-label="Abrir menú"><i class="bi bi-list"></i></button>
-      <span class="mobile-brand">GAMES<span>VOTE</span></span>
+
+      <button
+        mat-button
+        class="menu-toggle"
+        (click)="open()"
+        aria-label="Abrir menú"
+      >
+
+        <i class="bi bi-list"></i>
+
+      </button>
+
+
+      <span class="mobile-brand">
+        GAMES<span>VOTE</span>
+      </span>
+
+
       <span class="toolbar-spacer"></span>
-      <span class="topbar-caption"><i class="bi bi-stars"></i> Tu comunidad de videojuegos</span>
+
+
+      <span class="topbar-caption">
+
+        <i class="bi bi-stars"></i>
+
+        Tu comunidad de videojuegos
+
+      </span>
+
     </mat-toolbar>
-    <div class="main-content"><ng-content></ng-content></div>
+
+
+    <div class="main-content">
+
+      <ng-content></ng-content>
+
+    </div>
+
   </mat-drawer-content>
+
 </mat-drawer-container>

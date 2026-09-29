@@ -1,23 +1,24 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {getImage, getLocalImage} from "../../../services/utilities-service";
-import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {NgForOf, NgIf, NgStyle} from '@angular/common';
+import {Component, Input} from '@angular/core';
+import {NgIf} from '@angular/common';
+import {getImage, getLocalImage} from '../../../services/utilities-service';
 
 @Component({
   selector: 'app-card',
+  standalone: true,
   imports: [
-    NgStyle,
-    NgForOf,
     NgIf
   ],
   templateUrl: './card.html',
-  styleUrl: './card.css',
-  standalone: true
+  styleUrl: './card.css'
 })
 export class Card {
-  @Input() game!: any
+
+  @Input()
+  game!: any;
 
 
   protected readonly getLocalImage = getLocalImage;
+
   protected readonly getImage = getImage;
+
 }

@@ -1,12 +1,15 @@
 import {Component, Input} from '@angular/core';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
 @Component({
   selector: 'app-loader',
-  imports: [MatProgressSpinnerModule],
+  standalone: true,
+  imports: [],
   templateUrl: './loader.html',
-  styleUrl: './loader.css',
-  standalone: true
+  styleUrl: './loader.css'
 })
 export class Loader {
-  @Input() text: string = ""
+
+  @Input()
+  text: string = '';
+
 }

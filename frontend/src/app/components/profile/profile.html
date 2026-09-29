@@ -1,33 +1,257 @@
 <app-container>
   <main class="profile-layout">
+
     <aside class="profile-identity">
-      <div class="identity-orbit"></div><span class="section-kicker">TU ESPACIO EN GAMESVOTE</span>
+
+      <div class="identity-orbit"></div>
+
+      <span class="section-kicker">
+        TU ESPACIO EN GAMESVOTE
+      </span>
+
       <div class="avatar-picker">
-        <div class="profile-avatar"><img *ngIf="previewCoverImage" [src]="previewCoverImage" alt="Tu foto de perfil"><img *ngIf="!previewCoverImage" src="http://localhost:3000/uploads/No_Image_Available.jpg" alt="Avatar predeterminado"></div>
-        <input type="file" accept="image/*" #fileInput hidden (change)="onImageChange($event)"><button type="button" class="avatar-edit" (click)="fileInput.click()" aria-label="Cambiar foto de perfil"><i class="bi bi-camera-fill"></i></button>
+
+        <div class="profile-avatar">
+
+          <img
+            *ngIf="previewCoverImage()"
+            [src]="previewCoverImage()"
+            alt="Tu foto de perfil"
+          >
+
+          <img
+            *ngIf="!previewCoverImage()"
+            src="http://localhost:3000/uploads/No_Image_Available.jpg"
+            alt="Avatar predeterminado"
+          >
+
+        </div>
+
+        <input
+          type="file"
+          accept="image/*"
+          #fileInput
+          hidden
+          (change)="onImageChange($event)"
+        >
+
+        <button
+          type="button"
+          class="avatar-edit"
+          (click)="fileInput.click()"
+          aria-label="Cambiar foto de perfil"
+        >
+          <i class="bi bi-camera-fill"></i>
+        </button>
+
       </div>
-      <h1>Tu perfil,<br><span>a tu manera.</span></h1><p>Actualiza tus datos y personaliza tu espacio en la comunidad gamer.</p>
-      <div class="identity-decoration"><i class="bi bi-controller"></i><span>PLAYER PROFILE</span></div>
+
+      <h1>
+        Tu perfil,<br>
+        <span>a tu manera.</span>
+      </h1>
+
+      <p>
+        Actualiza tus datos y personaliza tu espacio en la comunidad gamer.
+      </p>
+
+      <div class="identity-decoration">
+        <i class="bi bi-controller"></i>
+        <span>PLAYER PROFILE</span>
+      </div>
+
     </aside>
 
+
     <div class="profile-content">
+
       <section class="profile-section">
-        <header class="profile-section-heading"><span class="section-kicker">INFORMACIÓN PERSONAL</span><h2>Datos del perfil</h2><p>Así te verá el resto de la comunidad.</p></header>
+
+        <header class="profile-section-heading">
+
+          <span class="section-kicker">
+            INFORMACIÓN PERSONAL
+          </span>
+
+          <h2>
+            Datos del perfil
+          </h2>
+
+          <p>
+            Así te verá el resto de la comunidad.
+          </p>
+
+        </header>
+
+
         <form [formGroup]="formProfile">
-          <div class="profile-row"><div class="native-field"><label class="field-label">Nombre</label><div class="game-input-wrap"><i class="bi bi-person"></i><input class="game-input" formControlName="name" autocomplete="given-name"></div></div><div class="native-field"><label class="field-label">Apellidos</label><div class="game-input-wrap"><input class="game-input no-icon" formControlName="cognames" autocomplete="family-name"></div></div></div>
-          <div class="native-field"><label class="field-label">Teléfono</label><div class="game-input-wrap"><i class="bi bi-phone"></i><input class="game-input" formControlName="tlf" autocomplete="tel"></div></div>
-          <div class="profile-actions"><button type="button" class="primary-action" (click)="updateProfile()"><i class="bi bi-check2"></i>Guardar cambios</button></div>
+
+          <div class="profile-row">
+
+            <div class="native-field">
+
+              <label class="field-label">
+                Nombre
+              </label>
+
+              <div class="game-input-wrap">
+
+                <i class="bi bi-person"></i>
+
+                <input
+                  class="game-input"
+                  formControlName="name"
+                  autocomplete="given-name"
+                >
+
+              </div>
+
+            </div>
+
+
+            <div class="native-field">
+
+              <label class="field-label">
+                Apellidos
+              </label>
+
+              <div class="game-input-wrap">
+
+                <input
+                  class="game-input no-icon"
+                  formControlName="cognames"
+                  autocomplete="family-name"
+                >
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="native-field">
+
+            <label class="field-label">
+              Teléfono
+            </label>
+
+            <div class="game-input-wrap">
+
+              <i class="bi bi-phone"></i>
+
+              <input
+                class="game-input"
+                formControlName="tlf"
+                autocomplete="tel"
+              >
+
+            </div>
+
+          </div>
+
+
+          <div class="profile-actions">
+
+            <button
+              type="button"
+              class="primary-action"
+              (click)="updateProfile()"
+            >
+              <i class="bi bi-check2"></i>
+              Guardar cambios
+            </button>
+
+          </div>
+
         </form>
+
       </section>
 
+
       <section class="profile-section security-section">
-        <header class="profile-section-heading"><span class="section-kicker">SEGURIDAD</span><h2>Cambiar contraseña</h2><p>Elige una contraseña segura para proteger tu cuenta.</p></header>
+
+        <header class="profile-section-heading">
+
+          <span class="section-kicker">
+            SEGURIDAD
+          </span>
+
+          <h2>
+            Cambiar contraseña
+          </h2>
+
+          <p>
+            Elige una contraseña segura para proteger tu cuenta.
+          </p>
+
+        </header>
+
+
         <form [formGroup]="formPassword">
-          <div class="native-field"><label class="field-label">Nueva contraseña</label><div class="game-input-wrap"><i class="bi bi-lock"></i><input class="game-input" type="password" formControlName="password" autocomplete="new-password"></div></div>
-          <div class="native-field"><label class="field-label">Repetir contraseña</label><div class="game-input-wrap"><i class="bi bi-lock"></i><input class="game-input" type="password" formControlName="repeatPassword" autocomplete="new-password"></div></div>
-          <div class="profile-actions"><button type="button" class="secondary-action" (click)="updatePassword()"><i class="bi bi-shield-lock"></i>Actualizar contraseña</button></div>
+
+          <div class="native-field">
+
+            <label class="field-label">
+              Nueva contraseña
+            </label>
+
+            <div class="game-input-wrap">
+
+              <i class="bi bi-lock"></i>
+
+              <input
+                class="game-input"
+                type="password"
+                formControlName="password"
+                autocomplete="new-password"
+              >
+
+            </div>
+
+          </div>
+
+
+          <div class="native-field">
+
+            <label class="field-label">
+              Repetir contraseña
+            </label>
+
+            <div class="game-input-wrap">
+
+              <i class="bi bi-lock"></i>
+
+              <input
+                class="game-input"
+                type="password"
+                formControlName="repeatPassword"
+                autocomplete="new-password"
+              >
+
+            </div>
+
+          </div>
+
+
+          <div class="profile-actions">
+
+            <button
+              type="button"
+              class="secondary-action"
+              (click)="updatePassword()"
+            >
+              <i class="bi bi-shield-lock"></i>
+              Actualizar contraseña
+            </button>
+
+          </div>
+
         </form>
+
       </section>
+
     </div>
+
   </main>
 </app-container>

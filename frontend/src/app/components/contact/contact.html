@@ -3,40 +3,74 @@
     <div class="contact-card">
       <div class="w-full h-full">
         <div class="contact-panel">
-
           <div class="contact-heading">
-            <span class="eyebrow">ESTAMOS PARA ESCUCHARTE</span><h1>Hablemos</h1><p>¿Tienes una idea, duda o sugerencia? Escríbenos.</p>
+            <span class="eyebrow">ESTAMOS PARA ESCUCHARTE</span>
+            <h1>Hablemos</h1>
+            <p>¿Tienes una idea, duda o sugerencia? Escríbenos.</p>
           </div>
 
-          <form
-            [formGroup]="form"
-              class="contact-form"
-          >
-
+          <form [formGroup]="form" (ngSubmit)="sendEmail()" class="contact-form">
             <div class="mt-5">
-                <div class="contact-row">
+              <div class="contact-row">
+                <div class="native-field">
+                  <label class="field-label">Nombre</label>
 
-                <div class="native-field"><label class="field-label">Nombre</label><div class="game-input-wrap"><i class="bi bi-person"></i><input class="game-input" formControlName="name" autocomplete="given-name"></div></div>
-                <div class="native-field"><label class="field-label">Apellidos</label><div class="game-input-wrap"><input class="game-input no-icon" formControlName="cognames" autocomplete="family-name"></div></div>
+                  <div class="game-input-wrap">
+                    <i class="bi bi-person"></i>
 
+                    <input class="game-input" formControlName="name" autocomplete="given-name" />
+                  </div>
+                </div>
+
+                <div class="native-field">
+                  <label class="field-label">Apellidos</label>
+
+                  <div class="game-input-wrap">
+                    <input
+                      class="game-input no-icon"
+                      formControlName="cognames"
+                      autocomplete="family-name"
+                    />
+                  </div>
+                </div>
               </div>
 
-              <div class="native-field"><label class="field-label">Correo electrónico</label><div class="game-input-wrap"><i class="bi bi-envelope"></i><input class="game-input" formControlName="email" type="email" autocomplete="email"></div></div>
+              <div class="native-field">
+                <label class="field-label">Correo electrónico</label>
 
-              <!-- Mensaje -->
-              <div class="native-field"><label class="field-label">Mensaje</label><textarea class="game-input game-textarea" formControlName="message" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="20" placeholder="Cuéntanos en qué podemos ayudarte..."></textarea></div>
+                <div class="game-input-wrap">
+                  <i class="bi bi-envelope"></i>
+
+                  <input
+                    class="game-input"
+                    formControlName="email"
+                    type="email"
+                    autocomplete="email"
+                  />
+                </div>
+              </div>
+
+              <div class="native-field">
+                <label class="field-label">Mensaje</label>
+
+                <textarea
+                  class="game-input game-textarea"
+                  formControlName="message"
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="5"
+                  cdkAutosizeMaxRows="20"
+                  placeholder="Cuéntanos en qué podemos ayudarte..."
+                ></textarea>
+              </div>
             </div>
 
-            <!-- Botón enviar -->
-            <div class="flex justify-end  w-full">
-              <button
-                (click)="sendEmail()"
-                class="contact-submit"
-              >
-                <i class="bi bi-send mr-1"></i>Enviar mensaje
+            <div class="flex justify-end w-full">
+              <button type="submit" class="contact-submit">
+                <i class="bi bi-send mr-1"></i>
+                Enviar mensaje
               </button>
             </div>
-
           </form>
         </div>
       </div>

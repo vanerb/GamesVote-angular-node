@@ -1,15 +1,28 @@
-<div class="relative w-full overflow-hidden mx-auto rounded-[10px] h-[250px]">
+<div
+  class="relative w-full overflow-hidden mx-auto rounded-[10px] h-[250px]"
+>
+
   <!-- Contenedor de slides -->
-  <div class="flex gap-2.5 h-full transition-transform duration-500 ease-in-out"
-       [style.transform]="'translateX(-' + (currentIndex * (100 / visibleSlides)) + '%)'">
-    <div *ngFor="let video of videos"
-         [ngStyle]="{
-           flex: '0 0 calc((100% / ' + visibleSlides + ') - 10px)',
-           height: '100%',
-           display: 'flex',
-           'justify-content': 'center',
-           'align-items': 'center'
-         }">
+  <div
+    class="flex gap-2.5 h-full transition-transform duration-500 ease-in-out"
+    [style.transform]="
+      'translateX(-' +
+      (currentIndex() * (100 / visibleSlides())) +
+      '%)'
+    "
+  >
+
+    <div
+      *ngFor="let video of videos"
+      [ngStyle]="{
+        flex: '0 0 calc((100% / ' + visibleSlides() + ') - 10px)',
+        height: '100%',
+        display: 'flex',
+        'justify-content': 'center',
+        'align-items': 'center'
+      }"
+    >
+
       <iframe
         [src]="getSafeUrl(video.video_id)"
         width="100%"
@@ -18,13 +31,34 @@
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
-        class="rounded-[10px]">
+        class="rounded-[10px]"
+      >
       </iframe>
+
     </div>
+
   </div>
 
-  <!-- Botones -->
-  <button type="button" (click)="prevSlide()" aria-label="Vídeo anterior" class="carousel-arrow carousel-arrow-left"><i class="bi bi-chevron-left"></i></button>
 
-  <button type="button" (click)="nextSlide()" aria-label="Vídeo siguiente" class="carousel-arrow carousel-arrow-right"><i class="bi bi-chevron-right"></i></button>
+  <!-- Botón anterior -->
+  <button
+    type="button"
+    (click)="prevSlide()"
+    aria-label="Vídeo anterior"
+    class="carousel-arrow carousel-arrow-left"
+  >
+    <i class="bi bi-chevron-left"></i>
+  </button>
+
+
+  <!-- Botón siguiente -->
+  <button
+    type="button"
+    (click)="nextSlide()"
+    aria-label="Vídeo siguiente"
+    class="carousel-arrow carousel-arrow-right"
+  >
+    <i class="bi bi-chevron-right"></i>
+  </button>
+
 </div>

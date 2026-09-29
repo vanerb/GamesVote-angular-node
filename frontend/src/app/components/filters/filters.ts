@@ -1,34 +1,67 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
-import {NgClass, NgForOf, NgIf} from '@angular/common';
-import {getGenreIcon, getGenres, getPlatformIcon, getPlatforms} from '../../services/utilities-service';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {AsyncPipe} from '@angular/common';
-import {map, Observable, startWith} from 'rxjs';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
+import {
+  getGenreIcon,
+  getGenres,
+  getPlatformIcon,
+  getPlatforms,
+} from '../../services/utilities-service';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { map, Observable, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-filters',
-  imports: [
-    ReactiveFormsModule,
-    MatAutocompleteModule,
-    NgForOf,
-    NgClass,
-    AsyncPipe,
-    NgIf
-
-  ],
+  standalone: true,
+  imports: [ReactiveFormsModule, MatAutocompleteModule, NgForOf, NgClass, AsyncPipe, NgIf],
   templateUrl: './filters.html',
   styleUrl: './filters.css',
-  standalone: true
 })
 export class Filters implements OnInit {
-  form!: FormGroup;
-  platformsControl = new FormControl('');
-  genresControl = new FormControl('');
-  @Input() isPhone: boolean = false;
-  @Output() search = new EventEmitter();
+  @Input()
+  isPhone: boolean = false;
 
-  constructor(private formBuilder: FormBuilder) {
+  @Output()
+  search = new EventEmitter<{
+    genres?: number[];
+    platforms?: number[];
+    minRating?: number;
+    maxRating?: number;
+    sortBy?: string;
+    sortOrder?: string;
+    year?: number;
+    search?: string;
+  }>();
+
+  form: FormGroup;
+
+  platformsControl = new FormControl<string>('');
+
+  genresControl = new FormControl<string>('');
+
+  filteredPlatforms!: Observable<
+    {
+      id: number;
+      name: string;
+      icon: string;
+    }[]
+  >;
+
+  filteredGenres!: Observable<
+    {
+      id: number;
+      name: string;
+      icon: string;
+    }[]
+  >;
+
+  constructor(private readonly formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
       order: '',
       platforms: this.formBuilder.array([]),
@@ -36,52 +69,65 @@ export class Filters implements OnInit {
       minRate: 0,
       maxRate: 10,
       isRated: false,
-      search: ''
+      search: '',
     });
   }
 
-  filteredPlatforms!: Observable<{id: number, name: string, icon: string}[]>;
-
-  filteredGenres!: Observable<{id: number, name: string, icon: string}[]>;
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.filteredPlatforms = this.platformsControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value || '', getPlatforms()))
+      map((value) => this._filter(value || '', getPlatforms())),
     );
-
 
     this.filteredGenres = this.genresControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value || '', getGenres()))
+      map((value) => this._filter(value || '', getGenres())),
     );
   }
 
-  addPlatform(platform: { id: number; name: string }) {
-    if (!this.platformsFormArray.value.some((p: any) => p.id === platform.id)) {
+  addPlatform(platform: { id: number; name: string }): void {
+    const exists = this.platformsFormArray.value.some((item: any) => item.id === platform.id);
+
+    if (!exists) {
       this.platformsFormArray.push(this.formBuilder.control(platform));
     }
+
     this.platformsControl.setValue('');
   }
 
-  removePlatform(index: number) {
+  removePlatform(index: number): void {
     this.platformsFormArray.removeAt(index);
   }
 
-  addGenre(genre: { id: number; name: string }) {
-    if (!this.genresFormArray.value.some((p: any) => p.id === genre.id)) {
+  addGenre(genre: { id: number; name: string }): void {
+    const exists = this.genresFormArray.value.some((item: any) => item.id === genre.id);
+
+    if (!exists) {
       this.genresFormArray.push(this.formBuilder.control(genre));
     }
+
     this.genresControl.setValue('');
   }
 
-  removeGenre(index: number) {
+  removeGenre(index: number): void {
     this.genresFormArray.removeAt(index);
   }
 
-  private _filter(value: string, array: any[]): any[] {
+  private _filter(
+    value: string,
+    array: {
+      id: number;
+      name: string;
+      icon: string;
+    }[],
+  ): {
+    id: number;
+    name: string;
+    icon: string;
+  }[] {
     const filterValue = value.toLowerCase();
-    return array.filter(option => option.name.toLowerCase().includes(filterValue));
+
+    return array.filter((option) => option.name.toLowerCase().includes(filterValue));
   }
 
   get platformsFormArray(): FormArray {
@@ -92,36 +138,54 @@ export class Filters implements OnInit {
     return this.form.get('genres') as FormArray;
   }
 
-  filter(){
+  filter(): void {
+    const genres: {
+      id: number;
+      name: string;
+      icon: string;
+    }[] = this.form.get('genres')?.value || [];
 
-    let genres: {id: number, name: string, icon: string}[] = this.form.get('genres')?.value
-    let platforms: {id: number, name: string, icon: string}[] = this.form.get('platforms')?.value
+    const platforms: {
+      id: number;
+      name: string;
+      icon: string;
+    }[] = this.form.get('platforms')?.value || [];
 
-    let sort: string = this.form.get('order')?.value
-    let filters: {
+    const sort: string = this.form.get('order')?.value || '';
+
+    const sortParts = sort.split('__');
+
+    const filters: {
       genres?: number[];
       platforms?: number[];
       minRating?: number;
       maxRating?: number;
-      sortBy?: string,
-      sortOrder?: string,
+      sortBy?: string;
+      sortOrder?: string;
       year?: number;
-      search?: string
+      search?: string;
     } = {
-      genres: genres.map(el => el.id) || [],
-      platforms: platforms.map(el => el.id) || [],
-      minRating: this.form.get('minRate')?.value || undefined,
-      maxRating: this.form.get('maxRate')?.value || undefined,
-      sortBy: sort.split('__')[0] || undefined,
-      sortOrder: sort.split('__')[1] || undefined,
-      search: this.form.get('search')?.value
-    }
+      genres: genres.map((element) => element.id),
 
-    console.log( filters)
+      platforms: platforms.map((element) => element.id),
+
+      minRating: this.form.get('minRate')?.value ?? undefined,
+
+      maxRating: this.form.get('maxRate')?.value ?? undefined,
+
+      sortBy: sortParts[0] || undefined,
+
+      sortOrder: sortParts[1] || undefined,
+
+      search: this.form.get('search')?.value || undefined,
+    };
+
+    console.log(filters);
 
     this.search.emit(filters);
   }
 
   protected readonly getPlatformIcon = getPlatformIcon;
+
   protected readonly getGenreIcon = getGenreIcon;
 }

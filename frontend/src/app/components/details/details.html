@@ -1,44 +1,405 @@
 <app-container>
-  <main class="detail-page" *ngIf="game">
+  <main class="detail-page" *ngIf="game() as currentGame">
+    <!-- ==================== HERO ==================== -->
     <section class="game-hero">
-      <div class="poster-frame"><img *ngIf="game.cover?.url; else fallbackCover" [src]="getImage(game?.cover?.url, 't_720p')" [alt]="game.name + ' portada'"><ng-template #fallbackCover><img [src]="getLocalImage('No_Image_Available.jpg')" alt="Portada no disponible"></ng-template><span class="poster-glow"></span></div>
+      <div class="poster-frame">
+        <img
+          *ngIf="currentGame.cover?.url; else fallbackCover"
+          [src]="getImage(currentGame.cover?.url, 't_720p')"
+          [alt]="currentGame.name + ' portada'"
+        />
+
+        <ng-template #fallbackCover>
+          <img [src]="getLocalImage('No_Image_Available.jpg')" alt="Portada no disponible" />
+        </ng-template>
+
+        <span class="poster-glow"></span>
+      </div>
+
       <div class="hero-info">
-        <span class="eyebrow"><i class="bi bi-controller"></i> FICHA DEL JUEGO</span>
-        <h1>{{ game.name }}</h1>
-        <div *ngIf="game.genres?.length" class="tag-list"><span class="game-tag" *ngFor="let genre of game.genres"><i [ngClass]="'bi bi-' + getGenreIcon(genre.id)"></i>{{ genre.name }}</span></div>
-        <p *ngIf="game.summary" class="hero-summary">{{ game.summary }}</p>
-        <div class="rating-cards">
-          <div class="rating-card"><span class="rating-symbol"><i class="bi bi-stars"></i></span><span class="rating-number">{{ game.rating ? game.rating.toFixed(0) : '0' }}<small>/100</small></span><span class="rating-caption">Nota de la crítica</span></div>
-          <div class="rating-card"><span class="rating-symbol community"><i class="bi bi-people-fill"></i></span><span class="rating-number">{{ getMediaValue(valorations) }}<small>/10</small></span><span class="rating-caption">Nota de la comunidad</span></div>
+        <span class="eyebrow">
+          <i class="bi bi-controller"></i>
+
+          FICHA DEL JUEGO
+        </span>
+
+        <h1>
+          {{ currentGame.name }}
+        </h1>
+
+        <div *ngIf="currentGame.genres?.length" class="tag-list">
+          <span class="game-tag" *ngFor="let genre of currentGame.genres">
+            <i [ngClass]="'bi bi-' + getGenreIcon(genre.id)"></i>
+
+            {{ genre.name }}
+          </span>
         </div>
-        <div *ngIf="game.platforms?.length" class="platform-list"><span class="platform-caption">DISPONIBLE EN</span><span *ngFor="let platform of game.platforms" class="platform-tag"><i [ngClass]="'bi bi-' + getPlatformIcon(platform.id)"></i>{{ platform.name }}</span></div>
+
+        <p *ngIf="currentGame.summary" class="hero-summary">
+          {{ currentGame.summary }}
+        </p>
+
+        <div class="rating-cards">
+          <div class="rating-card">
+            <span class="rating-symbol">
+              <i class="bi bi-stars"></i>
+            </span>
+
+            <span class="rating-number">
+              {{ currentGame.rating ? currentGame.rating.toFixed(0) : '0' }}
+
+              <small>/100</small>
+            </span>
+
+            <span class="rating-caption"> Nota de la crítica </span>
+          </div>
+
+          <div class="rating-card">
+            <span class="rating-symbol community">
+              <i class="bi bi-people-fill"></i>
+            </span>
+
+            <span class="rating-number">
+              {{ mediaValue() }}
+
+              <small>/10</small>
+            </span>
+
+            <span class="rating-caption"> Nota de la comunidad </span>
+          </div>
+        </div>
+
+        <div *ngIf="currentGame.platforms?.length" class="platform-list">
+          <span class="platform-caption"> DISPONIBLE EN </span>
+
+          <span *ngFor="let platform of currentGame.platforms" class="platform-tag">
+            <i [ngClass]="'bi bi-' + getPlatformIcon(platform.id)"></i>
+
+            {{ platform.name }}
+          </span>
+        </div>
       </div>
     </section>
 
-    <section *ngIf="game.storyline" class="detail-panel story-panel"><span class="section-kicker">LA HISTORIA</span><h2>Sinopsis</h2><p>{{ game.storyline }}</p></section>
-    <section *ngIf="game.screenshots?.length" class="detail-panel media-panel"><div class="section-title"><div><span class="section-kicker">DENTRO DEL JUEGO</span><h2>Capturas</h2></div><i class="bi bi-images"></i></div><app-carrousel-images [images]="game.screenshots || []"></app-carrousel-images></section>
-    <section *ngIf="game.videos?.length" class="detail-panel media-panel"><div class="section-title"><div><span class="section-kicker">MÍRALO EN ACCIÓN</span><h2>Vídeos</h2></div><i class="bi bi-play-btn"></i></div><app-carrousel-videos [videos]="game.videos || []"></app-carrousel-videos></section>
+    <!-- ==================== HISTORIA ==================== -->
+    <section *ngIf="currentGame.storyline" class="detail-panel story-panel">
+      <span class="section-kicker"> LA HISTORIA </span>
 
-    <section class="detail-panel reviews-panel">
-      <div class="section-title"><div><span class="section-kicker">OPINIONES DE JUGADORES</span><h2>Reseñas de la comunidad</h2></div><span class="review-count"><i class="bi bi-chat-square-heart"></i>{{ valorations.length }}</span></div>
-      <div *ngIf="myValorations.length === 0 && user" class="write-review">
-        <div class="review-form-heading"><div><h3>¿Qué te ha parecido?</h3><p>Tu opinión ayuda a otros jugadores a elegir su próxima aventura.</p></div><span class="selected-score" *ngIf="createValoration.value">{{ createValoration.value }}<small>/10</small></span></div>
-        <div class="score-picker" aria-label="Elige una nota"><button type="button" *ngFor="let n of [].constructor(10); let i = index" (click)="setNote(i+1, 'create')" [class.score-active]="createValoration.value === i+1">{{ i+1 }}</button></div>
-        <label class="field-label">Tu reseña</label><div class="game-input-wrap review-input-wrap"><img *ngIf="userImage('me')" [src]="userImage('me')" class="review-input-avatar" alt="Tu avatar"><span *ngIf="!userImage('me')" class="review-avatar-fallback"><i class="bi bi-person"></i></span><textarea class="game-input game-textarea review-input" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="6" [(ngModel)]="createValoration.description" placeholder="Cuéntanos qué te ha parecido..."></textarea></div>
-        <button type="button" class="primary-action submit-review" (click)="createMyValoration()" [disabled]="!createValoration.value"><i class="bi bi-send"></i> Publicar reseña</button>
+      <h2>Sinopsis</h2>
+
+      <p>
+        {{ currentGame.storyline }}
+      </p>
+    </section>
+
+    <!-- ==================== CAPTURAS ==================== -->
+    <section *ngIf="currentGame.screenshots?.length" class="detail-panel media-panel">
+      <div class="section-title">
+        <div>
+          <span class="section-kicker"> DENTRO DEL JUEGO </span>
+
+          <h2>Capturas</h2>
+        </div>
+
+        <i class="bi bi-images"></i>
       </div>
-      <div *ngIf="myValorations.length > 0" class="my-review-block"><div class="my-review-banner"><i class="bi bi-check-circle-fill"></i><span>Ya has valorado este juego</span></div>
-        <article *ngFor="let val of myValorations" class="review-card own-review">
-          <ng-container *ngIf="!editMode"><div class="review-author"><img *ngIf="userImage('others', val)" [src]="userImage('others', val)" alt="Avatar del usuario"><span *ngIf="!userImage('others', val)" class="review-avatar-fallback"><i class="bi bi-person"></i></span><span class="review-score"><i class="bi bi-star-fill"></i>{{ val.value }}<small>/10</small></span><span class="review-date">{{ transformDate(val.createdAt) }}</span></div><p class="review-copy">{{ val.description }}</p><div class="review-actions"><button type="button" class="icon-action" aria-label="Editar reseña" (click)="changeEditMode(val.id, val.gameId)"><i class="bi bi-pencil"></i></button><button type="button" class="icon-action danger" aria-label="Eliminar reseña" (click)="confirmDeleteId = val.id"><i class="bi bi-trash"></i></button></div></ng-container>
-          <ng-container *ngIf="editMode"><span class="section-kicker">ACTUALIZA TU OPINIÓN</span><div class="score-picker"><button type="button" *ngFor="let n of [].constructor(10); let i = index" (click)="setNote(i+1,'update')" [class.score-active]="updateValoration?.value===i+1">{{ i+1 }}</button></div><div class="game-input-wrap review-input-wrap"><textarea class="game-input game-textarea review-input" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="6" [(ngModel)]="updateValoration.description" placeholder="Edita tu reseña..."></textarea></div><div class="review-actions"><button type="button" class="primary-action" (click)="updateMyValoration()"><i class="bi bi-check2"></i> Guardar cambios</button><button type="button" class="secondary-action" (click)="cancelEditMode()">Cancelar</button></div></ng-container>
-          <div *ngIf="confirmDeleteId === val.id" class="delete-confirm"><div><i class="bi bi-trash3"></i><p>¿Eliminar tu reseña de <strong>{{ game.name }}</strong>?</p><span>Esta acción no se puede deshacer.</span><div class="confirm-actions"><button type="button" class="secondary-action" (click)="confirmDeleteId=null">Cancelar</button><button type="button" class="danger-action" (click)="deleteReview(val.id)">Eliminar reseña</button></div></div></div>
+
+      <app-carrousel-images [images]="currentGame.screenshots || []"> </app-carrousel-images>
+    </section>
+
+    <!-- ==================== VÍDEOS ==================== -->
+    <section *ngIf="currentGame.videos?.length" class="detail-panel media-panel">
+      <div class="section-title">
+        <div>
+          <span class="section-kicker"> MÍRALO EN ACCIÓN </span>
+
+          <h2>Vídeos</h2>
+        </div>
+
+        <i class="bi bi-play-btn"></i>
+      </div>
+
+      <app-carrousel-videos [videos]="currentGame.videos || []"> </app-carrousel-videos>
+    </section>
+
+    <!-- ==================== RESEÑAS ==================== -->
+    <section class="detail-panel reviews-panel">
+      <div class="section-title">
+        <div>
+          <span class="section-kicker"> OPINIONES DE JUGADORES </span>
+
+          <h2>Reseñas de la comunidad</h2>
+        </div>
+
+        <span class="review-count">
+          <i class="bi bi-chat-square-heart"></i>
+
+          {{ valorations().length }}
+        </span>
+      </div>
+
+      <!-- ==================== CREAR RESEÑA ==================== -->
+      <div *ngIf="myValorations().length === 0 && user()" class="write-review">
+        <div class="review-form-heading">
+          <div>
+            <h3>¿Qué te ha parecido?</h3>
+
+            <p>Tu opinión ayuda a otros jugadores a elegir su próxima aventura.</p>
+          </div>
+
+          <span class="selected-score" *ngIf="createValoration().value">
+            {{ createValoration().value }}
+
+            <small>/10</small>
+          </span>
+        </div>
+
+        <div class="score-picker" aria-label="Elige una nota">
+          <button
+            type="button"
+            *ngFor="let n of [].constructor(10); let i = index"
+            (click)="setNote(i + 1, 'create')"
+            [class.score-active]="createValoration().value === i + 1"
+          >
+            {{ i + 1 }}
+          </button>
+        </div>
+
+        <label class="field-label"> Tu reseña </label>
+
+        <div class="game-input-wrap review-input-wrap">
+          <img
+            *ngIf="userImage('me')"
+            [src]="userImage('me')"
+            class="review-input-avatar"
+            alt="Tu avatar"
+          />
+
+          <span *ngIf="!userImage('me')" class="review-avatar-fallback">
+            <i class="bi bi-person"></i>
+          </span>
+
+          <textarea
+            class="game-input game-textarea review-input"
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="2"
+            cdkAutosizeMaxRows="6"
+            [ngModel]="createValoration().description"
+            (ngModelChange)="updateCreateDescription($event)"
+            placeholder="Cuéntanos qué te ha parecido..."
+          >
+          </textarea>
+        </div>
+
+        <button
+          type="button"
+          class="primary-action submit-review"
+          (click)="createMyValoration()"
+          [disabled]="!createValoration().value"
+        >
+          <i class="bi bi-send"></i>
+
+          Publicar reseña
+        </button>
+      </div>
+
+      <!-- ==================== MI RESEÑA ==================== -->
+      <div *ngIf="myValorations().length > 0" class="my-review-block">
+        <div class="my-review-banner">
+          <i class="bi bi-check-circle-fill"></i>
+
+          <span> Ya has valorado este juego </span>
+        </div>
+
+        <article *ngFor="let val of myValorations()" class="review-card own-review">
+          <!-- MODO NORMAL -->
+          <ng-container *ngIf="!editMode()">
+            <div class="review-author">
+              <img
+                *ngIf="userImage('others', val)"
+                [src]="userImage('others', val)"
+                alt="Avatar del usuario"
+              />
+
+              <span *ngIf="!userImage('others', val)" class="review-avatar-fallback">
+                <i class="bi bi-person"></i>
+              </span>
+
+              <span class="review-score">
+                <i class="bi bi-star-fill"></i>
+
+                {{ val.value }}
+
+                <small>/10</small>
+              </span>
+
+              <span class="review-date">
+                {{ transformDate(val.createdAt) }}
+              </span>
+            </div>
+
+            <p class="review-copy">
+              {{ val.description }}
+            </p>
+
+            <div class="review-actions">
+              <button
+                type="button"
+                class="icon-action"
+                aria-label="Editar reseña"
+                (click)="changeEditMode(val.id, val.gameId)"
+              >
+                <i class="bi bi-pencil"></i>
+              </button>
+
+              <button
+                type="button"
+                class="icon-action danger"
+                aria-label="Eliminar reseña"
+                (click)="confirmDeleteId.set(val.id)"
+              >
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </ng-container>
+
+          <!-- MODO EDICIÓN -->
+          <ng-container *ngIf="editMode()">
+            <span class="section-kicker"> ACTUALIZA TU OPINIÓN </span>
+
+            <div class="score-picker">
+              <button
+                type="button"
+                *ngFor="let n of [].constructor(10); let i = index"
+                (click)="setNote(i + 1, 'update')"
+                [class.score-active]="updateValoration().value === i + 1"
+              >
+                {{ i + 1 }}
+              </button>
+            </div>
+
+            <div class="game-input-wrap review-input-wrap">
+              <textarea
+                class="game-input game-textarea review-input"
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="2"
+                cdkAutosizeMaxRows="6"
+                [ngModel]="updateValoration().description"
+                (ngModelChange)="updateUpdateDescription($event)"
+                placeholder="Edita tu reseña..."
+              >
+              </textarea>
+            </div>
+
+            <div class="review-actions">
+              <button type="button" class="primary-action" (click)="updateMyValoration()">
+                <i class="bi bi-check2"></i>
+
+                Guardar cambios
+              </button>
+
+              <button type="button" class="secondary-action" (click)="cancelEditMode()">
+                Cancelar
+              </button>
+            </div>
+          </ng-container>
+
+          <!-- CONFIRMAR ELIMINACIÓN -->
+          <div *ngIf="confirmDeleteId() === val.id" class="delete-confirm">
+            <div>
+              <i class="bi bi-trash3"></i>
+
+              <p>
+                ¿Eliminar tu reseña de
+
+                <strong> {{ currentGame.name }} </strong>?
+              </p>
+
+              <span> Esta acción no se puede deshacer. </span>
+
+              <div class="confirm-actions">
+                <button type="button" class="secondary-action" (click)="confirmDeleteId.set(null)">
+                  Cancelar
+                </button>
+
+                <button type="button" class="danger-action" (click)="deleteReview(val.id)">
+                  Eliminar reseña
+                </button>
+              </div>
+            </div>
+          </div>
         </article>
       </div>
-      <div *ngIf="!user && myValorations.length === 0" class="login-hint"><i class="bi bi-chat-dots"></i><span>Inicia sesión para compartir tu reseña.</span></div>
+
+      <!-- ==================== USUARIO NO LOGUEADO ==================== -->
+      <div *ngIf="!user() && myValorations().length === 0" class="login-hint">
+        <i class="bi bi-chat-dots"></i>
+
+        <span> Inicia sesión para compartir tu reseña. </span>
+      </div>
+
+      <!-- ==================== RESEÑAS COMUNIDAD ==================== -->
       <div class="community-reviews">
-        <h3>Lo que opina la comunidad</h3><p *ngIf="valorationsWitouthMyValoration.length===0" class="empty-reviews">Todavía no hay reseñas. ¡Sé el primero en compartir tu opinión!</p>
-        <article *ngFor="let val of valorationsWitouthMyValoration" class="review-card"><div class="review-author"><img *ngIf="userImage('others', val)" [src]="userImage('others', val)" alt="Avatar del usuario"><span *ngIf="!userImage('others', val)" class="review-avatar-fallback"><i class="bi bi-person"></i></span><span class="review-score"><i class="bi bi-star-fill"></i>{{ val.value }}<small>/10</small></span><span class="review-date">{{ transformDate(val.createdAt) }}</span></div><p class="review-copy">{{ val.description }}</p></article>
-        <nav *ngIf="totalPages > 1" class="review-pagination" aria-label="Páginas de reseñas"><button *ngIf="page > 1" type="button" (click)="paginator('prev')" aria-label="Reseñas anteriores"><i class="bi bi-arrow-left"></i></button><span>{{ page }} / {{ totalPages }}</span><button *ngIf="page < totalPages" type="button" (click)="paginator('next')" aria-label="Más reseñas"><i class="bi bi-arrow-right"></i></button></nav>
+        <h3>Lo que opina la comunidad</h3>
+
+        <p *ngIf="valorationsWitouthMyValoration().length === 0" class="empty-reviews">
+          Todavía no hay reseñas. ¡Sé el primero en compartir tu opinión!
+        </p>
+
+        <article *ngFor="let val of paginatedValorations()" class="review-card">
+          <div class="review-author">
+            <img
+              *ngIf="userImage('others', val)"
+              [src]="userImage('others', val)"
+              alt="Avatar del usuario"
+            />
+
+            <span *ngIf="!userImage('others', val)" class="review-avatar-fallback">
+              <i class="bi bi-person"></i>
+            </span>
+
+            <span class="review-score">
+              <i class="bi bi-star-fill"></i>
+
+              {{ val.value }}
+
+              <small>/10</small>
+            </span>
+
+            <span class="review-date">
+              {{ transformDate(val.createdAt) }}
+            </span>
+          </div>
+
+          <p class="review-copy">
+            {{ val.description }}
+          </p>
+        </article>
+
+        <!-- PAGINACIÓN -->
+        <nav *ngIf="totalPages() > 1" class="review-pagination" aria-label="Páginas de reseñas">
+          <button
+            *ngIf="page() > 1"
+            type="button"
+            (click)="paginator('prev')"
+            aria-label="Reseñas anteriores"
+          >
+            <i class="bi bi-arrow-left"></i>
+          </button>
+
+          <span> {{ page() }} / {{ totalPages() }} </span>
+
+          <button
+            *ngIf="page() < totalPages()"
+            type="button"
+            (click)="paginator('next')"
+            aria-label="Más reseñas"
+          >
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </nav>
       </div>
     </section>
   </main>

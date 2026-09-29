@@ -1,22 +1,30 @@
 <!-- IMAGEN -->
 <div class="w-[180px] h-[200px] overflow-hidden">
+
   <img
     *ngIf="game.cover?.url"
     [src]="getImage(game.cover.url)"
     alt="cover"
     class="w-full h-full object-cover"
   />
+
   <img
     *ngIf="!game.cover?.url"
     [src]="getLocalImage('No_Image_Available.jpg')"
     alt="cover"
     class="w-full h-full object-cover"
   />
+
 </div>
 
+
 <!-- TÍTULO CON ALTURA FIJA -->
-<div class="mt-5 text-center h-[40px] flex items-center justify-center">
+<div
+  class="mt-5 text-center h-[40px] flex items-center justify-center"
+>
+
   <span class="break-words">
     {{ game?.name }}
   </span>
+
 </div>
