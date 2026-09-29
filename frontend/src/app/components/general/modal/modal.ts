@@ -1,157 +1,72 @@
-import {
-  Component,
-  ComponentRef,
-  effect,
-  signal,
-  Type,
-  ViewChild,
-  ViewContainerRef
-} from '@angular/core';
-
+import {ChangeDetectorRef, Component, ComponentRef, Type, ViewChild, ViewContainerRef} from '@angular/core';
 import {NgIf, NgStyle} from '@angular/common';
 
 @Component({
   selector: 'app-modal',
-  standalone: true,
   imports: [
     NgStyle,
     NgIf
   ],
   templateUrl: './modal.html',
-  styleUrl: './modal.css'
+  styleUrl: './modal.css',
+  standalone: true
 })
 export class Modal {
+  @ViewChild('modalContent', { read: ViewContainerRef, static: false })
+  modalContent!: ViewContainerRef;
 
-  @ViewChild('modalContent', {
-    read: ViewContainerRef,
-    static: false
-  })
-  modalContent?: ViewContainerRef;
-
-  show = signal(false);
-
-  styles = signal<{ [key: string]: string }>({});
-
+  show = false;
+  styles: { [key: string]: string } = {};
   private componentRef?: ComponentRef<any>;
 
-  private pendingComponent?: Type<any>;
-
-  private pendingData: Record<string, any> = {};
-
-  private resolveOpen?: (value: any) => void;
-
-  private rejectOpen?: () => void;
-
-  constructor() {
-
-    effect(() => {
-
-      if (!this.show()) {
-        return;
-      }
-
-      const component = this.pendingComponent;
-
-      if (!component) {
-        return;
-      }
-
-      const container = this.modalContent;
-
-      if (!container) {
-        return;
-      }
-
-      this.createDynamicComponent(
-        container,
-        component,
-        this.pendingData
-      );
-
-    });
-
-  }
+  constructor(private cd: ChangeDetectorRef) {}
 
   open<T>(
     component: Type<T>,
     styles: { [key: string]: string } = {},
     data: Partial<T> = {}
   ): Promise<any> {
-
-    this.styles.set(styles);
-
-    this.pendingComponent = component;
-
-    this.pendingData = {
-      ...data
-    };
-
-    this.show.set(true);
+    this.styles = styles;
+    this.show = true;
+    this.cd.detectChanges(); // 🔄 Asegura renderizado del modal antes de insertar el contenido
 
     return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (!this.modalContent) return;
 
-      this.resolveOpen = resolve;
-      this.rejectOpen = reject;
+        // Limpia el contenido anterior
+        this.modalContent.clear();
 
+        // Crea el nuevo componente dinámicamente
+        this.componentRef = this.modalContent.createComponent(component);
+
+        // Inyecta las props iniciales (por ejemplo, datos del padre)
+        Object.assign(this.componentRef.instance, data);
+
+        // Inyecta las funciones de control del modal
+        (this.componentRef.instance as any).close = () => {
+          this.close();
+          reject(); // o resolve(false) si prefieres
+        };
+
+        (this.componentRef.instance as any).confirm = (result?: any) => {
+          this.close();
+          resolve(result);
+        };
+
+        this.cd.detectChanges(); // 🔄 Re-render final después de crear el contenido
+      });
     });
-
   }
 
-  private createDynamicComponent<T>(
-    container: ViewContainerRef,
-    component: Type<T>,
-    data: Partial<T>
-  ): void {
+  close() {
+    if (this.modalContent) {
+      this.modalContent.clear();
+    } else {
+      console.warn('⚠️ ModalComponent: modalContent no está disponible al cerrar el modal.');
+    }
 
-    container.clear();
-
-    this.componentRef =
-      container.createComponent(component);
-
-    Object.assign(
-      this.componentRef.instance,
-      data
-    );
-
-    (this.componentRef.instance as any).close = () => {
-
-      this.close();
-
-      this.rejectOpen?.();
-
-    };
-
-    (this.componentRef.instance as any).confirm = (
-      result?: any
-    ) => {
-
-      this.close();
-
-      this.resolveOpen?.(result);
-
-    };
-
-    this.pendingComponent = undefined;
-
-    this.pendingData = {};
-
+    this.show = false;
+    this.cd.detectChanges(); // 🔄 Actualiza el estado de visibilidad del modal
   }
-
-  close(): void {
-
-    this.modalContent?.clear();
-
-    this.componentRef = undefined;
-
-    this.pendingComponent = undefined;
-
-    this.pendingData = {};
-
-    this.show.set(false);
-
-    this.resolveOpen = undefined;
-    this.rejectOpen = undefined;
-
-  }
-
 }

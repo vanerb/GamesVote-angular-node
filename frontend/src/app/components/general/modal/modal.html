@@ -1,16 +1,12 @@
 <div
-  *ngIf="show()"
-  class="game-modal-backdrop"
+  *ngIf="this.show"
+  class="game-modal-backdrop fixed inset-0 flex justify-center items-center z-[999] pointer-auto"
 >
-
   <div
-    class="game-modal-surface"
-    [ngStyle]="styles()"
+    class="game-modal-surface z-[1000] pointer-auto"
+    [ngStyle]="this.styles"
     (click)="$event.stopPropagation()"
   >
-
     <ng-template #modalContent></ng-template>
-
   </div>
-
 </div>

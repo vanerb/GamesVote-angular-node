@@ -1,7 +1,5 @@
 <div class="w-full h-full">
-
-  <div class="flex flex-col justify-center items-center gap-2 text-text-muted">
-
+  <div class="flex flex-col justify-center items-center gap-2 text-text-muted p-4">
     <h1>
       {{ props.title }}
     </h1>
@@ -11,27 +9,11 @@
     </p>
 
     <div class="flex space-x-4 w-full">
-
-      <button
-        *ngIf="props.type !== 'info'"
-        mat-stroked-button
-        class="w-full"
-        (click)="close()"
-      >
+      <button *ngIf="props.type !== 'info'" mat-stroked-button class="w-full" (click)="close()">
         Cancelar
       </button>
 
-      <button
-        mat-raised-button
-        color="primary"
-        class="w-full"
-        (click)="confirm()"
-      >
-        Aceptar
-      </button>
-
+      <button mat-raised-button color="primary" class="w-full" (click)="confirm()">Aceptar</button>
     </div>
-
   </div>
-
 </div>
