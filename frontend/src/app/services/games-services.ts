@@ -10,7 +10,7 @@ import {Filters} from '../interfaces/filters';
   providedIn: 'root'
 })
 export class GamesServices {
-  private apiUrl = 'http://localhost:3000/api/igdb';
+  private apiUrl = 'http://node.waifly.com:27287/api/igdb';
 
   constructor(private http: HttpClient) {
   }

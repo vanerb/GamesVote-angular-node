@@ -31,7 +31,18 @@ app.use("/api/valoration", valorationRoutes);
 app.use("/api/images", imageRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-sequelize.sync({ alter: true }).then(() => {
-    console.log("Base de datos sincronizada");
-    app.listen(3000, () => console.log("Servidor en http://localhost:3000"));
-});
+
+sequelize.sync({ alter: true })
+    .then(() => {
+        console.log("Base de datos sincronizada");
+
+        const PORT = process.env.PORT || 3000;
+
+        app.listen(PORT, "0.0.0.0", () => {
+            console.log(`Servidor iniciado en el puerto ${PORT}`);
+        });
+    })
+    .catch((error) => {
+        console.error("Error al sincronizar la base de datos:", error);
+    });
+

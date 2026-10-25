@@ -1,9 +1,15 @@
 const { Sequelize } = require("sequelize");
 
-// Conexión a MySQL (ajusta usuario, contraseña y base de datos)
-const sequelize = new Sequelize("gamevote_angular_node", "root", "", {
-    host: "localhost",
-    dialect: "mysql",
-});
+const sequelize = new Sequelize(
+    process.env.DB_NAME,
+    process.env.DB_USER,
+    process.env.DB_PASSWORD,
+    {
+        host: process.env.DB_HOST,
+        port: Number(process.env.DB_PORT || 3306),
+        dialect: "mysql",
+        logging: false,
+    }
+);
 
 module.exports = sequelize;

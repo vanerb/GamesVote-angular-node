@@ -77,7 +77,7 @@ export class Profile implements OnInit {
 
       if (user.Images?.length > 0) {
         this.previewCoverImage.set(
-          'http://localhost:3000/' +
+          'http://node.waifly.com:27287/' +
           cleanUrlImage(user.Images[0].url)
         );
       }
