@@ -37,7 +37,7 @@ export function getImage(url: string | undefined, type: string = 't_cover_big') 
 }
 
 export function getLocalImage(name: string) {
-  return 'http://localhost:3000/uploads/' + name
+  return 'https://raw.githubusercontent.com/vanerb/GamesVote-angular-node/master/backend/uploads/' + name
 }
 
 
