@@ -7,7 +7,7 @@ import {Valoration} from '../interfaces/valoration';
   providedIn: 'root'
 })
 export class ValorationsService {
-  url = 'http://node.waifly.com:27287/api/valoration';
+  url = 'http://localhost:3000/api/valoration';
 
   constructor(private http: HttpClient, private readonly authService: AuthService) { }
 

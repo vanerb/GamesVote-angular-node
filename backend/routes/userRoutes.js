@@ -11,7 +11,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Image = require("../models/Image");
-const authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware = require("../middleware/authMiddleWare");
 const bcrypt = require("bcryptjs");
 
 router.post("/", upload.single("profileImage"), async (req, res) => {

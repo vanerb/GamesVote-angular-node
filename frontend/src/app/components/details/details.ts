@@ -215,7 +215,7 @@ export class Details implements OnInit {
       img = val.User?.Images?.[0]?.url;
     }
 
-    return img ? 'http://node.waifly.com:27287/' + cleanUrlImage(img) : null;
+    return img ? 'http://localhost:3000/' + cleanUrlImage(img) : null;
   }
 
   searchGameById(id: number): void {

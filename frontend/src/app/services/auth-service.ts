@@ -7,7 +7,7 @@ import {LoginForm, Token} from '../interfaces/auth';
   providedIn: 'root'
 })
 export class AuthService {
-  url = 'http://node.waifly.com:27287/';
+  url = 'http://localhost:3000/';
 
   constructor( private router: Router, private http: HttpClient) {}
 
@@ -67,14 +67,14 @@ export class AuthService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.getToken()}`
     });
-    return this.http.get<any>('http://node.waifly.com:27287/api/auth/user', {headers})
+    return this.http.get<any>('http://localhost:3000/api/auth/user', {headers})
   }
 
   update(formData: FormData) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.getToken()}`
     });
-    return this.http.put<any>('http://node.waifly.com:27287/api/user', formData, {headers})
+    return this.http.put<any>('http://localhost:30007/api/user', formData, {headers})
   }
 
 

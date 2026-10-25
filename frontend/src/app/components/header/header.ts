@@ -99,7 +99,7 @@ export class Header implements OnInit {
       if (user.Images?.length > 0) {
 
         this.previewCoverImage.set(
-          'http://node.waifly.com:27287/' +
+          'http://localhost:3000/' +
           user.Images[0].url
             .replace(/^\/+/, '')
         );

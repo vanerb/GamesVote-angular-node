@@ -19,7 +19,17 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+    'http://localhost:4200',
+    'https://vanerb.github.io'
+];
+
+app.use(cors({
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
 // Rutas
